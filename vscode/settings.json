@@ -1,0 +1,27 @@
+{
+    "window.zoomLevel": -1,
+    "window.menuBarVisibility": "toggle",
+    "editor.fontFamily": "'Victor Mono Semibold', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "workbench.colorTheme": "Monokai",
+    "editor.fontSize": 16,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "string.quoted.docstring.multi.python",
+                    "comment"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            }
+        ]
+    },
+    "editor.fontLigatures": true,
+    "python.linting.prospectorEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.banditEnabled": true,
+    "terminal.integrated.detectLocale": "off",
+    "workbench.iconTheme": "vscode-icons",
+    "python.workspaceSymbols.enabled": true
+}
