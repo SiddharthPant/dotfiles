@@ -3,6 +3,7 @@ set --global --export EDITOR "code -w"
 
 # Configure FZF to use ripgrep for file search
 set --global --export FZF_DEFAULT_COMMAND "rg --files --no-ignore-vcs --hidden"
+set --global --export GIT_ASKPASS (which ksshaskpass)
 
 
 set --global theme_display_date no
