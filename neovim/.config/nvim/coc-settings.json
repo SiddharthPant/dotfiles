@@ -1,0 +1,10 @@
+{
+	// JS config
+	"coc.preferences.formatOnSaveFiletypes": ["javascript", "typescript", "typescriptreact", "json", "javascriptreact", "typescript.tsx", "python"],
+
+	// Python config
+	"python.linting.pylintEnabled": false,
+	"python.linting.prospectorEnabled": true,
+	"python.linting.enabled": true,
+	"python.formatting.provider": "black"
+}
