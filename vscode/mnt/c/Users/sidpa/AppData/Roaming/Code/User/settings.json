@@ -1,0 +1,27 @@
+{
+  "window.menuBarVisibility": "toggle",
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "editor.fontFamily": "'CaskaydiaCove NF', Consolas, 'Courier New', monospace",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontWeightBold": "500",
+  "window.zoomLevel": -1,
+  "editor.fontLigatures": true,
+  "workbench.colorTheme": "Dracula",
+  "python.languageServer": "Pylance",
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": ["string.quoted.docstring.multi.python", "comment"],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  },
+  "python.linting.prospectorEnabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.banditEnabled": true,
+  "workbench.iconTheme": "vscode-icons",
+  "python.workspaceSymbols.enabled": true
+}
