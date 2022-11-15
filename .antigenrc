@@ -4,9 +4,9 @@ antigen use oh-my-zsh
 # Load bundles from the default repo (oh-my-zsh).
 antigen bundle git
 antigen bundle command-not-found
-antigen bundle docker
-antigen bundle docker-compose
-antigen bundle django
+# antigen bundle docker
+# antigen bundle docker-compose
+# antigen bundle django
 antigen bundle fzf
 
 # Load bundles from external repos.
@@ -15,8 +15,10 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Select theme.
-antigen bundle mafredri/zsh-async
-antigen bundle sindresorhus/pure
+# antigen bundle mafredri/zsh-async
+# antigen bundle sindresorhus/pure
+# antigen theme robbyrussell
+antigen theme agnoster
 
 # Tell Antigen that you're done.
 antigen apply
