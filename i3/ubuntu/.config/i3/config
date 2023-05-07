@@ -15,7 +15,7 @@ exec --no-startup-id xrandr --dpi 96 --output DP-0 --primary --mode 3440x1440 --
 # xrandr --output DP-0 --primary --mode 3440x1440 -r 180 --output DP-2 --mode 2560x1440 -r 59.95 --same-as DP-0 &
 # xrandr --output DP-2 --auto --output DP-0 --same-as DP-2
 
-exec always nitrogen --restore
+exec_always nitrogen --restore
  
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
