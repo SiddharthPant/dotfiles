@@ -70,7 +70,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git fzf zsh-autosuggestions fnm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -99,40 +99,41 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ls=exa
-alias vim=nvim
-alias bat=batcat
-export EDITOR=nvim
-export LANG=en_US.UTF-8
 
-# fnm
-export PATH="/home/sid/.local/share/fnm:$PATH"
-eval "`fnm env`"
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/sid/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/sid/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/Users/sid/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/sid/mambaforge/etc/profile.d/conda.sh" ]; then
-        . "/home/sid/mambaforge/etc/profile.d/conda.sh"
+    if [ -f "/Users/sid/mambaforge/etc/profile.d/conda.sh" ]; then
+        . "/Users/sid/mambaforge/etc/profile.d/conda.sh"
     else
-        export PATH="/home/sid/mambaforge/bin:$PATH"
+        export PATH="/Users/sid/mambaforge/bin:$PATH"
     fi
 fi
 unset __conda_setup
 
-if [ -f "/home/sid/mambaforge/etc/profile.d/mamba.sh" ]; then
-    . "/home/sid/mambaforge/etc/profile.d/mamba.sh"
+if [ -f "/Users/sid/mambaforge/etc/profile.d/mamba.sh" ]; then
+    . "/Users/sid/mambaforge/etc/profile.d/mamba.sh"
 fi
 # <<< conda initialize <<<
 
-
 # pnpm
-export PNPM_HOME="/home/sid/.local/share/pnpm"
+export PNPM_HOME="/Users/sid/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# My Configs
+export PATH="/Applications/Postgres.app/Contents/Versions/15/bin:$PATH"
+export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
+eval "$(fnm env --use-on-cd)"
+export EDITOR='nvim'
+alias vim='nvim'
