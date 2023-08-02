@@ -137,3 +137,4 @@ export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
 eval "$(fnm env --use-on-cd)"
 export EDITOR='nvim'
 alias vim='nvim'
+alias ls='exa'
