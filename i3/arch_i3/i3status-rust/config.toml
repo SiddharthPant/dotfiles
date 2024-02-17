@@ -1,0 +1,76 @@
+icons_format = "{icon}"
+
+[theme]
+theme = "ctp-mocha"
+# [theme.overrides]
+# idle_bg = "#123456"
+# idle_fg = "#abcdef"
+
+[icons]
+icons = "material-nf"
+[icons.overrides]
+bat = ["|E|", "|_|", "|=|", "|F|"]
+bat_charging = "|^| "
+
+[[block]]
+block = "music"
+format = " $icon {$combo.str(max_w:20,rot_interval:0.5) $play $next |}"
+player = "spotify"
+
+[[block]]
+block = "uptime"
+interval = 3600 # update every hour
+
+[[block]]
+block = "net"
+format = " ^icon_net_up $speed_up.eng(prefix:K)  ^icon_net_down $speed_down.eng(prefix:K)"
+
+[[block]]
+block = "net"
+device = "enp"
+format = " $icon $device"
+inactive_format = "$icon Down"
+
+[[block]]
+block = "net"
+device = "wlan"
+format = " ^icon_net_wireless $signal_strength $ssid $frequency"
+inactive_format = " ^icon_net_wireless Down"
+
+[[block]]
+block = "net"
+format = " $ip"
+
+[[block]]
+block = "cpu"
+
+[[block]]
+block = "nvidia_gpu"
+interval = 1
+format = " $icon RTX 3090 $utilization $memory $temperature $clocks Fan:$fan_speed $power"
+
+[[block]]
+block = "disk_space"
+path = "/"
+info_type = "available"
+alert_unit = "GB"
+interval = 20
+warning = 20.0
+alert = 10.0
+format = " $icon root: $available.eng(w:2) "
+
+[[block]]
+block = "memory"
+format = " $icon $mem_total_used_percents.eng(w:2) "
+format_alt = " $icon_swap $swap_used_percents.eng(w:2) "
+
+[[block]]
+block = "sound"
+[[block.click]]
+button = "left"
+cmd = "pavucontrol"
+
+[[block]]
+block = "time"
+interval = 5
+format = " $timestamp.datetime(f:'%a %d/%m %R') "
