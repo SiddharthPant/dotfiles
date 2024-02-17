@@ -1,0 +1,6 @@
+configuration {
+ modes: "window,drun,ssh,p:rofi-power-menu,calc,combi";
+ font: "DejaVuSansM Nerd Font Mono 12";
+ combi-modes: "window,drun,ssh,p:rofi-power-menu,calc";
+ }
+@theme "solarized"
