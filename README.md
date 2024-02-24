@@ -1,8 +1,3 @@
 # My config files
-My personal configs from and for various utilities.
+My personal configs for my daily driver utilities.
 
-
-To git pull all files execute:
-```bash
-    git submodule update --init --recursive
-```
