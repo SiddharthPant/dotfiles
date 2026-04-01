@@ -171,7 +171,24 @@ require("mini.statusline").setup({
 	use_icons = true,
 })
 
-require("mini.tabline").setup({
-	show_icons = false,
-	tabpage_section = "right", -- Show tabpages on the right
+require("bufferline").setup({
+	options = {
+		numbers = "buffer_id",
+		indicator = { style = "underline" },
+		separator_style = "thin",
+		show_buffer_icons = false,
+		show_close_icon = false,
+		show_tab_indicators = false,
+		modified_icon = "",
+		buffer_close_icon = "×",
+		close_command = function(bufnr)
+			require("snacks").bufdelete({ buf = bufnr })
+		end,
+		right_mouse_command = function(bufnr)
+			require("snacks").bufdelete({ buf = bufnr })
+		end,
+		tab_size = 14,
+		max_name_length = 14,
+		truncate_names = true,
+	},
 })

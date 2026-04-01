@@ -3,6 +3,7 @@ vim.pack.add({
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
 	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
+	"https://github.com/akinsho/bufferline.nvim",
 	{
 		src = "https://github.com/nvim-treesitter/nvim-treesitter",
 		branch = "main",
@@ -29,7 +30,8 @@ end
 packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
-packadd("mini.nvim") -- surround + clue + jump2d + statusline + tabline
+packadd("mini.nvim") -- surround + clue + jump2d + statusline
+packadd("bufferline.nvim")
 packadd("codediff.nvim")
 packadd("lazygit.nvim")
 packadd("nvim-lspconfig")
