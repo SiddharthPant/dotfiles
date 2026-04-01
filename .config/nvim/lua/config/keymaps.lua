@@ -23,8 +23,6 @@ end, { desc = "Previous diagnostic" })
 
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 
-vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
 vim.keymap.set("n", "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", { desc = "Delete buffers to the left" })
 vim.keymap.set("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>", { desc = "Delete buffers to the right" })
 vim.keymap.set("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>", { desc = "Delete other buffers" })
@@ -184,7 +182,7 @@ end, { desc = "Diff this (new tab)" })
 vim.keymap.set("n", "<leader>gs", function()
 	require("snacks").picker.git_status()
 end, { desc = "Git status (all files with diff)" })
-vim.keymap.set("n", "<leader>gv", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
+vim.keymap.set("n", "<leader>gd", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
 vim.keymap.set("n", "<leader>gg", function()
 	vim.g.lazygit_use_custom_config_file_path = 1
 	vim.g.lazygit_config_file_path = vim.fn.stdpath("config") .. "/lazygit/config.yml"
