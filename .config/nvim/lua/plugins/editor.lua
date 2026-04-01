@@ -89,15 +89,31 @@ require("snacks").setup({
 
 require("gitsigns").setup({
 	signs = {
-		add = { text = "\u{2590}" }, -- ▏
-		change = { text = "\u{2590}" }, -- ▐
-		delete = { text = "\u{2590}" }, -- ◦
-		topdelete = { text = "\u{25e6}" }, -- ◦
-		changedelete = { text = "\u{25cf}" }, -- ●
-		untracked = { text = "\u{25cb}" }, -- ○
+		add = { text = "▎" },
+		change = { text = "▎" },
+		delete = { text = "" },
+		topdelete = { text = "" },
+		changedelete = { text = "▎" },
+		untracked = { text = "▎" },
+	},
+	signs_staged = {
+		add = { text = "▎" },
+		change = { text = "▎" },
+		delete = { text = "" },
+		topdelete = { text = "" },
+		changedelete = { text = "▎" },
 	},
 	signcolumn = true,
-	current_line_blame = false,
+	current_line_blame = true,
+})
+
+require("codediff").setup({
+	keymaps = {
+		view = {
+			next_hunk = "]h",
+			prev_hunk = "[h",
+		},
+	},
 })
 
 require("mini.surround").setup({
