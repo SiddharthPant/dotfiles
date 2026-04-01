@@ -2,7 +2,6 @@
 -- OPTIONS
 -- ============================================================================
 vim.o.termguicolors = true
-vim.cmd.colorscheme("catppuccin")
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
 vim.o.cursorline = true -- highlight current line
@@ -258,6 +257,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+	"https://www.github.com/catppuccin/nvim",
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
 	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
@@ -295,6 +295,15 @@ packadd("nvim-lspconfig")
 packadd("conform.nvim")
 packadd("nvim-lint")
 packadd("blink.cmp")
+packadd("nvim") -- catppuccin theme
+
+-- ============================================================================
+-- CATPPUCCIN THEME (with transparent background)
+-- ============================================================================
+require("catppuccin").setup({
+	transparent_background = true,
+})
+vim.cmd.colorscheme("catppuccin")
 
 -- ============================================================================
 -- PLUGIN CONFIGS
