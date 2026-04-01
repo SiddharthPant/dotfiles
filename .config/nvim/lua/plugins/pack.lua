@@ -11,6 +11,7 @@ vim.pack.add({
 	},
 	-- Language Server Protocols (Native - no mason)
 	"https://www.github.com/neovim/nvim-lspconfig",
+	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
 	{
@@ -35,6 +36,7 @@ packadd("bufferline.nvim")
 packadd("codediff.nvim")
 packadd("lazygit.nvim")
 packadd("nvim-lspconfig")
+packadd("lazydev.nvim")
 packadd("conform.nvim")
 packadd("nvim-lint")
 packadd("blink.cmp")
