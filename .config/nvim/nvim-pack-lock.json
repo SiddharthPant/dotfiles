@@ -17,14 +17,6 @@
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
-    "efmls-configs-nvim": {
-      "rev": "0b0ca5462a0a9c1233cc8359e64741d7d49fbbe4",
-      "src": "https://github.com/creativenull/efmls-configs-nvim"
-    },
-    "fzf-lua": {
-      "rev": "c9e7b7bfbd01f949164988ee1684035468e1995c",
-      "src": "https://github.com/ibhagwan/fzf-lua"
-    },
     "gitsigns.nvim": {
       "rev": "caa98e2e5e4c23a1652c23be839d2e1722cecc29",
       "src": "https://www.github.com/lewis6991/gitsigns.nvim"
@@ -32,10 +24,6 @@
     "lazygit.nvim": {
       "rev": "a04ad0dbc725134edbee3a5eea29290976695357",
       "src": "https://github.com/kdheepak/lazygit.nvim"
-    },
-    "mason.nvim": {
-      "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
-      "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
       "rev": "3923662bf3d6ca49a9503f8d7196ea0450983e6a",
@@ -52,10 +40,6 @@
     "nvim-lspconfig": {
       "rev": "8e2084bf5e40c79c1f42210a6ef96a0a4793a763",
       "src": "https://www.github.com/neovim/nvim-lspconfig"
-    },
-    "nvim-tree.lua": {
-      "rev": "3603f069ff783c31986894a56c2a6755331b0802",
-      "src": "https://www.github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
       "rev": "7caec274fd19c12b55902a5b795100d21531391f",
