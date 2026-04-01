@@ -286,7 +286,7 @@ end
 packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
-packadd("mini.nvim") -- Only loading surround + clue + jump2d
+packadd("mini.nvim") -- surround + clue + jump2d + statusline + tabline
 packadd("codediff.nvim")
 packadd("lazygit.nvim")
 -- LSP (Native - no mason)
@@ -462,7 +462,7 @@ require("gitsigns").setup({
 -- Example: brew install lua-language-server gopls clangd
 
 -- ============================================================================
--- MINI.NVIM - Only surround + clue + jump2d (no other modules)
+-- MINI.NVIM - surround + clue + jump2d + statusline + tabline
 -- ============================================================================
 require("mini.surround").setup({
 	mappings = {
@@ -518,6 +518,81 @@ require("mini.jump2d").setup({
 		start_jumping = "<CR>", -- Press Enter then type 2 chars to jump
 	},
 })
+
+-- mini.statusline - minimal statusline
+require("mini.statusline").setup({
+	content = {
+		active = function()
+			local mode, mode_hl = require("mini.statusline").section_mode({ trunc_width = 120 })
+			local git = require("mini.statusline").section_git({ trunc_width = 75 })
+			local diagnostics = require("mini.statusline").section_diagnostics({ trunc_width = 75 })
+			local filename = require("mini.statusline").section_filename({ trunc_width = 140 })
+			local fileinfo = require("mini.statusline").section_fileinfo({ trunc_width = 120 })
+			local location = require("mini.statusline").section_location({ trunc_width = 75 })
+			local search = require("mini.statusline").section_searchcount({ trunc_width = 75 })
+
+			return require("mini.statusline").combine_groups({
+				{ hl = mode_hl, strings = { mode } },
+				{ hl = "MiniStatuslineDevinfo", strings = { git, diagnostics } },
+				"%<", -- Mark general truncate point
+				{ hl = "MiniStatuslineFilename", strings = { filename } },
+				"%=", -- End left alignment
+				{ hl = "MiniStatuslineFileinfo", strings = { fileinfo } },
+				{ hl = mode_hl, strings = { search, location } },
+			})
+		end,
+	},
+	use_icons = true,
+})
+
+-- mini.tabline - buffer tabs
+require("mini.tabline").setup({
+	show_icons = true,
+	tabpage_section = "right", -- Show tabpages on the right
+})
+
+-- Close current buffer with leader + bc (buffer close)
+vim.keymap.set("n", "<leader>bc", function()
+	local current = vim.api.nvim_get_current_buf()
+	-- Get list of listed buffers
+	local buffers = vim.tbl_filter(function(buf)
+		return vim.bo[buf].buflisted and vim.api.nvim_buf_is_valid(buf)
+	end, vim.api.nvim_list_bufs())
+
+	-- Find next buffer to switch to
+	local next_buf = nil
+	for i, buf in ipairs(buffers) do
+		if buf == current then
+			next_buf = buffers[i + 1] or buffers[i - 1]
+			break
+		end
+	end
+
+	-- Switch to next buffer if exists, then delete current
+	if next_buf and next_buf ~= current then
+		vim.api.nvim_set_current_buf(next_buf)
+	elseif #buffers > 1 then
+		-- Try to find any other valid buffer
+		for _, buf in ipairs(buffers) do
+			if buf ~= current then
+				vim.api.nvim_set_current_buf(buf)
+				break
+			end
+		end
+	end
+
+	-- Delete the buffer using snacks if available, otherwise bdelete
+	local ok, snacks = pcall(require, "snacks")
+	if ok then
+		snacks.bufdelete({ buf = current })
+	else
+		vim.cmd("bdelete! " .. current)
+	end
+end, { desc = "Close current buffer" })
+
+-- Tab navigation keymaps
+vim.keymap.set("n", "<Tab>", ":bnext<CR>", { silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>", { silent = true, desc = "Previous buffer" })
 
 vim.keymap.set("n", "]h", function()
 	require("gitsigns").next_hunk()
