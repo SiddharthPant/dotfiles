@@ -22,7 +22,6 @@ vim.keymap.set("n", "[d", function()
 end, { desc = "Previous diagnostic" })
 
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
-vim.keymap.set({ "n", "v" }, "<leader>x", '"_d', { desc = "Delete without yanking" })
 
 vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })

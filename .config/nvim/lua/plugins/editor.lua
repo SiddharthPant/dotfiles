@@ -172,6 +172,6 @@ require("mini.statusline").setup({
 })
 
 require("mini.tabline").setup({
-	show_icons = true,
+	show_icons = false,
 	tabpage_section = "right", -- Show tabpages on the right
 })
