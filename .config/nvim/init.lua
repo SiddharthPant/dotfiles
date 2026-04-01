@@ -273,6 +273,8 @@ vim.pack.add({
 		src = "https://github.com/saghen/blink.cmp",
 		version = vim.version.range("1.*"),
 	},
+	-- Advanced diff view
+	"https://github.com/esmuellert/codediff.nvim",
 })
 
 local function packadd(name)
@@ -281,7 +283,8 @@ end
 packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
-packadd("mini.nvim") -- Only loading surround + clue
+packadd("mini.nvim") -- Only loading surround + clue + jump2d
+packadd("codediff.nvim")
 -- LSP (Native - no mason)
 packadd("nvim-lspconfig")
 -- Formatting and Linting (Modern: conform + nvim-lint)
@@ -353,8 +356,6 @@ require("snacks").setup({
 	explorer = {
 		enabled = true,
 		replace_netrw = true,
-		hidden = true, -- Show hidden files
-		ignored = true, -- Show gitignored files
 	},
 	git = { enabled = true },
 	gitbrowse = { enabled = true },
@@ -362,7 +363,25 @@ require("snacks").setup({
 	input = { enabled = true },
 	notifier = { enabled = true },
 	notify = { enabled = true },
-	picker = { enabled = true },
+	picker = {
+		enabled = true,
+		sources = {
+			files = {
+				hidden = true, -- Show hidden files in file picker
+				ignored = false, -- Don't show gitignored files
+			},
+			explorer = {
+				hidden = true, -- Show hidden files
+				ignored = false, -- Don't show gitignored files
+				layout = {
+					preview = false,
+					layout = {
+						position = "right", -- Show explorer on right
+					},
+				},
+			},
+		},
+	},
 	quickfile = { enabled = true },
 	scope = { enabled = true },
 	statuscolumn = { enabled = true },
@@ -509,8 +528,16 @@ vim.keymap.set("n", "<leader>hB", function()
 	require("gitsigns").toggle_current_line_blame()
 end, { desc = "Toggle inline blame" })
 vim.keymap.set("n", "<leader>hd", function()
+	-- Open diff in new tab
+	vim.cmd("tab split")
 	require("gitsigns").diffthis()
-end, { desc = "Diff this" })
+end, { desc = "Diff this (new tab)" })
+-- Show all changed files with diff preview
+vim.keymap.set("n", "<leader>gs", function()
+	require("snacks").picker.git_status()
+end, { desc = "Git status (all files with diff)" })
+-- Open codediff (VSCode-style diff view)
+vim.keymap.set("n", "<leader>gv", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
 
 -- ============================================================================
 -- LSP, Linting, Formatting & Completion
