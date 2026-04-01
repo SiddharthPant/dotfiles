@@ -47,12 +47,11 @@ local function enable_lsp_buffer_features(client, bufnr)
 				buffer = bufnr,
 				callback = function()
 					if vim.lsp.codelens.is_enabled({ bufnr = bufnr }) then
-						pcall(vim.lsp.codelens.refresh, { bufnr = bufnr })
+						pcall(vim.lsp.codelens.enable, true, { bufnr = bufnr })
 					end
 				end,
 			})
 		end
-		pcall(vim.lsp.codelens.refresh, { bufnr = bufnr })
 	end
 
 	if client:supports_method("textDocument/linkedEditingRange") then
