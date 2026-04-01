@@ -1,0 +1,47 @@
+# Lazygit config with Catppuccin Mocha theme
+# https://github.com/catppuccin/lazygit
+
+gui:
+  theme:
+    activeBorderColor:
+      - "#b4befe"
+      - bold
+    inactiveBorderColor:
+      - "#6c7086"
+    optionsTextColor:
+      - "#89b4fa"
+    selectedLineBgColor:
+      - "#313244"
+    selectedRangeBgColor:
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#b4befe"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
+
+  authorColors:
+    "*": "#fab387"
+
+  branchColors:
+    "main": "#a6e3a1"
+    "master": "#a6e3a1"
+    "develop": "#89b4fa"
+    "feature/*": "#cba6f7"
+    "hotfix/*": "#f38ba8"
+    "release/*": "#f9e2af"
+
+  commitGraphColors:
+    - "#94e2d5"
+    - "#89b4fa"
+    - "#cba6f7"
+    - "#f38ba8"
+    - "#f9e2af"
+    - "#a6e3a1"
+    - "#fab387"
+    - "#eba0ac"

@@ -2,6 +2,7 @@
 -- OPTIONS
 -- ============================================================================
 vim.o.termguicolors = true
+vim.cmd.colorscheme("catppuccin")
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
 vim.o.cursorline = true -- highlight current line
@@ -275,6 +276,8 @@ vim.pack.add({
 	},
 	-- Advanced diff view
 	"https://github.com/esmuellert/codediff.nvim",
+	-- LazyGit integration
+	"https://github.com/kdheepak/lazygit.nvim",
 })
 
 local function packadd(name)
@@ -285,6 +288,7 @@ packadd("gitsigns.nvim")
 packadd("snacks.nvim")
 packadd("mini.nvim") -- Only loading surround + clue + jump2d
 packadd("codediff.nvim")
+packadd("lazygit.nvim")
 -- LSP (Native - no mason)
 packadd("nvim-lspconfig")
 -- Formatting and Linting (Modern: conform + nvim-lint)
@@ -372,7 +376,7 @@ require("snacks").setup({
 			},
 			explorer = {
 				hidden = true, -- Show hidden files
-				ignored = false, -- Don't show gitignored files
+				ignored = true, -- Show gitignored files
 				layout = {
 					preview = false,
 					layout = {
@@ -538,6 +542,13 @@ vim.keymap.set("n", "<leader>gs", function()
 end, { desc = "Git status (all files with diff)" })
 -- Open codediff (VSCode-style diff view)
 vim.keymap.set("n", "<leader>gv", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
+-- Open lazygit with catppuccin theme
+vim.keymap.set("n", "<leader>gg", function()
+	-- Set lazygit to use catppuccin mocha theme
+	vim.g.lazygit_use_custom_config_file_path = 1
+	vim.g.lazygit_config_file_path = vim.fn.stdpath("config") .. "/lazygit/config.yml"
+	require("lazygit").lazygit()
+end, { desc = "Open lazygit (catppuccin theme)" })
 
 -- ============================================================================
 -- LSP, Linting, Formatting & Completion
