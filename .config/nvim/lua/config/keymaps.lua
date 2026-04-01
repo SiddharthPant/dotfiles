@@ -68,21 +68,21 @@ vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Yank line to system clipboard"
 vim.keymap.set({ "n", "v" }, "<leader>d", '"+d', { desc = "Delete to system clipboard" })
 vim.keymap.set("n", "<leader>D", '"+D', { desc = "Delete line to system clipboard" })
 
--- Change to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>c", '"+c', { desc = "Change to system clipboard" })
-vim.keymap.set("n", "<leader>C", '"+C', { desc = "Change line to system clipboard" })
-
--- Note: <leader>x is intentionally NOT mapped - uses normal register
-
 -- Snacks Explorer (replaces nvim-tree)
 vim.keymap.set("n", "<leader>e", function()
 	require("snacks").explorer()
 end, { desc = "Toggle Explorer" })
 
 -- Snacks Picker (replaces fzf-lua)
-vim.keymap.set("n", "<leader>ff", function()
+local function find_files()
 	require("snacks").picker.files()
-end, { desc = "Find Files" })
+end
+
+vim.keymap.set("n", "<leader><leader>", find_files, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>ff", find_files, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fo", function()
+	require("snacks").picker.recent()
+end, { desc = "Find Old Files" })
 vim.keymap.set("n", "<leader>fg", function()
 	require("snacks").picker.grep()
 end, { desc = "Live Grep" })
