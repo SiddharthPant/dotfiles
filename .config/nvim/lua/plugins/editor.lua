@@ -169,25 +169,118 @@ require("mini.jump2d").setup({
 	},
 })
 
-require("mini.statusline").setup({
+local statusline = require("mini.statusline")
+
+vim.api.nvim_set_hl(0, "StatuslinePath", { link = "MiniStatuslineFilename" })
+vim.api.nvim_set_hl(0, "StatuslineMeta", { link = "MiniStatuslineFileinfo" })
+vim.api.nvim_set_hl(0, "StatuslineLsp", { link = "MiniStatuslineDevinfo" })
+vim.api.nvim_set_hl(0, "StatuslineRecording", { link = "DiagnosticWarn" })
+vim.api.nvim_set_hl(0, "StatuslineModified", { link = "DiagnosticWarn" })
+vim.api.nvim_set_hl(0, "StatuslineReadonly", { link = "DiagnosticInfo" })
+
+local function compact(...)
+	local ret = {}
+	for i = 1, select("#", ...) do
+		local value = select(i, ...)
+		if value and value ~= "" then
+			table.insert(ret, value)
+		end
+	end
+	return ret
+end
+
+local function section_path()
+	local name = vim.api.nvim_buf_get_name(0)
+	if name == "" then
+		return "[No Name]"
+	end
+	return vim.fn.pathshorten(vim.fn.fnamemodify(name, ":~:."), 2)
+end
+
+local function section_file_state()
+	local modified = vim.bo.modified and "[+]" or ""
+	local readonly = (vim.bo.readonly or not vim.bo.modifiable) and "[RO]" or ""
+	return modified, readonly
+end
+
+local function section_lsp()
+	local names = {}
+	local seen = {}
+	for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+		if not seen[client.name] then
+			seen[client.name] = true
+			table.insert(names, client.name)
+		end
+	end
+	table.sort(names)
+	if #names == 0 then
+		return ""
+	end
+	if #names == 1 then
+		return "LSP " .. names[1]
+	end
+	return "LSP " .. names[1] .. "+" .. (#names - 1)
+end
+
+local function section_recording()
+	local reg = vim.fn.reg_recording()
+	return reg ~= "" and ("REC @" .. reg) or ""
+end
+
+local function section_progress()
+	local line = vim.fn.line(".")
+	local total = math.max(vim.fn.line("$"), 1)
+	local column = vim.fn.virtcol(".")
+	local width = math.max(vim.fn.virtcol("$") - 1, 0)
+	local percent = math.floor((line / total) * 100)
+	return string.format("%d/%d | %d/%d %d%%%%", column, width, line, total, percent)
+end
+
+local statusline_group = vim.api.nvim_create_augroup("StatuslineRefresh", { clear = true })
+vim.api.nvim_create_autocmd("RecordingEnter", {
+	group = statusline_group,
+	callback = function()
+		vim.cmd.redrawstatus()
+	end,
+})
+vim.api.nvim_create_autocmd("RecordingLeave", {
+	group = statusline_group,
+	callback = function()
+		vim.schedule(function()
+			vim.cmd.redrawstatus()
+		end)
+	end,
+})
+
+statusline.setup({
 	content = {
 		active = function()
-			local mode, mode_hl = require("mini.statusline").section_mode({ trunc_width = 120 })
-			local git = require("mini.statusline").section_git({ trunc_width = 75 })
-			local diagnostics = require("mini.statusline").section_diagnostics({ trunc_width = 75 })
-			local filename = require("mini.statusline").section_filename({ trunc_width = 140 })
-			local fileinfo = require("mini.statusline").section_fileinfo({ trunc_width = 120 })
-			local location = require("mini.statusline").section_location({ trunc_width = 75 })
-			local search = require("mini.statusline").section_searchcount({ trunc_width = 75 })
+			local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
+			local git = statusline.section_git({ trunc_width = 75 })
+			local diagnostics = statusline.section_diagnostics({ trunc_width = 75 })
+			local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
+			local search = statusline.section_searchcount({ trunc_width = 75 })
+			local modified, readonly = section_file_state()
 
-			return require("mini.statusline").combine_groups({
+			return statusline.combine_groups({
 				{ hl = mode_hl, strings = { mode } },
-				{ hl = "MiniStatuslineDevinfo", strings = { git, diagnostics } },
+				{ hl = "MiniStatuslineDevinfo", strings = compact(git, diagnostics) },
 				"%<", -- Mark general truncate point
-				{ hl = "MiniStatuslineFilename", strings = { filename } },
+				{ hl = "StatuslinePath", strings = { section_path() } },
+				{ hl = "StatuslineModified", strings = compact(modified) },
+				{ hl = "StatuslineReadonly", strings = compact(readonly) },
 				"%=", -- End left alignment
-				{ hl = "MiniStatuslineFileinfo", strings = { fileinfo } },
-				{ hl = mode_hl, strings = { search, location } },
+				{ hl = "StatuslineRecording", strings = compact(section_recording()) },
+				{ hl = "StatuslineLsp", strings = compact(section_lsp()) },
+				{ hl = "StatuslineMeta", strings = compact(fileinfo) },
+				{ hl = "StatuslineMeta", strings = compact(search, section_progress()) },
+			})
+		end,
+		inactive = function()
+			return statusline.combine_groups({
+				{ hl = "MiniStatuslineInactive", strings = { section_path() } },
+				"%=",
+				{ hl = "MiniStatuslineInactive", strings = compact(section_progress()) },
 			})
 		end,
 	},
@@ -202,7 +295,7 @@ require("bufferline").setup({
 		show_buffer_icons = false,
 		show_close_icon = false,
 		show_tab_indicators = false,
-		modified_icon = "",
+		modified_icon = "●",
 		buffer_close_icon = "×",
 		close_command = function(bufnr)
 			require("snacks").bufdelete({ buf = bufnr })

@@ -19,6 +19,7 @@ vim.o.signcolumn = "yes" -- always show a sign column
 vim.o.colorcolumn = "100" -- show a column at 100 position chars
 vim.o.showmatch = true -- highlights matching brackets
 vim.o.completeopt = "menuone,noselect,popup" -- completion options
+vim.o.laststatus = 3 -- use a single global statusline
 vim.o.showmode = false -- do not show the mode, instead have it in statusline
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
