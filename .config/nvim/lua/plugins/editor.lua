@@ -170,13 +170,18 @@ require("mini.jump2d").setup({
 })
 
 local statusline = require("mini.statusline")
+local palette = require("catppuccin.palettes").get_palette("mocha")
 
-vim.api.nvim_set_hl(0, "StatuslinePath", { link = "MiniStatuslineFilename" })
-vim.api.nvim_set_hl(0, "StatuslineMeta", { link = "MiniStatuslineFileinfo" })
-vim.api.nvim_set_hl(0, "StatuslineLsp", { link = "MiniStatuslineDevinfo" })
-vim.api.nvim_set_hl(0, "StatuslineRecording", { link = "DiagnosticWarn" })
-vim.api.nvim_set_hl(0, "StatuslineModified", { link = "DiagnosticWarn" })
-vim.api.nvim_set_hl(0, "StatuslineReadonly", { link = "DiagnosticInfo" })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = palette.subtext1, bg = palette.mantle })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = palette.overlay0, bg = palette.crust })
+vim.api.nvim_set_hl(0, "MiniStatuslineInactive", { fg = palette.overlay0, bg = palette.crust })
+vim.api.nvim_set_hl(0, "StatuslineDev", { fg = palette.subtext1, bg = palette.surface0 })
+vim.api.nvim_set_hl(0, "StatuslinePath", { fg = palette.text, bg = palette.surface0, bold = true })
+vim.api.nvim_set_hl(0, "StatuslineMeta", { fg = palette.subtext0, bg = palette.surface1 })
+vim.api.nvim_set_hl(0, "StatuslineLsp", { fg = palette.blue, bg = palette.surface1, bold = true })
+vim.api.nvim_set_hl(0, "StatuslineRecording", { fg = palette.base, bg = palette.yellow, bold = true })
+vim.api.nvim_set_hl(0, "StatuslineModified", { fg = palette.yellow, bg = palette.surface0, bold = true })
+vim.api.nvim_set_hl(0, "StatuslineReadonly", { fg = palette.sapphire, bg = palette.surface0, bold = true })
 
 local function compact(...)
 	local ret = {}
@@ -264,7 +269,7 @@ statusline.setup({
 
 			return statusline.combine_groups({
 				{ hl = mode_hl, strings = { mode } },
-				{ hl = "MiniStatuslineDevinfo", strings = compact(git, diagnostics) },
+				{ hl = "StatuslineDev", strings = compact(git, diagnostics) },
 				"%<", -- Mark general truncate point
 				{ hl = "StatuslinePath", strings = { section_path() } },
 				{ hl = "StatuslineModified", strings = compact(modified) },
