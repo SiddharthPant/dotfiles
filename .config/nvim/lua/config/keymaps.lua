@@ -198,6 +198,7 @@ vim.keymap.set("n", "<leader>uG", function()
 	local config = require("gitsigns.config").config
 	require("gitsigns").toggle_signs(not config.signcolumn)
 end, { desc = "Toggle git signs" })
+vim.keymap.set("n", "<leader>uu", "<cmd>UndotreeToggle<CR>", { desc = "Toggle undo tree" })
 vim.keymap.set("n", "<leader>gs", function()
 	require("snacks").picker.git_status()
 end, { desc = "Git status (all files with diff)" })
