@@ -1,0 +1,31 @@
+# Font
+font-family = Maple Mono NF
+background-opacity = 0.95
+background-blur = 10
+
+
+# Cursor
+cursor-style = block
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env,title,path
+
+# Cursor trail shader
+# custom-shader-animation = true
+custom-shader = shaders/cursor.glsl
+
+# Tab switching with Ctrl+number instead of Cmd+number
+keybind = ctrl+1=goto_tab:1
+keybind = ctrl+2=goto_tab:2
+keybind = ctrl+3=goto_tab:3
+keybind = ctrl+4=goto_tab:4
+keybind = ctrl+5=goto_tab:5
+keybind = ctrl+6=goto_tab:6
+keybind = ctrl+7=goto_tab:7
+keybind = ctrl+8=goto_tab:8
+keybind = ctrl+9=goto_tab:9
+
+# theme = Kitty Default
+theme = Catppuccin Mocha
+# theme = TokyoNight
+
+# Make pane separator more visible
+split-divider-color = #888888
