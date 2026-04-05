@@ -155,17 +155,10 @@ require("mini.clue").setup({
 		require("mini.clue").gen_clues.registers(),
 		require("mini.clue").gen_clues.windows(),
 		require("mini.clue").gen_clues.z(),
-		{ mode = "n", keys = "<CR>", desc = "Jump to 2 chars (jump2d)" },
 	},
 	window = {
 		config = { width = "auto", border = "rounded" },
 		delay = 300,
-	},
-})
-
-require("mini.jump2d").setup({
-	mappings = {
-		start_jumping = "<CR>", -- Press Enter then type 2 chars to jump
 	},
 })
 

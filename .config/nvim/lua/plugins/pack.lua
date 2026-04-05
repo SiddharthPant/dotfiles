@@ -32,7 +32,7 @@ end
 packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
-packadd("mini.nvim") -- surround + clue + jump2d + statusline
+packadd("mini.nvim") -- surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")
 packadd("codediff.nvim")
