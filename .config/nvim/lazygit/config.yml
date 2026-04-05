@@ -46,6 +46,6 @@ gui:
     - "#fab387"
     - "#eba0ac"
 
-git:
-  pagers:
-    - pager: delta --paging=never
+# git:
+#   pagers:
+#     - pager: delta --paging=never
