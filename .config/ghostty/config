@@ -6,7 +6,7 @@ background-blur = 10
 
 # Cursor
 cursor-style = block
-shell-integration-features = no-cursor,ssh-terminfo,ssh-env,title,path
+shell-integration-features = no-cursor,ssh-env,title,path
 
 # Cursor trail shader
 # custom-shader-animation = true
