@@ -1,5 +1,11 @@
 local M = {}
 
+-- Setup Supermaven
+require("supermaven-nvim").setup({
+	silent = true,
+	log_level = "off",
+})
+
 local blink = require("blink.cmp")
 
 blink.setup({
@@ -15,7 +21,7 @@ blink.setup({
 	appearance = { nerd_font_variant = "mono" },
 	completion = { menu = { auto_show = true } },
 	sources = {
-		default = { "lsp", "path", "buffer", "snippets" },
+		default = { "lsp", "path", "buffer", "snippets", "supermaven" },
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
 		},
@@ -24,6 +30,11 @@ blink.setup({
 				name = "LazyDev",
 				module = "lazydev.integrations.blink",
 				score_offset = 100,
+			},
+			supermaven = {
+				name = "Supermaven",
+				module = "blink.compat.source.supermaven",
+				score_offset = 50,
 			},
 		},
 	},
@@ -46,11 +57,13 @@ blink.setup({
 })
 
 vim.keymap.set("i", "<C-y>", function()
-	if vim.lsp.inline_completion.get() then
+	local supermaven = require("supermaven-nvim.completion_preview")
+	if supermaven.has_suggestion() then
+		supermaven.on_accept_suggestion()
 		return ""
 	end
 	return "<C-y>"
-end, { expr = true, desc = "Accept Inline Completion" })
+end, { expr = true, desc = "Accept Supermaven Suggestion" })
 
 M.capabilities = blink.get_lsp_capabilities()
 
