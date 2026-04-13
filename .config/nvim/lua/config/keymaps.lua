@@ -207,7 +207,5 @@ vim.keymap.set("n", "<leader>gs", function()
 end, { desc = "Git status (all files with diff)" })
 vim.keymap.set("n", "<leader>gd", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
 vim.keymap.set("n", "<leader>gg", function()
-	vim.g.lazygit_use_custom_config_file_path = 1
-	vim.g.lazygit_config_file_path = vim.fn.stdpath("config") .. "/lazygit/config.yml"
-	require("lazygit").lazygit()
-end, { desc = "Open lazygit (catppuccin theme)" })
+	require("snacks").lazygit()
+end, { desc = "Open lazygit" })

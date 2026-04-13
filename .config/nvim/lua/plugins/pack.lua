@@ -21,8 +21,6 @@ vim.pack.add({
 	},
 	-- Advanced diff view
 	"https://github.com/esmuellert/codediff.nvim",
-	-- LazyGit integration
-	"https://github.com/kdheepak/lazygit.nvim",
 })
 
 local function packadd(name)
@@ -36,7 +34,6 @@ packadd("mini.nvim") -- surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")
 packadd("codediff.nvim")
-packadd("lazygit.nvim")
 packadd("nvim-lspconfig")
 packadd("lazydev.nvim")
 packadd("conform.nvim")
