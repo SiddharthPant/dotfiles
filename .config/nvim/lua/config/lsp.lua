@@ -222,10 +222,32 @@ vim.lsp.config("bashls", {})
 vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
+vim.lsp.config("rust_analyzer", {
+	settings = {
+		["rust-analyzer"] = {
+			cargo = {
+				allFeatures = true,
+				loadOutDirsFromCheck = true,
+				runBuildScripts = true,
+			},
+			checkOnSave = {
+				allFeatures = true,
+				command = "clippy",
+				extraArgs = { "--no-deps" },
+			},
+			procMacro = {
+				enable = true,
+				ignored = {
+					leptos_macro = { "component" },
+				},
+			},
+		},
+	},
+})
 
 -- Note: LSP servers should be installed manually via your package manager
 -- Example: npm install -g typescript-language-server pyright bash-language-server
--- Example: brew install lua-language-server gopls clangd
+-- Example: brew install lua-language-server gopls clangd rust-analyzer
 vim.lsp.enable({
 	"lua_ls",
 	"pyright",
@@ -233,4 +255,5 @@ vim.lsp.enable({
 	"ts_ls",
 	"gopls",
 	"clangd",
+	"rust_analyzer",
 })
