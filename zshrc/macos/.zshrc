@@ -11,23 +11,21 @@ bindkey '^[[B' history-search-forward
 
 export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
 export EDITOR='nvim'
-export VISUAL=$EDITOR   # For GUI-capable editors
+export VISUAL=$EDITOR # For GUI-capable editors
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/sid/.docker/completions $fpath)
 
 autoload -Uz compinit && compinit -C
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' menu select  # Enable menu selection
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}  # Add colors
-
+zstyle ':completion:*' menu select                    # Enable menu selection
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # Add colors
 
 # Herd injected NVM configuration
 # export NVM_DIR="/Users/sid/Library/Application Support/Herd/config/nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 #
 # [[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] && builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
-
 
 # Herd injected PHP binary.
 export PATH="/Users/sid/Library/Application Support/Herd/bin:$PATH"
@@ -76,11 +74,10 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 # <<< conda initialize <<<
 
 # export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
-# eval "$(fnm env --use-on-cd --version-file-strategy recursive)"
-
+eval "$(fnm env --use-on-cd --version-file-strategy recursive)"
 
 # Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
+# . "$HOME/.vite-plus/env"
 
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -90,7 +87,6 @@ eval "$(zoxide init --cmd cd zsh)"
 
 source "/opt/homebrew/opt/fzf/shell/completion.zsh"
 source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
-
 
 # ===== Aliases =====
 alias timeout='gtimeout'
