@@ -222,6 +222,8 @@ vim.lsp.config("bashls", {})
 vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
+vim.lsp.config("taplo", {})
+
 vim.lsp.config("rust_analyzer", {
 	settings = {
 		["rust-analyzer"] = {
@@ -256,4 +258,5 @@ vim.lsp.enable({
 	"gopls",
 	"clangd",
 	"rust_analyzer",
+	"taplo",
 })

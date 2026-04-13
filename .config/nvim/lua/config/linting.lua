@@ -23,6 +23,7 @@ lint.linters_by_ft = {
 	cpp = { "cpplint" },
 	go = { "golangcilint" },
 	rust = {}, -- rust-analyzer handles linting via clippy
+	toml = {},
 }
 
 local function debounce(ms, fn)

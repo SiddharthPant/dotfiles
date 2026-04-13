@@ -40,7 +40,7 @@ require("conform").setup({
 		c = { "clang_format" },
 		cpp = { "clang_format" },
 		go = { "gofumpt" },
-		rust = { "rustfmt" },
+		toml = { "taplo" },
 	},
 })
 

@@ -21,6 +21,8 @@ vim.pack.add({
 	},
 	-- Advanced diff view
 	"https://github.com/esmuellert/codediff.nvim",
+	-- TOML (for Cargo.toml)
+	"https://github.com/tamasfe/taplo",
 })
 
 local function packadd(name)
@@ -39,4 +41,5 @@ packadd("lazydev.nvim")
 packadd("conform.nvim")
 packadd("nvim-lint")
 packadd("blink.cmp")
+packadd("taplo")
 packadd("nvim") -- catppuccin theme
