@@ -19,7 +19,6 @@ vim.pack.add({
 		src = "https://github.com/saghen/blink.cmp",
 		version = vim.version.range("1.*"),
 	},
-	"https://github.com/saghen/blink.compat", -- For non-blink sources like supermaven
 	-- Advanced diff view
 	"https://github.com/esmuellert/codediff.nvim",
 	-- TOML (for Cargo.toml)
@@ -44,7 +43,6 @@ packadd("lazydev.nvim")
 packadd("conform.nvim")
 packadd("nvim-lint")
 packadd("blink.cmp")
-packadd("blink.compat")
 packadd("taplo")
 packadd("supermaven-nvim")
 packadd("nvim") -- catppuccin theme
