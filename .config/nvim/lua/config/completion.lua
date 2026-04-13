@@ -21,7 +21,7 @@ blink.setup({
 	appearance = { nerd_font_variant = "mono" },
 	completion = { menu = { auto_show = true } },
 	sources = {
-		default = { "lsp", "path", "buffer", "snippets", "supermaven" },
+		default = { "lsp", "path", "buffer", "snippets" },
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
 		},
@@ -30,11 +30,6 @@ blink.setup({
 				name = "LazyDev",
 				module = "lazydev.integrations.blink",
 				score_offset = 100,
-			},
-			supermaven = {
-				name = "Supermaven",
-				module = "blink.compat.source.supermaven",
-				score_offset = 50,
 			},
 		},
 	},
