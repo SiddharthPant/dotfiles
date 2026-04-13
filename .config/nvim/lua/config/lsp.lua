@@ -232,7 +232,8 @@ vim.lsp.config("rust_analyzer", {
 				loadOutDirsFromCheck = true,
 				runBuildScripts = true,
 			},
-			checkOnSave = {
+			checkOnSave = true,
+			check = {
 				allFeatures = true,
 				command = "clippy",
 				extraArgs = { "--no-deps" },
