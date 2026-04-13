@@ -57,6 +57,10 @@
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://www.github.com/folke/snacks.nvim"
     },
+    "taplo": {
+      "rev": "b673b44df2773db8673a00df2e7654b769f7fde7",
+      "src": "https://github.com/tamasfe/taplo"
+    },
     "undotree": {
       "rev": "6fa6b57cda8459e1e4b2ca34df702f55242f4e4d",
       "src": "https://github.com/mbbill/undotree"
