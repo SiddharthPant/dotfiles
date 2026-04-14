@@ -85,6 +85,17 @@ require("snacks").setup({
 						position = "right", -- Show explorer on right
 					},
 				},
+				win = {
+					list = {
+						keys = {
+							["<C-l>"] = function()
+								if vim.env.TMUX and vim.env.TMUX ~= "" then
+									vim.system({ "tmux", "select-pane", "-R" })
+								end
+							end,
+						},
+					},
+				},
 			},
 		},
 	},
