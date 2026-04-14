@@ -210,3 +210,15 @@ vim.keymap.set("n", "<leader>gd", ":CodeDiff<cr>", { desc = "Git diff view (code
 vim.keymap.set("n", "<leader>gg", function()
 	require("snacks").lazygit()
 end, { desc = "Open lazygit" })
+
+-- Supermaven toggle (blink.cmp unaffected)
+vim.keymap.set("n", "<leader>ts", function()
+	vim.cmd("SupermavenToggle")
+	local api = require("supermaven-nvim.api")
+	local is_running = api.is_running()
+	require("snacks").notify(is_running and "Supermaven AI enabled" or "Supermaven AI disabled", {
+		title = "Supermaven",
+		icon = is_running and "✨" or "🚫",
+		level = "info",
+	})
+end, { desc = "Toggle Supermaven AI suggestions" })
