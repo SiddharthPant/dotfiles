@@ -25,6 +25,8 @@ vim.pack.add({
 	"https://github.com/tamasfe/taplo",
 	-- AI inline completions
 	"https://github.com/supermaven-inc/supermaven-nvim",
+	-- Tmux pane/window navigation
+	"https://github.com/christoomey/vim-tmux-navigator",
 })
 
 local function packadd(name)
@@ -45,4 +47,5 @@ packadd("nvim-lint")
 packadd("blink.cmp")
 packadd("taplo")
 packadd("supermaven-nvim")
+packadd("vim-tmux-navigator")
 packadd("nvim") -- catppuccin theme
