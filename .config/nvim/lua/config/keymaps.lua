@@ -61,7 +61,13 @@ vim.keymap.set("n", "<leader>pa", function() -- show file path
 end, { desc = "Copy full file path" })
 
 vim.keymap.set("n", "<leader>td", function()
-	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+	local enabled = vim.diagnostic.is_enabled()
+	vim.diagnostic.enable(not enabled)
+	require("snacks").notify(enabled and "Diagnostics disabled" or "Diagnostics enabled", {
+		title = "LSP Diagnostics",
+		icon = enabled and "🚫" or "🩺",
+		level = "info",
+	})
 end, { desc = "Toggle diagnostics" })
 
 -- Yank to system clipboard (visual and normal mode)
