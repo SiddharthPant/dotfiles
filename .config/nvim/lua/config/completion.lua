@@ -1,10 +1,21 @@
 local M = {}
 
--- Setup Supermaven
+-- Setup Supermaven (disabled by default - use <leader>ts to toggle)
 require("supermaven-nvim").setup({
 	silent = true,
 	log_level = "off",
+	-- Don't use default keymaps - we define our own
+	disable_keymaps = true,
 })
+
+-- Start supermaven then immediately stop it so it's "off" by default
+-- User can toggle on with :SupermavenToggle or <leader>ts
+vim.defer_fn(function()
+	local api = require("supermaven-nvim.api")
+	if api.is_running() then
+		api.stop()
+	end
+end, 100)
 
 local blink = require("blink.cmp")
 
