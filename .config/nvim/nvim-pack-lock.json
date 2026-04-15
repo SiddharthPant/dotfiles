@@ -37,6 +37,10 @@
       "rev": "a04ad0dbc725134edbee3a5eea29290976695357",
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
+    "markdown-preview.nvim": {
+      "rev": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee",
+      "src": "https://github.com/iamcco/markdown-preview.nvim"
+    },
     "mini.nvim": {
       "rev": "3923662bf3d6ca49a9503f8d7196ea0450983e6a",
       "src": "https://www.github.com/echasnovski/mini.nvim"
@@ -56,6 +60,10 @@
     "nvim-treesitter": {
       "rev": "7caec274fd19c12b55902a5b795100d21531391f",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "render-markdown.nvim": {
+      "rev": "0fd43fb4b1f073931c4b481f5f3b7cea3749e190",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks.nvim": {
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",

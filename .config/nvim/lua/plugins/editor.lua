@@ -134,6 +134,46 @@ require("codediff").setup({
 	},
 })
 
+vim.g.mkdp_filetypes = { "markdown" }
+vim.g.mkdp_theme = "dark"
+local markdown_group = vim.api.nvim_create_augroup("MarkdownTools", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = markdown_group,
+	pattern = "markdown",
+	callback = function(args)
+		vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<CR>", {
+			buffer = args.buf,
+			desc = "Markdown Preview Toggle",
+		})
+		vim.keymap.set("n", "<leader>mr", function()
+			require("render-markdown").toggle()
+		end, {
+			buffer = args.buf,
+			desc = "Markdown Render Toggle",
+		})
+	end,
+})
+
+require("render-markdown").setup({
+	file_types = { "markdown" },
+	completions = {
+		blink = { enabled = true },
+	},
+	code = {
+		sign = false,
+		width = "block",
+		right_pad = 1,
+	},
+	heading = {
+		sign = false,
+		icons = {},
+	},
+	checkbox = {
+		enabled = false,
+	},
+})
+
 require("mini.surround").setup({
 	mappings = {
 		add = "sa", -- Add surrounding (e.g., saiw" surrounds word with ")
