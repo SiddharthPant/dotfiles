@@ -175,7 +175,15 @@ vim.api.nvim_create_autocmd("LspDetach", {
 	end,
 })
 
-vim.keymap.set("n", "<leader>q", function()
+vim.keymap.set("n", "<leader>qd", function()
+	if vim.tbl_isempty(vim.diagnostic.get(0)) then
+		require("snacks").notify("No diagnostics available", {
+			title = "LSP Diagnostics",
+			level = "info",
+		})
+		return
+	end
+
 	vim.diagnostic.setloclist({ open = true })
 end, { desc = "Open diagnostic list" })
 vim.keymap.set("n", "<leader>cl", function()
