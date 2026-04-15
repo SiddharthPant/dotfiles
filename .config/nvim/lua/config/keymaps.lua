@@ -26,6 +26,7 @@ vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 vim.keymap.set("n", "<leader>x", function()
 	require("snacks").bufdelete()
 end, { desc = "Delete Buffer" })
+vim.keymap.set("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
 
 vim.keymap.set("n", "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", { desc = "Delete buffers to the left" })
 vim.keymap.set("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>", { desc = "Delete buffers to the right" })
