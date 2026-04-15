@@ -25,6 +25,13 @@ vim.pack.add({
 	"https://github.com/tamasfe/taplo",
 	-- AI inline completions
 	"https://github.com/supermaven-inc/supermaven-nvim",
+	-- Markdown preview in browser
+	{
+		src = "https://github.com/iamcco/markdown-preview.nvim",
+		build = "cd app && npx --yes yarn install",
+	},
+	-- Markdown rendering inside Neovim
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	-- Tmux pane/window navigation
 	"https://github.com/christoomey/vim-tmux-navigator",
 })
@@ -47,5 +54,7 @@ packadd("nvim-lint")
 packadd("blink.cmp")
 packadd("taplo")
 packadd("supermaven-nvim")
+packadd("markdown-preview.nvim")
+packadd("render-markdown.nvim")
 packadd("vim-tmux-navigator")
 packadd("nvim") -- catppuccin theme
