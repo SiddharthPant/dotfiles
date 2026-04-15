@@ -65,7 +65,9 @@ blink.setup({
 vim.keymap.set("i", "<C-y>", function()
 	local supermaven = require("supermaven-nvim.completion_preview")
 	if supermaven.has_suggestion() then
-		supermaven.on_accept_suggestion()
+		vim.schedule(function()
+			supermaven.on_accept_suggestion()
+		end)
 		return ""
 	end
 	return "<C-y>"
