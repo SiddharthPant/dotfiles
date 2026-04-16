@@ -22,7 +22,7 @@ vim.keymap.set("n", "[d", function()
 	vim.diagnostic.jump({ count = -1 })
 end, { desc = "Previous diagnostic" })
 
-vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
+vim.keymap.set("x", "<leader>P", '"_dP', { desc = "Paste without yanking" })
 vim.keymap.set("n", "<leader>x", function()
 	require("snacks").bufdelete()
 end, { desc = "Delete Buffer" })
