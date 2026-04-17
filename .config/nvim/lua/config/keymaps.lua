@@ -97,6 +97,17 @@ end, { desc = "Find Old Files" })
 vim.keymap.set("n", "<leader>fg", function()
 	require("snacks").picker.grep()
 end, { desc = "Live Grep" })
+vim.keymap.set({ "n", "x" }, "<leader>rr", function()
+	require("grug-far").open({
+		prefills = {
+			paths = vim.fn.expand("%"),
+		},
+		visualSelectionUsage = "auto-detect",
+	})
+end, { desc = "Search and replace in file" })
+vim.keymap.set({ "n", "x" }, "<leader>rR", function()
+	require("grug-far").open({ visualSelectionUsage = "auto-detect" })
+end, { desc = "Search and replace" })
 vim.keymap.set("n", "<leader>fb", function()
 	require("snacks").picker.buffers()
 end, { desc = "Find Buffers" })
