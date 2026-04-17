@@ -18,6 +18,14 @@ vim.defer_fn(function()
 end, 100)
 
 local blink = require("blink.cmp")
+local luasnip = require("luasnip")
+
+luasnip.config.set_config({
+	history = true,
+	delete_check_events = "TextChanged",
+})
+
+require("luasnip.loaders.from_vscode").lazy_load()
 
 blink.setup({
 	keymap = {
@@ -45,16 +53,7 @@ blink.setup({
 		},
 	},
 	snippets = {
-		-- Use native Neovim snippets.
-		expand = function(snippet)
-			vim.snippet.expand(snippet)
-		end,
-		active = function(filter)
-			return vim.snippet.active(filter)
-		end,
-		jump = function(direction)
-			vim.snippet.jump(direction)
-		end,
+		preset = "luasnip",
 	},
 	fuzzy = {
 		implementation = "prefer_rust",
