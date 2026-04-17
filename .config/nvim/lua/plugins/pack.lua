@@ -9,6 +9,7 @@ vim.pack.add({
 		build = "make install_jsregexp",
 	},
 	"https://github.com/rafamadriz/friendly-snippets",
+	"https://github.com/b0o/SchemaStore.nvim",
 	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
 	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/mbbill/undotree",
@@ -54,6 +55,7 @@ packadd("grug-far.nvim")
 packadd("flash.nvim")
 packadd("LuaSnip")
 packadd("friendly-snippets")
+packadd("SchemaStore.nvim")
 packadd("mini.nvim") -- surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")

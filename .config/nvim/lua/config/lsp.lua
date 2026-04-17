@@ -227,7 +227,22 @@ vim.lsp.config("lua_ls", {
 })
 vim.lsp.config("pyright", {})
 vim.lsp.config("bashls", {})
+vim.lsp.config("jsonls", {
+	before_init = function(_, config)
+		config.settings = config.settings or {}
+		config.settings.json = config.settings.json or {}
+		config.settings.json.schemas = config.settings.json.schemas or {}
+		vim.list_extend(config.settings.json.schemas, require("schemastore").json.schemas())
+	end,
+	settings = {
+		json = {
+			format = { enable = true },
+			validate = { enable = true },
+		},
+	},
+})
 vim.lsp.config("ts_ls", {})
+vim.lsp.config("eslint", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
 vim.lsp.config("taplo", {})
@@ -263,7 +278,9 @@ vim.lsp.enable({
 	"lua_ls",
 	"pyright",
 	"bashls",
+	"jsonls",
 	"ts_ls",
+	"eslint",
 	"gopls",
 	"clangd",
 	"rust_analyzer",
