@@ -54,6 +54,29 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
+vim.keymap.set({ "n", "x", "o" }, "s", function()
+	require("flash").jump()
+end, { desc = "Flash" })
+vim.keymap.set({ "n", "o", "x" }, "S", function()
+	require("flash").treesitter()
+end, { desc = "Flash Treesitter" })
+vim.keymap.set("o", "r", function()
+	require("flash").remote()
+end, { desc = "Remote Flash" })
+vim.keymap.set({ "o", "x" }, "R", function()
+	require("flash").treesitter_search()
+end, { desc = "Treesitter Search" })
+vim.keymap.set("c", "<C-s>", function()
+	require("flash").toggle()
+end, { desc = "Toggle Flash Search" })
+vim.keymap.set({ "n", "o", "x" }, "<C-Space>", function()
+	require("flash").treesitter({
+		actions = {
+			["<C-Space>"] = "next",
+			["<BS>"] = "prev",
+		},
+	})
+end, { desc = "Treesitter Incremental Selection" })
 
 vim.keymap.set("n", "<leader>pa", function() -- show file path
 	local path = vim.fn.expand("%:p")
