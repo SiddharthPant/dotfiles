@@ -4,6 +4,11 @@ vim.pack.add({
 	"https://www.github.com/folke/snacks.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/folke/flash.nvim",
+	{
+		src = "https://github.com/L3MON4D3/LuaSnip",
+		build = "make install_jsregexp",
+	},
+	"https://github.com/rafamadriz/friendly-snippets",
 	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
 	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/mbbill/undotree",
@@ -47,6 +52,8 @@ packadd("gitsigns.nvim")
 packadd("snacks.nvim")
 packadd("grug-far.nvim")
 packadd("flash.nvim")
+packadd("LuaSnip")
+packadd("friendly-snippets")
 packadd("mini.nvim") -- surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")
