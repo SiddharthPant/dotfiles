@@ -105,7 +105,9 @@ require("snacks").setup({
 	words = { enabled = true },
 })
 
-	require("grug-far").setup({
+require("flash").setup({})
+
+require("grug-far").setup({
 		keymaps = {
 			replace = { n = ",r" },
 			qflist = { n = ",q" },
@@ -200,13 +202,13 @@ require("render-markdown").setup({
 
 require("mini.surround").setup({
 	mappings = {
-		add = "sa", -- Add surrounding (e.g., saiw" surrounds word with ")
-		delete = "sd", -- Delete surrounding (e.g., sd" removes surrounding ")
-		find = "sf", -- Find surrounding
-		find_left = "sF", -- Find surrounding (to the left)
-		highlight = "sh", -- Highlight surrounding
-		replace = "sr", -- Replace surrounding (e.g., sr"' replaces " with ')
-		update_n_lines = "sn", -- Update `n_lines`
+		add = "gsa", -- Add surrounding (e.g., gsaiw" surrounds word with ")
+		delete = "gsd", -- Delete surrounding (e.g., gsd" removes surrounding ")
+		find = "gsf", -- Find surrounding
+		find_left = "gsF", -- Find surrounding (to the left)
+		highlight = "gsh", -- Highlight surrounding
+		replace = "gsr", -- Replace surrounding (e.g., gsr"' replaces " with ')
+		update_n_lines = "gsn", -- Update `n_lines`
 		suffix_last = "l", -- Suffix to search with "prev" method
 		suffix_next = "n", -- Suffix to search with "next" method
 	},

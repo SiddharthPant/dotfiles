@@ -3,6 +3,7 @@ vim.pack.add({
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
+	"https://github.com/folke/flash.nvim",
 	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
 	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/mbbill/undotree",
@@ -45,6 +46,7 @@ packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
 packadd("grug-far.nvim")
+packadd("flash.nvim")
 packadd("mini.nvim") -- surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")
