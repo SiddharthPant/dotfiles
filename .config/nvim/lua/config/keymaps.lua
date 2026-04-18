@@ -69,6 +69,14 @@ end, { desc = "Treesitter Search" })
 vim.keymap.set("n", "<leader>tf", function()
 	require("flash").toggle()
 end, { desc = "Toggle Flash Search" })
+vim.keymap.set("n", "<leader>tw", function()
+	vim.wo.wrap = not vim.wo.wrap
+	require("snacks").notify(vim.wo.wrap and "Line wrap enabled" or "Line wrap disabled", {
+		title = "Wrap",
+		icon = vim.wo.wrap and "↩" or "↪",
+		level = "info",
+	})
+end, { desc = "Toggle line wrap" })
 vim.keymap.set({ "n", "o", "x" }, "<leader>vi", function()
 	require("flash").treesitter({
 		actions = {
