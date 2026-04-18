@@ -42,4 +42,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- close quickfix and location list windows with q
+vim.api.nvim_create_autocmd("FileType", {
+	group = M.group,
+	pattern = "qf",
+	callback = function(args)
+		vim.keymap.set("n", "q", "<cmd>close<CR>", {
+			buffer = args.buf,
+			silent = true,
+			desc = "Close quickfix window",
+		})
+	end,
+})
+
 return M
