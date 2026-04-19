@@ -2,7 +2,7 @@ vim.o.termguicolors = true
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
 vim.o.cursorline = true -- highlight current line
-vim.o.wrap = false -- do not wrap lines by default
+vim.o.wrap = true -- wrap lines by default
 vim.o.scrolloff = 10 -- keep 10 lines above/below cursor
 vim.o.sidescrolloff = 10 -- keep 10 lines to left/right of cursor
 
