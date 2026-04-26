@@ -9,6 +9,7 @@ This repo contains personal dotfiles. The main actively used app config here is 
 Common links:
 
 - `.tmux.conf` -> `~/.tmux.conf`
+- `.gitconfig` -> `~/.gitconfig`
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
@@ -30,6 +31,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 ## Repo Layout
 
 - `.tmux.conf`: tmux configuration
+- `.gitconfig`: Git configuration
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
