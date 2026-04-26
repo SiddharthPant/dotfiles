@@ -16,6 +16,7 @@ The repo uses `Makefile` as the source of truth for what gets linked into `$HOME
 These paths are currently managed by `Makefile`:
 
 - `.tmux.conf` -> `~/.tmux.conf`
+- `.gitconfig` -> `~/.gitconfig`
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
@@ -26,6 +27,7 @@ These paths are currently managed by `Makefile`:
 ## Layout
 
 - `.tmux.conf`: tmux configuration
+- `.gitconfig`: Git configuration
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration

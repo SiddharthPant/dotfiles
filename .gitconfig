@@ -1,0 +1,42 @@
+[include]
+	path = /Users/sid/.config/git/themes.gitconfig
+
+[core]
+	excludesfile = /Users/sid/.config/git/ignore
+	pager = delta
+	editor = nvim
+
+[delta]
+	features = hoopoe
+	navigate = true
+	side-by-side = true
+	light = true
+
+[push]
+	autoSetupRemote = true
+
+[diff]
+	algorithm = histogram
+
+[alias]
+	undo = reset --mixed HEAD^
+
+[interactive]
+	diffFilter = delta --color-only
+
+[merge]
+	conflictStyle = zdiff3
+
+[user]
+	email = sid@anjanix.com
+	name = SiddharthPant
+
+[diff "lockb"]
+  textconv = bun
+  binary = true
+
+[pull]
+  ff = only
+  rebase = false
+[rerere]
+	enabled = true

@@ -23,7 +23,7 @@ keybind = ctrl+7=goto_tab:7
 keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
 
-theme = GitHub
+theme = GitHub Light Default
 
 # Make pane separator more visible
 split-divider-color = #8c959f
