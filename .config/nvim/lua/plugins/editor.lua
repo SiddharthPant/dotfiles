@@ -108,28 +108,28 @@ require("snacks").setup({
 require("flash").setup({})
 
 require("grug-far").setup({
-		keymaps = {
-			replace = { n = ",r" },
-			qflist = { n = ",q" },
-			syncLocations = { n = ",s" },
-			syncLine = { n = ",l" },
-			close = { n = ",c" },
-			historyOpen = { n = ",t" },
-			historyAdd = { n = ",a" },
-			refresh = { n = ",f" },
-			openLocation = { n = ",o" },
-			abort = { n = ",b" },
-			toggleShowCommand = { n = ",w" },
-			swapEngine = { n = ",e" },
-			previewLocation = { n = ",i" },
-			swapReplacementInterpreter = { n = ",x" },
-			applyNext = { n = ",j" },
-			applyPrev = { n = ",k" },
-			syncNext = { n = ",n" },
-			syncPrev = { n = ",p" },
-			syncFile = { n = ",v" },
-		},
-	})
+	keymaps = {
+		replace = { n = ",r" },
+		qflist = { n = ",q" },
+		syncLocations = { n = ",s" },
+		syncLine = { n = ",l" },
+		close = { n = ",c" },
+		historyOpen = { n = ",t" },
+		historyAdd = { n = ",a" },
+		refresh = { n = ",f" },
+		openLocation = { n = ",o" },
+		abort = { n = ",b" },
+		toggleShowCommand = { n = ",w" },
+		swapEngine = { n = ",e" },
+		previewLocation = { n = ",i" },
+		swapReplacementInterpreter = { n = ",x" },
+		applyNext = { n = ",j" },
+		applyPrev = { n = ",k" },
+		syncNext = { n = ",n" },
+		syncPrev = { n = ",p" },
+		syncFile = { n = ",v" },
+	},
+})
 
 require("gitsigns").setup({
 	signs = {
@@ -240,7 +240,20 @@ require("mini.clue").setup({
 })
 
 local statusline = require("mini.statusline")
-local palette = require("catppuccin.palettes").get_palette("mocha")
+local palette = {
+	base = "#ffffff",
+	text = "#24292f",
+	subtext1 = "#57606a",
+	subtext0 = "#6e7781",
+	overlay0 = "#8c959f",
+	surface1 = "#d0d7de",
+	surface0 = "#eaeef2",
+	mantle = "#f6f8fa",
+	crust = "#eaeef2",
+	blue = "#0969da",
+	yellow = "#9a6700",
+	sapphire = "#1a7f37",
+}
 
 vim.api.nvim_set_hl(0, "StatusLine", { fg = palette.subtext1, bg = palette.mantle })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = palette.overlay0, bg = palette.crust })
