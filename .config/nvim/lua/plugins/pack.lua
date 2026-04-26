@@ -1,5 +1,5 @@
 vim.pack.add({
-	"https://www.github.com/catppuccin/nvim",
+	"https://github.com/projekt0n/github-nvim-theme",
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
@@ -70,4 +70,4 @@ packadd("supermaven-nvim")
 packadd("markdown-preview.nvim")
 packadd("render-markdown.nvim")
 packadd("vim-tmux-navigator")
-packadd("nvim") -- catppuccin theme
+packadd("github-nvim-theme")
