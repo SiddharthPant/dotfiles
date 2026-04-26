@@ -76,10 +76,7 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 # export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
 eval "$(fnm env --use-on-cd --version-file-strategy recursive)"
 
-# Vite+ bin (https://viteplus.dev)
-# . "$HOME/.vite-plus/env"
-
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 eval "$(zoxide init --cmd cd zsh)"
