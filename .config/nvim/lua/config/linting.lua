@@ -6,12 +6,12 @@ vim.keymap.set("n", "<leader>cL", function()
 end, { desc = "Code Lint" })
 
 lint.linters_by_ft = {
-	javascript = {},
-	javascriptreact = {},
-	typescript = {},
-	typescriptreact = {},
-	vue = {},
-	svelte = {},
+	javascript = { "oxlint" },
+	javascriptreact = { "oxlint" },
+	typescript = { "oxlint" },
+	typescriptreact = { "oxlint" },
+	vue = { "oxlint" },
+	svelte = { "oxlint" },
 	json = {},
 	jsonc = {},
 	lua = { "luacheck" },

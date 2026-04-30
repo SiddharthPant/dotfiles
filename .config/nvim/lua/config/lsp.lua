@@ -242,7 +242,6 @@ vim.lsp.config("jsonls", {
 	},
 })
 vim.lsp.config("ts_ls", {})
-vim.lsp.config("eslint", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
 vim.lsp.config("taplo", {})
@@ -280,7 +279,6 @@ vim.lsp.enable({
 	"bashls",
 	"jsonls",
 	"ts_ls",
-	"eslint",
 	"gopls",
 	"clangd",
 	"rust_analyzer",
