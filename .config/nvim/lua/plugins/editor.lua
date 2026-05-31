@@ -240,31 +240,6 @@ require("mini.clue").setup({
 })
 
 local statusline = require("mini.statusline")
-local palette = {
-	base = "#ffffff",
-	text = "#24292f",
-	subtext1 = "#57606a",
-	subtext0 = "#6e7781",
-	overlay0 = "#8c959f",
-	surface1 = "#d0d7de",
-	surface0 = "#eaeef2",
-	mantle = "#f6f8fa",
-	crust = "#eaeef2",
-	blue = "#0969da",
-	yellow = "#9a6700",
-	sapphire = "#1a7f37",
-}
-
-vim.api.nvim_set_hl(0, "StatusLine", { fg = palette.subtext1, bg = palette.mantle })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = palette.overlay0, bg = palette.crust })
-vim.api.nvim_set_hl(0, "MiniStatuslineInactive", { fg = palette.overlay0, bg = palette.crust })
-vim.api.nvim_set_hl(0, "StatuslineDev", { fg = palette.subtext1, bg = palette.surface0 })
-vim.api.nvim_set_hl(0, "StatuslinePath", { fg = palette.text, bg = palette.surface0, bold = true })
-vim.api.nvim_set_hl(0, "StatuslineMeta", { fg = palette.subtext0, bg = palette.surface1 })
-vim.api.nvim_set_hl(0, "StatuslineLsp", { fg = palette.blue, bg = palette.surface1, bold = true })
-vim.api.nvim_set_hl(0, "StatuslineRecording", { fg = palette.base, bg = palette.yellow, bold = true })
-vim.api.nvim_set_hl(0, "StatuslineModified", { fg = palette.yellow, bg = palette.surface0, bold = true })
-vim.api.nvim_set_hl(0, "StatuslineReadonly", { fg = palette.sapphire, bg = palette.surface0, bold = true })
 
 local function compact(...)
 	local ret = {}
@@ -352,16 +327,14 @@ statusline.setup({
 
 			return statusline.combine_groups({
 				{ hl = mode_hl, strings = { mode } },
-				{ hl = "StatuslineDev", strings = compact(git, diagnostics) },
+				{ hl = "MiniStatuslineDevinfo", strings = compact(git, diagnostics) },
 				"%<", -- Mark general truncate point
-				{ hl = "StatuslinePath", strings = { section_path() } },
-				{ hl = "StatuslineModified", strings = compact(modified) },
-				{ hl = "StatuslineReadonly", strings = compact(readonly) },
+				{ hl = "MiniStatuslineFilename", strings = { section_path() } },
+				{ hl = "MiniStatuslineFileinfo", strings = compact(modified, readonly) },
 				"%=", -- End left alignment
-				{ hl = "StatuslineRecording", strings = compact(section_recording()) },
-				{ hl = "StatuslineLsp", strings = compact(section_lsp()) },
-				{ hl = "StatuslineMeta", strings = compact(fileinfo) },
-				{ hl = "StatuslineMeta", strings = compact(search, section_progress()) },
+				{ hl = "MiniStatuslineDevinfo", strings = compact(section_recording(), section_lsp()) },
+				{ hl = "MiniStatuslineFileinfo", strings = compact(fileinfo) },
+				{ hl = "MiniStatuslineFileinfo", strings = compact(search, section_progress()) },
 			})
 		end,
 		inactive = function()
