@@ -36,7 +36,7 @@ export HERD_PHP_83_INI_SCAN_DIR="/Users/sid/Library/Application Support/Herd/con
 # Herd injected PHP 8.4 configuration.
 export HERD_PHP_84_INI_SCAN_DIR="/Users/sid/Library/Application Support/Herd/config/php/84/"
 
-export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/go/bin:$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 # pnpm
@@ -79,7 +79,7 @@ eval "$(fnm env --use-on-cd --version-file-strategy recursive)"
 source /opt/homebrew/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
 # eval "$(starship init zsh)"
 
 source "/opt/homebrew/opt/fzf/shell/completion.zsh"
