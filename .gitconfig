@@ -7,10 +7,8 @@
 	editor = nvim
 
 [delta]
-	features = hoopoe
 	navigate = true
 	side-by-side = true
-	light = true
 
 [push]
 	autoSetupRemote = true
