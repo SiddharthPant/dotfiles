@@ -23,4 +23,22 @@
       "cmd-k p": "markdown::OpenFollowingPreview",
     },
   },
+  {
+    "context": "Editor",
+    "unbind": {
+      "cmd-backspace": "editor::DeleteToBeginningOfLine"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-backspace": "editor::DeleteLine"
+    }
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "cmd-shift-k": "editor::DeleteLine"
+    }
+  }
 ]

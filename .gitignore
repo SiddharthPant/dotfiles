@@ -21,3 +21,8 @@ static/CACHE/
 static/js/build
 .vscode/
 .env
+.config/zed/.tmp*
+.config/zed/conversations/
+.config/zed/embeddings/
+.config/zed/prompts/
+.config/zed/settings_backup.json

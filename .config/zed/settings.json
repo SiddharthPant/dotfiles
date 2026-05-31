@@ -7,25 +7,11 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "code_lens": "off",
-  "inlay_hints": {
-    "enabled": false
-  },
+  "icon_theme": "Catppuccin Mocha",
+  "theme": "Catppuccin Mocha",
   "indent_guides": {
     "background_coloring": "indent_aware",
-    "coloring": "indent_aware"
-  },
-  "minimap": {
-    "show": "never"
-  },
-  "which_key": {
-    "enabled": true
-  },
-  "icon_theme": "Catppuccin Mocha",
-  "theme": {
-    "mode": "dark",
-    "light": "Dracula Light (Alucard)",
-    "dark": "Catppuccin Mocha",
+    "coloring": "indent_aware",
   },
   "cli_default_open_behavior": "new_window",
   "edit_predictions": {
@@ -46,7 +32,7 @@
     "hide_root": true,
     "diagnostic_badges": true,
     "scrollbar": {
-      "horizontal_scroll": false
+      "horizontal_scroll": false,
     },
     "bold_folder_labels": false,
     "folder_icons": false,
