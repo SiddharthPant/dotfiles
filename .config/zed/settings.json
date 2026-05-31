@@ -1,0 +1,79 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "code_lens": "off",
+  "inlay_hints": {
+    "enabled": false
+  },
+  "indent_guides": {
+    "background_coloring": "indent_aware",
+    "coloring": "indent_aware"
+  },
+  "minimap": {
+    "show": "never"
+  },
+  "which_key": {
+    "enabled": true
+  },
+  "icon_theme": "Catppuccin Mocha",
+  "theme": {
+    "mode": "dark",
+    "light": "Dracula Light (Alucard)",
+    "dark": "Catppuccin Mocha",
+  },
+  "cli_default_open_behavior": "new_window",
+  "edit_predictions": {
+    "mode": "subtle",
+    "provider": "zed",
+    "allow_data_collection": "no",
+  },
+  "buffer_font_family": "Maple Mono NF",
+  "ui_font_size": 12,
+  "buffer_font_size": 11,
+  "terminal": {
+    "font_size": 10,
+  },
+  "soft_wrap": "editor_width",
+  "project_panel": {
+    "sort_mode": "directories_first",
+    "hide_hidden": false,
+    "hide_root": true,
+    "diagnostic_badges": true,
+    "scrollbar": {
+      "horizontal_scroll": false
+    },
+    "bold_folder_labels": false,
+    "folder_icons": false,
+    "entry_spacing": "standard",
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "agent": {
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "tabs": {
+    "file_icons": true,
+    "git_status": true,
+    "show_diagnostics": "all",
+  },
+}

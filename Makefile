@@ -63,6 +63,7 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
 	@echo "Common dotfiles linked"
 
@@ -75,5 +76,6 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
 	@echo "Dotfiles unlinked"
