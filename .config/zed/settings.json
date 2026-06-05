@@ -96,4 +96,18 @@
     "git_status": true,
     "show_diagnostics": "all",
   },
+  "file_types": {
+    "env": ["env", ".env.*"],
+  },
+  "languages": {
+    "SQL": {
+      "formatter": {
+        "external": {
+          "command": "sql-formatter",
+          "arguments": ["--language", "postgresql"],
+        },
+      },
+    },
+  },
+  "always_treat_brackets_as_autoclosed": true,
 }
