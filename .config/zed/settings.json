@@ -41,10 +41,23 @@
     "allow_data_collection": "no",
   },
   "buffer_font_family": "Maple Mono NF",
-  "ui_font_size": 12,
-  "buffer_font_size": 11,
+
+  // MacBook Screen Font Settings
+  // "ui_font_size": 12,
+  // "buffer_font_size": 11,
+  // "agent_buffer_font_size": 10.0,
+  // "agent_ui_font_size": 13.0,
+  // "terminal": {
+  //   "font_size": 10,
+  // },
+
+  // Monitor Screen font Settings
+  "ui_font_size": 11,
+  "buffer_font_size": 9,
+  "agent_buffer_font_size": 9,
+  "agent_ui_font_size": 11,
   "terminal": {
-    "font_size": 10,
+    "font_size": 9,
   },
   "soft_wrap": "editor_width",
   "project_panel": {
