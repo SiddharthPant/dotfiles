@@ -7,6 +7,27 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "show_edit_predictions": false,
+  "agent_servers": {
+    "claude-acp": {
+      "default_config_options": {
+        "effort": "high",
+      },
+      "type": "registry",
+    },
+    "opencode": {
+      "type": "registry",
+    },
+    "cursor": {
+      "type": "registry",
+    },
+    "codex-acp": {
+      "default_config_options": {
+        "reasoning_effort": "medium",
+      },
+      "type": "registry",
+    },
+  },
   "icon_theme": "Catppuccin Mocha",
   "theme": "Catppuccin Mocha",
   "indent_guides": {
