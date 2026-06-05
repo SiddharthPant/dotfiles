@@ -71,21 +71,21 @@
     "bold_folder_labels": false,
     "folder_icons": false,
     "entry_spacing": "standard",
-    "dock": "left",
+    "dock": "right",
   },
   "outline_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "collaboration_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "agent": {
-    "dock": "right",
+    "dock": "left",
     "favorite_models": [],
     "model_parameters": [],
   },
   "git_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "telemetry": {
     "diagnostics": false,
