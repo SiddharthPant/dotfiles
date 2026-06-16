@@ -17,6 +17,7 @@ These paths are currently managed by `Makefile`:
 
 - `.tmux.conf` -> `~/.tmux.conf`
 - `.gitconfig` -> `~/.gitconfig`
+- `.zshenv` -> `~/.zshenv`
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
@@ -30,6 +31,7 @@ These paths are currently managed by `Makefile`:
 
 - `.tmux.conf`: tmux configuration
 - `.gitconfig`: Git configuration
+- `.zshenv`: non-interactive-safe Zsh environment and PATH setup
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration

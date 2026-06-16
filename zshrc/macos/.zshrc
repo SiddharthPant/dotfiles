@@ -9,10 +9,6 @@ bindkey -e
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
-export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
-export EDITOR='nvim'
-export VISUAL=$EDITOR # For GUI-capable editors
-
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/sid/.docker/completions $fpath)
 
@@ -26,24 +22,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # Add colors
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 #
 # [[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] && builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
-
-# Herd injected PHP binary.
-export PATH="/Users/sid/Library/Application Support/Herd/bin:$PATH"
-
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/sid/Library/Application Support/Herd/config/php/83/"
-
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/sid/Library/Application Support/Herd/config/php/84/"
-
-export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
-
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-
-export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.lmstudio/bin"
 
 source /opt/homebrew/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh

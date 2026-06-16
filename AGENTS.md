@@ -10,6 +10,7 @@ Common links:
 
 - `.tmux.conf` -> `~/.tmux.conf`
 - `.gitconfig` -> `~/.gitconfig`
+- `.zshenv` -> `~/.zshenv`
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
@@ -34,6 +35,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 
 - `.tmux.conf`: tmux configuration
 - `.gitconfig`: Git configuration
+- `.zshenv`: non-interactive-safe Zsh environment and PATH setup
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
