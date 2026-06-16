@@ -20,7 +20,9 @@ These paths are currently managed by `Makefile`:
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
+- `.config/zed/` -> `~/.config/zed`
 - `.config/starship.toml` -> `~/.config/starship.toml`
+- `.config/mise/config.toml` -> `~/.config/mise/config.toml`
 - `zshrc/macos/.zshrc` -> `~/.zshrc` on macOS
 - `zshrc/arch-i3/.zshrc` -> `~/.zshrc` on Arch Linux
 
@@ -31,7 +33,9 @@ These paths are currently managed by `Makefile`:
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
+- `.config/zed/`: Zed editor configuration
 - `.config/starship.toml`: Starship prompt configuration
+- `.config/mise/config.toml`: Global mise tools
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration
 

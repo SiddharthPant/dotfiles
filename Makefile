@@ -65,6 +65,7 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/config.toml,$(HOME)/.config/mise/config.toml)
 	@echo "Common dotfiles linked"
 
 # target: clean - Remove all dotfile symlinks
@@ -78,4 +79,5 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/config.toml,$(HOME)/.config/mise/config.toml)
 	@echo "Dotfiles unlinked"

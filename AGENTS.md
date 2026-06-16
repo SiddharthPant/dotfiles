@@ -15,6 +15,7 @@ Common links:
 - `.config/kitty/` -> `~/.config/kitty`
 - `.config/zed/` -> `~/.config/zed`
 - `.config/starship.toml` -> `~/.config/starship.toml`
+- `.config/mise/config.toml` -> `~/.config/mise/config.toml`
 
 Platform-specific `~/.zshrc` links:
 
@@ -38,6 +39,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 - `.config/kitty/`: Kitty terminal configuration
 - `.config/zed/`: Zed editor configuration
 - `.config/starship.toml`: Starship prompt configuration
+- `.config/mise/config.toml`: Global mise tools
 - `zshrc/macos/.zshrc`: macOS shell configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux shell configuration
 
