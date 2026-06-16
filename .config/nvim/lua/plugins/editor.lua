@@ -230,6 +230,8 @@ require("render-markdown").setup({
 	},
 })
 
+require("mini.pairs").setup()
+
 require("mini.surround").setup({
 	mappings = {
 		add = "gsa", -- Add surrounding (e.g., gsaiw" surrounds word with ")

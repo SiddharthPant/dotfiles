@@ -10,7 +10,7 @@ vim.pack.add({
 	},
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/b0o/SchemaStore.nvim",
-	"https://www.github.com/echasnovski/mini.nvim", -- Only for surround + clue
+	"https://www.github.com/echasnovski/mini.nvim", -- pairs + surround + clue
 	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/mbbill/undotree",
 	{
@@ -56,7 +56,7 @@ packadd("flash.nvim")
 packadd("LuaSnip")
 packadd("friendly-snippets")
 packadd("SchemaStore.nvim")
-packadd("mini.nvim") -- surround + clue + statusline
+packadd("mini.nvim") -- pairs + surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")
 packadd("codediff.nvim")
