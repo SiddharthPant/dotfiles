@@ -161,8 +161,34 @@ require("codediff").setup({
 })
 
 vim.g.mkdp_filetypes = { "markdown" }
-vim.g.mkdp_theme = "dark"
+vim.g.mkdp_theme = "light"
 local markdown_group = vim.api.nvim_create_augroup("MarkdownTools", { clear = true })
+
+local function toggle_markdown_preview_theme()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local theme = vim.g.mkdp_theme == "dark" and "light" or "dark"
+	local was_open = vim.b.MarkdownPreviewToggleBool == 1
+
+	vim.g.mkdp_theme = theme
+
+	if was_open then
+		vim.cmd("MarkdownPreviewStop")
+		vim.defer_fn(function()
+			if not vim.api.nvim_buf_is_valid(bufnr) then
+				return
+			end
+
+			vim.api.nvim_buf_call(bufnr, function()
+				vim.cmd("MarkdownPreview")
+			end)
+		end, 100)
+	end
+
+	require("snacks").notify("Markdown preview theme: " .. theme, {
+		title = "Markdown Preview",
+		level = "info",
+	})
+end
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = markdown_group,
@@ -171,6 +197,10 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<CR>", {
 			buffer = args.buf,
 			desc = "Markdown Preview Toggle",
+		})
+		vim.keymap.set("n", "<leader>mt", toggle_markdown_preview_theme, {
+			buffer = args.buf,
+			desc = "Markdown Preview Theme Toggle",
 		})
 		vim.keymap.set("n", "<leader>mr", function()
 			require("render-markdown").toggle()
