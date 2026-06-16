@@ -31,13 +31,21 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 	end,
 })
 
--- wrap, linebreak and spellcheck on markdown and text files
+-- wrap and linebreak on prose-like files
 vim.api.nvim_create_autocmd("FileType", {
 	group = M.group,
 	pattern = { "markdown", "text", "gitcommit" },
 	callback = function()
 		vim.opt_local.wrap = true
 		vim.opt_local.linebreak = true
+	end,
+})
+
+-- spellcheck commit messages
+vim.api.nvim_create_autocmd("FileType", {
+	group = M.group,
+	pattern = "gitcommit",
+	callback = function()
 		vim.opt_local.spell = true
 	end,
 })
