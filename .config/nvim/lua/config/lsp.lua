@@ -242,9 +242,29 @@ vim.lsp.config("jsonls", {
 	},
 })
 vim.lsp.config("ts_ls", {})
-vim.lsp.config("gopls", {})
+vim.lsp.config("gopls", {
+	settings = {
+		gopls = {
+			usePlaceholders = true,
+			completionBudget = "250ms",
+			matcher = "Fuzzy",
+			completeFunctionCalls = true,
+			experimentalPostfixCompletions = true,
+			semanticTokens = true,
+		},
+	},
+})
+vim.lsp.config("html", {
+	filetypes = { "html", "templ", "htmldjango" },
+	init_options = {
+		provideFormatter = false,
+		embeddedLanguages = { css = true, javascript = true },
+		configurationSection = { "html", "css", "javascript" },
+	},
+})
 vim.lsp.config("clangd", {})
 vim.lsp.config("taplo", {})
+vim.lsp.config("templ", {})
 
 vim.lsp.config("rust_analyzer", {
 	settings = {
@@ -273,6 +293,7 @@ vim.lsp.config("rust_analyzer", {
 -- Note: LSP servers should be installed manually via your package manager
 -- Example: npm install -g typescript-language-server pyright bash-language-server
 -- Example: brew install lua-language-server gopls clangd rust-analyzer
+-- Example: go install github.com/a-h/templ/cmd/templ@latest
 vim.lsp.enable({
 	"lua_ls",
 	"pyright",
@@ -280,7 +301,9 @@ vim.lsp.enable({
 	"jsonls",
 	"ts_ls",
 	"gopls",
+	"html",
 	"clangd",
 	"rust_analyzer",
 	"taplo",
+	"templ",
 })

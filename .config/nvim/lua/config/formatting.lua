@@ -39,7 +39,9 @@ require("conform").setup({
 		zsh = { "shfmt" },
 		c = { "clang_format" },
 		cpp = { "clang_format" },
-		go = { "gofumpt" },
+		go = { "goimports", "gofumpt" },
+		rust = { "rustfmt" },
+		templ = { "templ" },
 		toml = { "taplo" },
 	},
 })

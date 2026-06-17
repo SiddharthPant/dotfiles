@@ -2,6 +2,56 @@ local M = {}
 
 M.group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
+local function rust_project_uses_askama(path)
+	local cargo_toml = vim.fs.find("Cargo.toml", {
+		path = vim.fs.dirname(path),
+		upward = true,
+	})[1]
+
+	if not cargo_toml then
+		return false
+	end
+
+	local ok, lines = pcall(vim.fn.readfile, cargo_toml, "", 1000)
+	if not ok then
+		return false
+	end
+
+	return table.concat(lines, "\n"):find("askama", 1, true) ~= nil
+end
+
+vim.filetype.add({
+	extension = {
+		askama = "htmldjango",
+		templ = "templ",
+	},
+})
+
+local function set_askama_template_filetype(bufnr)
+	if not vim.api.nvim_buf_is_loaded(bufnr) then
+		return
+	end
+
+	local path = vim.api.nvim_buf_get_name(bufnr)
+	if path:match("/templates/.*%.html$") and rust_project_uses_askama(path) then
+		vim.bo[bufnr].filetype = "htmldjango"
+	end
+end
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "BufEnter" }, {
+	group = M.group,
+	pattern = "*/templates/*.html",
+	callback = function(args)
+		set_askama_template_filetype(args.buf)
+	end,
+})
+
+vim.schedule(function()
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		set_askama_template_filetype(bufnr)
+	end
+end)
+
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = M.group,

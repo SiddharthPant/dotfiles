@@ -41,6 +41,7 @@ local function debounce(ms, fn)
 end
 
 -- Run linting after reads, insert exits, and writes with a small debounce.
+-- Keep golangci-lint save-only; gopls already covers fast edit-time feedback.
 vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave", "BufWritePost" }, {
 	group = augroup,
 	callback = debounce(100, function(args)
@@ -54,6 +55,9 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave", "BufWritePost" }, {
 			return
 		end
 		if vim.api.nvim_buf_get_name(args.buf) == "" then
+			return
+		end
+		if vim.bo[args.buf].filetype == "go" and args.event ~= "BufWritePost" then
 			return
 		end
 		lint.try_lint()

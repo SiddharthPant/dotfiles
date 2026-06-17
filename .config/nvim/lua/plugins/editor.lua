@@ -9,6 +9,7 @@ local function setup_treesitter()
 		"c",
 		"cpp",
 		"go",
+		"templ",
 		"html",
 		"css",
 		"javascript",
