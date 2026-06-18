@@ -9,6 +9,11 @@ font-size = 12
 cursor-style = block
 shell-integration-features = no-cursor,ssh-env,title,path
 
+working-directory = home
+window-inherit-working-directory = false
+tab-inherit-working-directory = false
+split-inherit-working-directory = true
+
 # Cursor trail shader
 # custom-shader-animation = true
 # custom-shader = shaders/cursor.glsl
