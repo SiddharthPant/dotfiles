@@ -6,6 +6,9 @@ export FZF_DEFAULT_COMMAND="rg --files --ignore-vcs --hidden"
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
 
+# pi: use FFF to override built-in find/grep tool names (requires pi restart)
+export PI_FFF_MODE="override"
+
 if [ -d "$HOME/Library/Application Support/Herd/config/php/83" ]; then
 	export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
 fi

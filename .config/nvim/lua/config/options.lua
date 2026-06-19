@@ -54,4 +54,9 @@ vim.o.splitright = true -- vertical splits go right
 vim.o.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
 vim.opt.diffopt:append("linematch:60") -- improve diff display
 
+-- Set a useful terminal title so each pane is distinguishable (dir + file).
+-- Works with ghostty; overrides the shell's title while nvim is running.
+vim.o.title = true
+vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} — %t%(%m%)"
+
 require("config.folds").setup()

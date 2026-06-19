@@ -7,7 +7,7 @@ font-size = 12
 
 # Cursor
 cursor-style = block
-shell-integration-features = no-cursor,ssh-env,title,path
+shell-integration-features = no-cursor,ssh-env,path
 
 working-directory = home
 window-inherit-working-directory = false
