@@ -94,6 +94,11 @@ For common Neovim tasks, edit here first:
 - Options like numbers, tabs, search, UI basics: `.config/nvim/lua/config/options.lua`
 - Autocmd behavior: `.config/nvim/lua/config/autocmds.lua`
 
+## Git Conventions
+
+- Commit messages must be a single one-line subject.
+- Do not add `Co-authored-by` or any co-author trailers to commits.
+
 ## Current Conventions
 
 - Plugin installation uses native `vim.pack`, not `lazy.nvim`.
