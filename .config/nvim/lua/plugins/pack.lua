@@ -2,6 +2,7 @@ vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
+	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/folke/flash.nvim",
 	{
@@ -51,7 +52,23 @@ end
 packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("snacks.nvim")
+packadd("fff.nvim")
 packadd("grug-far.nvim")
+
+-- Build fff.nvim's native binary on install/update (downloads prebuilt or falls
+-- back to a cargo build via the plugin's own download helper).
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = vim.api.nvim_create_augroup("FffBuild", { clear = true }),
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+		if name == "fff.nvim" and (kind == "install" or kind == "update") then
+			if not ev.data.active then
+				vim.cmd("packadd fff.nvim")
+			end
+			require("fff.download").download_or_build_binary()
+		end
+	end,
+})
 packadd("flash.nvim")
 packadd("LuaSnip")
 packadd("friendly-snippets")

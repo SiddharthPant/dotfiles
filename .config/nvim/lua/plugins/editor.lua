@@ -74,10 +74,6 @@ require("snacks").setup({
 	picker = {
 		enabled = true,
 		sources = {
-			files = {
-				hidden = true, -- Show hidden files in file picker
-				ignored = false, -- Don't show gitignored files
-			},
 			explorer = {
 				hidden = true, -- Show hidden files
 				ignored = true, -- Show gitignored files
@@ -107,6 +103,19 @@ require("snacks").setup({
 })
 
 require("flash").setup({})
+
+-- fff.nvim: file finder + live grep (replaces snacks picker for files/grep).
+-- The native search binary is built on install via the PackChanged autocmd
+-- in lua/plugins/pack.lua.
+require("fff").setup({
+	layout = {
+		height = 0.8,
+		width = 0.8,
+		prompt_position = "bottom",
+		preview_position = "right",
+		preview_size = 0.5,
+	},
+})
 
 require("grug-far").setup({
 	keymaps = {

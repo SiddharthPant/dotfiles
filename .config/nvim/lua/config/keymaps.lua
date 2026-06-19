@@ -115,9 +115,9 @@ vim.keymap.set("n", "<leader>e", function()
 	require("snacks").explorer()
 end, { desc = "Toggle Explorer" })
 
--- Snacks Picker (replaces fzf-lua)
+-- fff.nvim file finder + live grep (replaces snacks picker for files/grep)
 local function find_files()
-	require("snacks").picker.files()
+	require("fff").find_files()
 end
 
 vim.keymap.set("n", "<leader><leader>", find_files, { desc = "Find Files" })
@@ -126,8 +126,11 @@ vim.keymap.set("n", "<leader>fo", function()
 	require("snacks").picker.recent()
 end, { desc = "Find Old Files" })
 vim.keymap.set("n", "<leader>fg", function()
-	require("snacks").picker.grep()
+	require("fff").live_grep()
 end, { desc = "Live Grep" })
+vim.keymap.set("n", "<leader>fc", function()
+	require("fff").live_grep({ query = vim.fn.expand("<cword>") })
+end, { desc = "Grep current word" })
 vim.keymap.set({ "n", "x" }, "<leader>rr", function()
 	require("grug-far").open({
 		prefills = {
