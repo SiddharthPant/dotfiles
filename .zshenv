@@ -8,6 +8,8 @@ export VISUAL="$EDITOR"
 
 # pi: use FFF to override built-in find/grep tool names (requires pi restart)
 export PI_FFF_MODE="override"
+export FFF_FRECENCY_DB="$HOME/.cache/nvim/fff_frecency"
+export FFF_HISTORY_DB="$HOME/.local/share/nvim/fff_history"
 
 if [ -d "$HOME/Library/Application Support/Herd/config/php/83" ]; then
 	export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
