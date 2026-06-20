@@ -411,3 +411,111 @@ require("bufferline").setup({
 		truncate_names = true,
 	},
 })
+
+-- Session restore: persistence.nvim auto-saves the session on exit and
+-- restores it when nvim is started without file arguments.
+require("persistence").setup({
+	need = 1,
+	branch = true,
+})
+vim.api.nvim_create_autocmd("StdinReadPre", {
+	group = vim.api.nvim_create_augroup("persistence_restore", { clear = true }),
+	callback = function()
+		vim.g.started_stdin = true
+	end,
+})
+vim.api.nvim_create_autocmd("VimEnter", {
+	group = "persistence_restore",
+	callback = function()
+		-- Only auto-restore when nvim was opened with no file/buffer arguments.
+		if vim.fn.argc() == 0 and not vim.g.started_stdin then
+			require("persistence").load()
+		end
+	end,
+})
+-- The snacks explorer opens as a real vertical split (sidebar preset,
+-- position = right). If it's open when the session is saved, persistence
+-- captures it as a split with an empty buffer that reappears on restore.
+-- `picker:close()` defers the actual close to `vim.schedule`, which runs
+-- AFTER persistence's `mks!`, so we must close the explorer windows
+-- synchronously here instead.
+vim.api.nvim_create_autocmd("User", {
+	group = "persistence_restore",
+	pattern = "PersistenceSavePre",
+	callback = function()
+		-- Ask any open explorer picker to close first (tears down state).
+		for _, picker in ipairs(require("snacks").picker.get({ source = "explorer" })) do
+			picker:close()
+		end
+		-- Then synchronously quit any leftover snacks picker/explorer windows so
+		-- they are not captured by `mksession`. Detect snacks windows either by
+		-- the `snacks_win` window marker snacks sets on every window it creates,
+		-- or by the buffer filetype as a fallback. Also close empty placeholder
+		-- split windows snacks leaves behind (no name, no filetype, unmodified,
+		-- empty), but never close the last remaining window.
+		local wins = vim.api.nvim_tabpage_list_wins(0)
+		for _, win in ipairs(wins) do
+			if not vim.api.nvim_win_is_valid(win) then
+				goto continue
+			end
+			local buf = vim.api.nvim_win_get_buf(win)
+			local ok, ft = pcall(function() return vim.bo[buf].filetype end)
+			local is_snacks_ft = ok and (ft == "snacks_picker_list"
+				or ft == "snacks_picker_input"
+				or ft == "snacks_picker_preview"
+				or ft == "snacks_win")
+			local is_snacks_win = vim.w[win] ~= nil and vim.w[win].snacks_win ~= nil
+			local is_empty_placeholder = ok
+				and ft == ""
+				and vim.bo[buf].buftype == ""
+				and not vim.bo[buf].modified
+				and vim.api.nvim_buf_get_name(buf) == ""
+				and vim.api.nvim_buf_line_count(buf) <= 1
+			if (is_snacks_ft or is_snacks_win or is_empty_placeholder)
+				and #vim.api.nvim_tabpage_list_wins(0) > 1
+			then
+				pcall(vim.api.nvim_win_close, win, true)
+			end
+			::continue::
+		end
+	end,
+})
+-- Session restore loads buffers via `badd`, which does not trigger filetype
+-- detection, so the FileType autocommand that starts Treesitter never fires
+-- and syntax highlighting is missing on restored buffers. Force filetype
+-- detection on every loaded buffer after a session loads; the existing
+-- FileType autocmd then starts Treesitter automatically.
+vim.api.nvim_create_autocmd("User", {
+	group = "persistence_restore",
+	pattern = "PersistenceLoadPost",
+	callback = function()
+		vim.schedule(function()
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].buftype == "" then
+					if vim.bo[bufnr].filetype == "" then
+						vim.api.nvim_buf_call(bufnr, function()
+							vim.cmd("filetype detect")
+						end)
+					end
+					-- Ensure a highlighter is running even if filetype was already set
+					-- without firing FileType (e.g. restored buffer that was visited).
+					if vim.bo[bufnr].filetype ~= "" and not vim.treesitter.highlighter.active[bufnr] then
+						pcall(vim.treesitter.start, bufnr)
+					end
+				end
+			end
+		end)
+	end,
+})
+vim.keymap.set("n", "<leader>qs", function()
+	require("persistence").load()
+end, { desc = "Restore session for cwd" })
+vim.keymap.set("n", "<leader>qS", function()
+	require("persistence").select()
+end, { desc = "Select session" })
+vim.keymap.set("n", "<leader>ql", function()
+	require("persistence").load({ last = true })
+end, { desc = "Restore last session" })
+vim.keymap.set("n", "<leader>qD", function()
+	require("persistence").stop()
+end, { desc = "Stop session save on exit" })

@@ -43,6 +43,7 @@ vim.pack.add({
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	-- Tmux pane/window navigation
 	"https://github.com/christoomey/vim-tmux-navigator",
+	"https://github.com/folke/persistence.nvim",
 })
 
 local function packadd(name)
@@ -88,3 +89,4 @@ packadd("markdown-preview.nvim")
 packadd("render-markdown.nvim")
 packadd("vim-tmux-navigator")
 packadd("catppuccin")
+packadd("persistence.nvim")
