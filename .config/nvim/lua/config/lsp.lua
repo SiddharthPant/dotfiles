@@ -162,6 +162,15 @@ local function lsp_on_attach(ev)
 		end, "Toggle Inline Completion")
 	end
 
+	map("n", "<leader>cL", function()
+		for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+			vim.lsp.stop_client(c.id, true)
+		end
+		vim.defer_fn(function()
+			vim.cmd("edit")
+		end, 100)
+	end, "Restart LSP")
+
 	enable_lsp_buffer_features(client, bufnr)
 end
 
