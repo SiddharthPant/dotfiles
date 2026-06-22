@@ -275,29 +275,8 @@ vim.lsp.config("clangd", {})
 vim.lsp.config("taplo", {})
 vim.lsp.config("templ", {})
 
-vim.lsp.config("rust_analyzer", {
-	settings = {
-		["rust-analyzer"] = {
-			cargo = {
-				allFeatures = true,
-				loadOutDirsFromCheck = true,
-				runBuildScripts = true,
-			},
-			checkOnSave = true,
-			check = {
-				allFeatures = true,
-				command = "clippy",
-				extraArgs = { "--no-deps" },
-			},
-			procMacro = {
-				enable = true,
-				ignored = {
-					leptos_macro = { "component" },
-				},
-			},
-		},
-	},
-})
+-- rust_analyzer is started by rustaceanvim (see lua/plugins/editor.lua),
+-- which owns its server settings and DAP wiring. Do not add it here.
 
 -- Note: LSP servers should be installed manually via your package manager
 -- Example: npm install -g typescript-language-server pyright bash-language-server
@@ -312,7 +291,6 @@ vim.lsp.enable({
 	"gopls",
 	"html",
 	"clangd",
-	"rust_analyzer",
 	"taplo",
 	"templ",
 })

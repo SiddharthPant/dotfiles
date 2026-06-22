@@ -519,3 +519,123 @@ end, { desc = "Restore last session" })
 vim.keymap.set("n", "<leader>qD", function()
 	require("persistence").stop()
 end, { desc = "Stop session save on exit" })
+
+-- Rust: rustaceanvim (runnables, expand macro, debug adapter wiring) +
+-- crates.nvim (Cargo.toml dependency management). rustaceanvim is a filetype
+-- plugin that owns rust-analyzer startup, so the rust-analyzer server settings
+-- live here (in vim.g.rustaceanvim) rather than in lua/config/lsp.lua, and
+-- "rust_analyzer" is intentionally absent from vim.lsp.enable().
+--
+-- Use a function so capabilities are read lazily from config.completion (which
+-- loads after plugins in init.lua) at the moment rust-analyzer first starts.
+vim.g.rustaceanvim = function()
+	local capabilities =
+		vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), require("config.completion").capabilities)
+	return {
+		tools = {
+			hover_actions = { replace_builtin_hover = true },
+		},
+		server = {
+			capabilities = capabilities,
+			default_settings = {
+				["rust-analyzer"] = {
+					cargo = {
+						allFeatures = true,
+						loadOutDirsFromCheck = true,
+						runBuildScripts = true,
+					},
+					check = {
+						allFeatures = true,
+						command = "clippy",
+						extraArgs = { "--no-deps" },
+					},
+					procMacro = {
+						enable = true,
+						ignored = {
+							leptos_macro = { "component" },
+						},
+					},
+				},
+			},
+		},
+		-- rustaceanvim autoloads nvim-dap configurations for Rust when the LSP
+		-- client attaches. Install a debug adapter (codelldb recommended) via
+		-- `brew install codelldb` (macOS) or your distro's package manager and
+		-- rustaceanvim will auto-detect it; use :RustLsp debuggables or <leader>rd.
+		dap = {},
+	}
+end
+
+-- crates.nvim: Cargo.toml dependency management via an in-process LSP that
+-- blink picks up through its `lsp` source (no cmp source registration needed).
+require("crates").setup({
+	completion = { cmp = { enabled = false } },
+	lsp = {
+		enabled = true,
+		actions = true,
+		completion = true,
+		hover = true,
+	},
+})
+
+local rust_augroup = vim.api.nvim_create_augroup("RustConfig", { clear = true })
+
+-- rustaceanvim commands for Rust buffers. `K` is overridden to hover actions
+-- via tools.hover_actions.replace_builtin_hover above; the rest are explicit.
+vim.api.nvim_create_autocmd("FileType", {
+	group = rust_augroup,
+	pattern = "rust",
+	callback = function(args)
+		local map = function(lhs, rhs, desc)
+			vim.keymap.set("n", lhs, rhs, { buffer = args.buf, silent = true, desc = desc })
+		end
+		map("<leader>rn", function() vim.cmd.RustLsp("runnables") end, "Rust runnables")
+		map("<leader>rd", function() vim.cmd.RustLsp("debuggables") end, "Rust debuggables")
+		map("<leader>re", function() vim.cmd.RustLsp("expandMacro") end, "Expand macro")
+		map("<leader>ro", function() vim.cmd.RustLsp("openExternalDocs") end, "Open external docs")
+		map("<leader>rj", function() vim.cmd.RustLsp({ "moveItem", "down" }) end, "Move item down")
+		map("<leader>rk", function() vim.cmd.RustLsp({ "moveItem", "up" }) end, "Move item up")
+	end,
+})
+
+-- crates.nvim commands for Cargo.toml buffers (toml filetype filtered to the
+-- Cargo.toml filename). The global LspAttach autocmd in lua/config/lsp.lua
+-- already wires <leader>ca code actions for the crates in-process LSP.
+vim.api.nvim_create_autocmd("FileType", {
+	group = rust_augroup,
+	pattern = "toml",
+	callback = function(args)
+		if not vim.api.nvim_buf_get_name(args.buf):match("Cargo%.toml$") then
+			return
+		end
+		local map = function(lhs, action, desc)
+			vim.keymap.set("n", lhs, function() require("crates")[action]() end, { buffer = args.buf, desc = desc })
+		end
+		map("<leader>rcu", "update_crate", "Update crate")
+		map("<leader>rcU", "upgrade_crate", "Upgrade crate")
+		map("<leader>rca", "update_all_crates", "Update all crates")
+		map("<leader>rcA", "upgrade_all_crates", "Upgrade all crates")
+		map("<leader>rcp", "show_popup", "Show crate popup")
+		map("<leader>rcr", "reload", "Reload crates")
+	end,
+})
+
+-- DAP: nvim-dap + nvim-dap-ui. `<leader>d`/`<leader>D` are taken (delete to
+-- system clipboard), so debug controls live under the free `<leader>;` prefix.
+-- rustaceanvim autoloads Rust launch configs on LSP attach; DAP UI opens/closes
+-- automatically when a session starts/ends.
+local dap = require("dap")
+local dapui = require("dapui")
+dapui.setup()
+dap.listeners.before.attach.dapui_config = function() dapui.open() end
+dap.listeners.before.launch.dapui_config = function() dapui.open() end
+dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+
+vim.keymap.set("n", "<leader>;b", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>;B", function() dap.clear_breakpoints() end, { desc = "Clear Breakpoints" })
+vim.keymap.set("n", "<leader>;c", function() dap.continue() end, { desc = "DAP Continue" })
+vim.keymap.set("n", "<leader>;s", function() dap.step_over() end, { desc = "Step Over" })
+vim.keymap.set("n", "<leader>;i", function() dap.step_into() end, { desc = "Step Into" })
+vim.keymap.set("n", "<leader>;o", function() dap.step_out() end, { desc = "Step Out" })
+vim.keymap.set("n", "<leader>;t", function() dapui.toggle() end, { desc = "Toggle DAP UI" })

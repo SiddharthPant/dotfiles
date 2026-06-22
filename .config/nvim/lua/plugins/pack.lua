@@ -34,6 +34,15 @@ vim.pack.add({
 	"https://github.com/tamasfe/taplo",
 	-- AI inline completions
 	"https://github.com/supermaven-inc/supermaven-nvim",
+	-- Rust: rustaceanvim (runnables, expand macro, debug adapter wiring). It
+	-- manages rust-analyzer itself, so rust_analyzer is NOT in vim.lsp.enable().
+	"https://github.com/mrcjkb/rustaceanvim",
+	-- Rust: Cargo.toml dependency management (versions, features, code actions)
+	{ src = "https://github.com/saecki/crates.nvim", version = "stable" },
+	-- Debug Adapter Protocol: debugging UI (rustaceanvim autoloads Rust configs)
+	"https://github.com/mfussenegger/nvim-dap",
+	"https://github.com/rcarriga/nvim-dap-ui",
+	"https://github.com/nvim-neotest/nvim-nio",
 	-- Markdown preview in browser
 	{
 		src = "https://github.com/iamcco/markdown-preview.nvim",
@@ -85,6 +94,11 @@ packadd("nvim-lint")
 packadd("blink.cmp")
 packadd("taplo")
 packadd("supermaven-nvim")
+packadd("rustaceanvim")
+packadd("crates.nvim")
+packadd("nvim-nio")
+packadd("nvim-dap")
+packadd("nvim-dap-ui")
 packadd("markdown-preview.nvim")
 packadd("render-markdown.nvim")
 packadd("vim-tmux-navigator")
