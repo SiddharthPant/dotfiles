@@ -27,7 +27,7 @@ defaults that the config intentionally relies on.
 | Normal | `N` | Previous search result and center |
 | Normal | `<C-d>` | Half page down and center |
 | Normal | `<C-u>` | Half page up and center |
-| Normal | `<Esc>` | Clear search highlight and escape |
+| Normal | `<Esc>` | Close LSP hover/signature float and clear search highlight |
 | Terminal | `<Esc><Esc>` | Exit terminal mode |
 | Visual | `<leader>P` | Paste without yanking replaced text |
 | Normal | `J` | Join lines and keep cursor position |
@@ -93,11 +93,11 @@ defaults that the config intentionally relies on.
 | Normal | `<leader>tc` | Toggle system clipboard |
 | Normal | `<leader>tg` | Toggle git signs |
 | Normal | `<leader>tu` | Toggle undo tree |
-| Normal | `<leader>tb` | Toggle inline git blame |
+| Normal | `<leader>tb` | Toggle inline git blame, off by default |
 | Normal | `<leader>ts` | Toggle Supermaven |
 | Normal | `<leader>tm` | Toggle render-markdown |
-| Normal, LSP buffer | `<leader>th` | Toggle inlay hints |
-| Normal, LSP buffer | `<leader>tC` | Toggle CodeLens |
+| Normal, LSP buffer | `<leader>th` | Toggle inlay hints, off by default |
+| Normal, LSP buffer | `<leader>tC` | Toggle CodeLens, off by default |
 | Normal, LSP buffer | `<leader>ti` | Toggle inline completion |
 
 ## Code, Diagnostics, And LSP

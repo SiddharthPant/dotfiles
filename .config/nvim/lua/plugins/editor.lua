@@ -124,7 +124,7 @@ require("gitsigns").setup({
 		changedelete = { text = "▎" },
 	},
 	signcolumn = true,
-	current_line_blame = true,
+	current_line_blame = false,
 })
 
 require("codediff").setup({

@@ -8,8 +8,6 @@ local lsp_capabilities = vim.tbl_deep_extend("force", require("config.completion
 	},
 })
 
-vim.lsp.inlay_hint.enable(true)
-vim.lsp.codelens.enable(true)
 vim.lsp.inline_completion.enable(true)
 
 local diagnostic_signs = {
@@ -46,6 +44,13 @@ local function enable_lsp_buffer_features(client, bufnr)
 	if client:supports_method("textDocument/linkedEditingRange") then
 		vim.lsp.linked_editing_range.enable(true, { client_id = client.id })
 	end
+end
+
+local function notify_toggle(title, enabled)
+	require("snacks").notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), {
+		title = title,
+		level = "info",
+	})
 end
 
 local function lsp_on_attach(ev)
@@ -119,22 +124,25 @@ local function lsp_on_attach(ev)
 
 	if client:supports_method("textDocument/inlayHint") then
 		map("n", "<leader>th", function()
-			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+			local enabled = not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+			vim.lsp.inlay_hint.enable(enabled, { bufnr = bufnr })
+			notify_toggle("Inlay hints", enabled)
 		end, "Toggle Inlay Hints")
 	end
 
 	if client:supports_method("textDocument/codeLens") then
 		map("n", "<leader>tC", function()
-			vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+			local enabled = not vim.lsp.codelens.is_enabled({ bufnr = bufnr })
+			vim.lsp.codelens.enable(enabled, { bufnr = bufnr })
+			notify_toggle("CodeLens", enabled)
 		end, "Toggle CodeLens")
 	end
 
 	if client:supports_method("textDocument/inlineCompletion") then
 		map("n", "<leader>ti", function()
-			vim.lsp.inline_completion.enable(
-				not vim.lsp.inline_completion.is_enabled({ bufnr = bufnr }),
-				{ bufnr = bufnr }
-			)
+			local enabled = not vim.lsp.inline_completion.is_enabled({ bufnr = bufnr })
+			vim.lsp.inline_completion.enable(enabled, { bufnr = bufnr })
+			notify_toggle("Inline completion", enabled)
 		end, "Toggle Inline Completion")
 	end
 

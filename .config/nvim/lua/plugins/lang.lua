@@ -105,6 +105,22 @@ vim.api.nvim_create_autocmd("FileType", {
 local dap = require("dap")
 local dapui = require("dapui")
 
+local function notify_toggle(title, enabled)
+	require("snacks").notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), {
+		title = title,
+		level = "info",
+	})
+end
+
+local function dapui_is_open()
+	for _, layout in ipairs(require("dapui.windows").layouts) do
+		if layout:is_open() then
+			return true
+		end
+	end
+	return false
+end
+
 dapui.setup()
 
 dap.listeners.before.attach.dapui_config = function()
@@ -140,4 +156,5 @@ vim.keymap.set("n", "<leader>do", function()
 end, { desc = "Step out" })
 vim.keymap.set("n", "<leader>dt", function()
 	dapui.toggle()
+	notify_toggle("DAP UI", dapui_is_open())
 end, { desc = "Toggle DAP UI" })

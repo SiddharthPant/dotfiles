@@ -3,6 +3,37 @@ vim.g.maplocalleader = ","
 
 local map = vim.keymap.set
 
+local function notify_toggle(title, enabled)
+	require("snacks").notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), {
+		title = title,
+		level = "info",
+	})
+end
+
+local function filetype_visible(filetype)
+	for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+		local buf = vim.api.nvim_win_get_buf(win)
+		if vim.bo[buf].filetype == filetype then
+			return true
+		end
+	end
+	return false
+end
+
+local function close_lsp_floating_previews()
+	local closed = false
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local ok, preview_buf = pcall(function()
+			return vim.w[win].lsp_floating_bufnr
+		end)
+		if ok and preview_buf and vim.api.nvim_win_is_valid(win) then
+			pcall(vim.api.nvim_win_close, win, true)
+			closed = true
+		end
+	end
+	return closed
+end
+
 -- Movement and editing basics
 map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
@@ -14,7 +45,10 @@ map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-map("n", "<Esc>", "<cmd>nohlsearch<CR><Esc>", { silent = true, desc = "Escape and clear search highlight" })
+map("n", "<Esc>", function()
+	close_lsp_floating_previews()
+	vim.cmd.nohlsearch()
+end, { silent = true, desc = "Close LSP float and clear search highlight" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 map("x", "<leader>P", '"_dP', { desc = "Paste without yanking" })
 map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
@@ -63,22 +97,16 @@ end, { desc = "Treesitter Search" })
 
 -- Toggles
 map("n", "<leader>tf", function()
-	require("flash").toggle()
+	notify_toggle("Flash search", require("flash").toggle())
 end, { desc = "Toggle Flash Search" })
 map("n", "<leader>tw", function()
 	vim.wo.wrap = not vim.wo.wrap
-	require("snacks").notify(vim.wo.wrap and "Line wrap enabled" or "Line wrap disabled", {
-		title = "Wrap",
-		level = "info",
-	})
+	notify_toggle("Line wrap", vim.wo.wrap)
 end, { desc = "Toggle line wrap" })
 map("n", "<leader>td", function()
 	local enabled = vim.diagnostic.is_enabled()
 	vim.diagnostic.enable(not enabled)
-	require("snacks").notify(enabled and "Diagnostics disabled" or "Diagnostics enabled", {
-		title = "LSP Diagnostics",
-		level = "info",
-	})
+	notify_toggle("Diagnostics", not enabled)
 end, { desc = "Toggle diagnostics" })
 map("n", "<leader>tc", function()
 	local enabled = vim.list_contains(vim.opt.clipboard:get(), "unnamedplus")
@@ -87,27 +115,24 @@ map("n", "<leader>tc", function()
 	else
 		vim.opt.clipboard:append("unnamedplus")
 	end
-	require("snacks").notify(enabled and "System clipboard disabled" or "System clipboard enabled", {
-		title = "Clipboard",
-		level = "info",
-	})
+	notify_toggle("System clipboard", not enabled)
 end, { desc = "Toggle system clipboard" })
 map("n", "<leader>tg", function()
-	local config = require("gitsigns.config").config
-	require("gitsigns").toggle_signs(not config.signcolumn)
+	notify_toggle("Git signs", require("gitsigns").toggle_signs())
 end, { desc = "Toggle git signs" })
-map("n", "<leader>tu", "<cmd>UndotreeToggle<CR>", { desc = "Toggle undo tree" })
+map("n", "<leader>tu", function()
+	vim.cmd.UndotreeToggle()
+	vim.schedule(function()
+		notify_toggle("Undo tree", filetype_visible("undotree"))
+	end)
+end, { desc = "Toggle undo tree" })
 map("n", "<leader>tb", function()
-	require("gitsigns").toggle_current_line_blame()
+	notify_toggle("Inline blame", require("gitsigns").toggle_current_line_blame())
 end, { desc = "Toggle inline blame" })
 map("n", "<leader>ts", function()
 	vim.cmd("SupermavenToggle")
 	local api = require("supermaven-nvim.api")
-	local is_running = api.is_running()
-	require("snacks").notify(is_running and "Supermaven AI enabled" or "Supermaven AI disabled", {
-		title = "Supermaven",
-		level = "info",
-	})
+	notify_toggle("Supermaven AI", api.is_running())
 end, { desc = "Toggle Supermaven AI suggestions" })
 
 -- Path/project utilities

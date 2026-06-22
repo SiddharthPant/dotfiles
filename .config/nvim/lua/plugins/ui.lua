@@ -45,6 +45,13 @@ require("mini.statusline").setup({
 	use_icons = true,
 })
 
+local function notify_toggle(title, enabled)
+	require("snacks").notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), {
+		title = title,
+		level = "info",
+	})
+end
+
 vim.g.mkdp_filetypes = { "markdown" }
 vim.g.mkdp_theme = "light"
 
@@ -53,7 +60,14 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = markdown_group,
 	pattern = "markdown",
 	callback = function(args)
-		vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<CR>", {
+		vim.keymap.set("n", "<leader>mp", function()
+			vim.cmd.MarkdownPreviewToggle()
+			vim.schedule(function()
+				if vim.api.nvim_buf_is_valid(args.buf) then
+					notify_toggle("Markdown preview", vim.b[args.buf].MarkdownPreviewToggleBool == 1)
+				end
+			end)
+		end, {
 			buffer = args.buf,
 			desc = "Markdown preview toggle",
 		})
@@ -80,5 +94,7 @@ require("render-markdown").setup({
 })
 
 vim.keymap.set("n", "<leader>tm", function()
-	require("render-markdown").toggle()
+	local render_markdown = require("render-markdown")
+	render_markdown.toggle()
+	notify_toggle("Render markdown", render_markdown.get())
 end, { desc = "Toggle render-markdown" })
