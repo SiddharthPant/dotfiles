@@ -1,137 +1,161 @@
-vim.g.mapleader = " " -- space for leader
-vim.g.maplocalleader = " " -- space for localleader
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
--- better movement in wrapped text
-vim.keymap.set("n", "j", function()
+local map = vim.keymap.set
+
+-- Movement and editing basics
+map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
 end, { expr = true, silent = true, desc = "Down (wrap-aware)" })
-vim.keymap.set("n", "k", function()
+map("n", "k", function()
 	return vim.v.count == 0 and "gk" or "k"
 end, { expr = true, silent = true, desc = "Up (wrap-aware)" })
+map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+map("n", "<Esc>", "<cmd>nohlsearch<CR><Esc>", { silent = true, desc = "Escape and clear search highlight" })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+map("x", "<leader>P", '"_dP', { desc = "Paste without yanking" })
+map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
-vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
-vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR><Esc>", { silent = true, desc = "Escape and clear search highlight" })
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-vim.keymap.set("n", "]d", function()
-	vim.diagnostic.jump({ count = 1 })
-end, { desc = "Next diagnostic" })
-vim.keymap.set("n", "[d", function()
-	vim.diagnostic.jump({ count = -1 })
-end, { desc = "Previous diagnostic" })
+map("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+map("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+map("v", "<", "<gv", { desc = "Indent left and reselect" })
+map("v", ">", ">gv", { desc = "Indent right and reselect" })
 
-vim.keymap.set("x", "<leader>P", '"_dP', { desc = "Paste without yanking" })
-vim.keymap.set("n", "<leader>x", function()
+-- Windows, splits, and tmux panes
+map("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", { desc = "Navigate left (tmux aware)" })
+map("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", { desc = "Navigate down (tmux aware)" })
+map("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { desc = "Navigate up (tmux aware)" })
+map("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { desc = "Navigate right (tmux aware)" })
+
+map("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
+map("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
+map("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
+map("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
+map("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+map("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+
+-- Buffers
+map("n", "<leader>bd", function()
 	require("snacks").bufdelete()
-end, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
+end, { desc = "Delete buffer" })
+map("n", "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", { desc = "Delete buffers to the left" })
+map("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>", { desc = "Delete buffers to the right" })
+map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>", { desc = "Delete other buffers" })
 
-vim.keymap.set("n", "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", { desc = "Delete buffers to the left" })
-vim.keymap.set("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>", { desc = "Delete buffers to the right" })
-vim.keymap.set("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>", { desc = "Delete other buffers" })
-
--- Tmux Navigator - seamless navigation between Neovim and tmux panes
-vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { desc = "Navigate left (tmux aware)" })
-vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>", { desc = "Navigate down (tmux aware)" })
-vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>", { desc = "Navigate up (tmux aware)" })
-vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>", { desc = "Navigate right (tmux aware)" })
-
-vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
-vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
-vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
-vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
-vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
-
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
-vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
-vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
-
-vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
-vim.keymap.set({ "n", "x", "o" }, "s", function()
+-- Flash
+map({ "n", "x", "o" }, "s", function()
 	require("flash").jump()
 end, { desc = "Flash" })
-vim.keymap.set({ "n", "o", "x" }, "S", function()
+map({ "n", "o", "x" }, "S", function()
 	require("flash").treesitter()
 end, { desc = "Flash Treesitter" })
-vim.keymap.set("o", "r", function()
+map("o", "r", function()
 	require("flash").remote()
 end, { desc = "Remote Flash" })
-vim.keymap.set({ "o", "x" }, "R", function()
+map({ "o", "x" }, "R", function()
 	require("flash").treesitter_search()
 end, { desc = "Treesitter Search" })
-vim.keymap.set("n", "<leader>tf", function()
+
+-- Toggles
+map("n", "<leader>tf", function()
 	require("flash").toggle()
 end, { desc = "Toggle Flash Search" })
-vim.keymap.set("n", "<leader>tw", function()
+map("n", "<leader>tw", function()
 	vim.wo.wrap = not vim.wo.wrap
 	require("snacks").notify(vim.wo.wrap and "Line wrap enabled" or "Line wrap disabled", {
 		title = "Wrap",
-		icon = vim.wo.wrap and "↩" or "↪",
 		level = "info",
 	})
 end, { desc = "Toggle line wrap" })
-vim.keymap.set({ "n", "o", "x" }, "<leader>vi", function()
-	require("flash").treesitter({
-		actions = {
-			["<C-Space>"] = "next",
-			["<BS>"] = "prev",
-		},
+map("n", "<leader>td", function()
+	local enabled = vim.diagnostic.is_enabled()
+	vim.diagnostic.enable(not enabled)
+	require("snacks").notify(enabled and "Diagnostics disabled" or "Diagnostics enabled", {
+		title = "LSP Diagnostics",
+		level = "info",
 	})
-end, { desc = "Treesitter Incremental Selection" })
+end, { desc = "Toggle diagnostics" })
+map("n", "<leader>tc", function()
+	local enabled = vim.list_contains(vim.opt.clipboard:get(), "unnamedplus")
+	if enabled then
+		vim.opt.clipboard:remove("unnamedplus")
+	else
+		vim.opt.clipboard:append("unnamedplus")
+	end
+	require("snacks").notify(enabled and "System clipboard disabled" or "System clipboard enabled", {
+		title = "Clipboard",
+		level = "info",
+	})
+end, { desc = "Toggle system clipboard" })
+map("n", "<leader>tg", function()
+	local config = require("gitsigns.config").config
+	require("gitsigns").toggle_signs(not config.signcolumn)
+end, { desc = "Toggle git signs" })
+map("n", "<leader>tu", "<cmd>UndotreeToggle<CR>", { desc = "Toggle undo tree" })
+map("n", "<leader>tb", function()
+	require("gitsigns").toggle_current_line_blame()
+end, { desc = "Toggle inline blame" })
+map("n", "<leader>ts", function()
+	vim.cmd("SupermavenToggle")
+	local api = require("supermaven-nvim.api")
+	local is_running = api.is_running()
+	require("snacks").notify(is_running and "Supermaven AI enabled" or "Supermaven AI disabled", {
+		title = "Supermaven",
+		level = "info",
+	})
+end, { desc = "Toggle Supermaven AI suggestions" })
 
-vim.keymap.set("n", "<leader>pa", function() -- show file path
+-- Path/project utilities
+map("n", "<leader>pa", function()
 	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
 	print("file:", path)
 end, { desc = "Copy full file path" })
 
-vim.keymap.set("n", "<leader>td", function()
-	local enabled = vim.diagnostic.is_enabled()
-	vim.diagnostic.enable(not enabled)
-	require("snacks").notify(enabled and "Diagnostics disabled" or "Diagnostics enabled", {
-		title = "LSP Diagnostics",
-		icon = enabled and "🚫" or "🩺",
-		level = "info",
-	})
-end, { desc = "Toggle diagnostics" })
-
--- Yank to system clipboard (visual and normal mode)
-vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
-vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Yank line to system clipboard" })
-
--- Delete to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>d", '"+d', { desc = "Delete to system clipboard" })
-vim.keymap.set("n", "<leader>D", '"+D', { desc = "Delete line to system clipboard" })
-
--- Snacks Explorer (replaces nvim-tree)
-vim.keymap.set("n", "<leader>e", function()
+-- Explorer
+map("n", "<leader>e", function()
 	require("snacks").explorer()
 end, { desc = "Toggle Explorer" })
 
--- fff.nvim file finder + live grep (replaces snacks picker for files/grep)
-local function find_files()
+-- Find/search
+map("n", "<leader><leader>", function()
 	require("fff").find_files()
-end
-
-vim.keymap.set("n", "<leader><leader>", find_files, { desc = "Find Files" })
-vim.keymap.set("n", "<leader>ff", find_files, { desc = "Find Files" })
-vim.keymap.set("n", "<leader>fo", function()
+end, { desc = "Find files" })
+map("n", "<leader>fo", function()
 	require("snacks").picker.recent()
-end, { desc = "Find Old Files" })
-vim.keymap.set("n", "<leader>fg", function()
+end, { desc = "Find old files" })
+map("n", "<leader>fg", function()
 	require("fff").live_grep()
-end, { desc = "Live Grep" })
-vim.keymap.set("n", "<leader>fc", function()
+end, { desc = "Live grep" })
+map("n", "<leader>fc", function()
 	require("fff").live_grep({ query = vim.fn.expand("<cword>") })
 end, { desc = "Grep current word" })
-vim.keymap.set({ "n", "x" }, "<leader>rr", function()
+map("n", "<leader>fb", function()
+	require("snacks").picker.buffers()
+end, { desc = "Find buffers" })
+map("n", "<leader>fh", function()
+	require("snacks").picker.help()
+end, { desc = "Find help" })
+map("n", "<leader>fk", function()
+	require("snacks").picker.keymaps()
+end, { desc = "Find keymaps" })
+map("n", "<leader>fx", function()
+	require("snacks").picker.diagnostics_buffer()
+end, { desc = "Find diagnostics (buffer)" })
+map("n", "<leader>fX", function()
+	require("snacks").picker.diagnostics()
+end, { desc = "Find diagnostics (workspace)" })
+map("n", "<leader>fn", function()
+	require("snacks").notifier.show_history()
+end, { desc = "Show notifications" })
+
+-- Replace
+map({ "n", "x" }, "<leader>rr", function()
 	require("grug-far").open({
 		prefills = {
 			paths = vim.fn.expand("%"),
@@ -139,82 +163,25 @@ vim.keymap.set({ "n", "x" }, "<leader>rr", function()
 		visualSelectionUsage = "auto-detect",
 	})
 end, { desc = "Search and replace in file" })
-vim.keymap.set({ "n", "x" }, "<leader>rR", function()
+map({ "n", "x" }, "<leader>rR", function()
 	require("grug-far").open({ visualSelectionUsage = "auto-detect" })
 end, { desc = "Search and replace" })
-vim.keymap.set("n", "<leader>fb", function()
-	require("snacks").picker.buffers()
-end, { desc = "Find Buffers" })
-vim.keymap.set("n", "<leader>fh", function()
-	require("snacks").picker.help()
-end, { desc = "Find Help" })
-vim.keymap.set("n", "<leader>fk", function()
-	require("snacks").picker.keymaps()
-end, { desc = "Find Keymaps" })
-vim.keymap.set("n", "<leader>fx", function()
-	require("snacks").picker.diagnostics_buffer()
-end, { desc = "Find Diagnostics (Buffer)" })
-vim.keymap.set("n", "<leader>fX", function()
-	require("snacks").picker.diagnostics()
-end, { desc = "Find Diagnostics (Workspace)" })
 
--- Snacks Git
-vim.keymap.set("n", "<leader>gb", function()
+-- Git
+map("n", "<leader>gb", function()
 	require("snacks").git.blame_line()
-end, { desc = "Git Blame Line" })
-vim.keymap.set("n", "<leader>gB", function()
+end, { desc = "Git blame line" })
+map("n", "<leader>gB", function()
 	require("snacks").gitbrowse()
-end, { desc = "Git Browse" })
+end, { desc = "Git browse" })
+map("n", "<leader>gs", function()
+	require("snacks").picker.git_status()
+end, { desc = "Git status" })
+map("n", "<leader>gd", ":CodeDiff<CR>", { desc = "Git diff view (codediff)" })
+map("n", "<leader>gg", function()
+	require("snacks").lazygit()
+end, { desc = "Open lazygit" })
 
--- Snacks Buffer Delete (replaces mini.bufremove)
-vim.keymap.set("n", "<leader>bd", function()
-	require("snacks").bufdelete()
-end, { desc = "Delete Buffer" })
-
--- Snacks Notifications
-vim.keymap.set("n", "<leader>fn", function()
-	require("snacks").notifier.show_history()
-end, { desc = "Show Notifications" })
-
--- Close current buffer with leader + bc (buffer close)
-vim.keymap.set("n", "<leader>bc", function()
-	local current = vim.api.nvim_get_current_buf()
-	local buffers = vim.tbl_filter(function(buf)
-		return vim.bo[buf].buflisted and vim.api.nvim_buf_is_valid(buf)
-	end, vim.api.nvim_list_bufs())
-
-	local next_buf = nil
-	for i, buf in ipairs(buffers) do
-		if buf == current then
-			next_buf = buffers[i + 1] or buffers[i - 1]
-			break
-		end
-	end
-
-	if next_buf and next_buf ~= current then
-		vim.api.nvim_set_current_buf(next_buf)
-	elseif #buffers > 1 then
-		for _, buf in ipairs(buffers) do
-			if buf ~= current then
-				vim.api.nvim_set_current_buf(buf)
-				break
-			end
-		end
-	end
-
-	local ok, snacks = pcall(require, "snacks")
-	if ok then
-		snacks.bufdelete({ buf = current })
-	else
-		vim.cmd("bdelete! " .. current)
-	end
-end, { desc = "Close current buffer" })
-
--- Tab navigation keymaps
-vim.keymap.set("n", "<Tab>", ":bnext<CR>", { silent = true, desc = "Next buffer" })
-vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>", { silent = true, desc = "Previous buffer" })
-
--- Keep ]h/[h consistent everywhere; plain diff windows still use Vim's native motions underneath.
 local function nav_hunk(direction, diff_key)
 	if vim.wo.diff then
 		vim.cmd.normal({ diff_key, bang = true })
@@ -223,54 +190,27 @@ local function nav_hunk(direction, diff_key)
 	require("gitsigns").nav_hunk(direction)
 end
 
-vim.keymap.set("n", "]h", function()
+map("n", "]h", function()
 	nav_hunk("next", "]c")
 end, { desc = "Next git hunk" })
-vim.keymap.set("n", "[h", function()
+map("n", "[h", function()
 	nav_hunk("prev", "[c")
 end, { desc = "Previous git hunk" })
-vim.keymap.set("n", "]H", function()
+map("n", "]H", function()
 	require("gitsigns").nav_hunk("last")
 end, { desc = "Last git hunk" })
-vim.keymap.set("n", "[H", function()
+map("n", "[H", function()
 	require("gitsigns").nav_hunk("first")
 end, { desc = "First git hunk" })
-vim.keymap.set("n", "<leader>hs", function()
+map("n", "<leader>hs", function()
 	require("gitsigns").stage_hunk()
 end, { desc = "Stage hunk" })
-vim.keymap.set("n", "<leader>hr", function()
+map("n", "<leader>hr", function()
 	require("gitsigns").reset_hunk()
 end, { desc = "Reset hunk" })
-vim.keymap.set("n", "<leader>hp", function()
+map("n", "<leader>hp", function()
 	require("gitsigns").preview_hunk()
 end, { desc = "Preview hunk" })
-vim.keymap.set("n", "<leader>hb", function()
-	require("gitsigns").blame_line({ full = true })
-end, { desc = "Blame line" })
-vim.keymap.set("n", "<leader>hB", function()
-	require("gitsigns").toggle_current_line_blame()
-end, { desc = "Toggle inline blame" })
-vim.keymap.set("n", "<leader>uG", function()
-	local config = require("gitsigns.config").config
-	require("gitsigns").toggle_signs(not config.signcolumn)
-end, { desc = "Toggle git signs" })
-vim.keymap.set("n", "<leader>uu", "<cmd>UndotreeToggle<CR>", { desc = "Toggle undo tree" })
-vim.keymap.set("n", "<leader>gs", function()
-	require("snacks").picker.git_status()
-end, { desc = "Git status (all files with diff)" })
-vim.keymap.set("n", "<leader>gd", ":CodeDiff<cr>", { desc = "Git diff view (codediff)" })
-vim.keymap.set("n", "<leader>gg", function()
-	require("snacks").lazygit()
-end, { desc = "Open lazygit" })
 
--- Supermaven toggle (blink.cmp unaffected)
-vim.keymap.set("n", "<leader>ts", function()
-	vim.cmd("SupermavenToggle")
-	local api = require("supermaven-nvim.api")
-	local is_running = api.is_running()
-	require("snacks").notify(is_running and "Supermaven AI enabled" or "Supermaven AI disabled", {
-		title = "Supermaven",
-		icon = is_running and "✨" or "🚫",
-		level = "info",
-	})
-end, { desc = "Toggle Supermaven AI suggestions" })
+-- Sessions and quit
+map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })

@@ -1,3 +1,5 @@
 require("plugins.pack")
 require("plugins.theme")
 require("plugins.editor")
+require("plugins.ui")
+require("plugins.lang")

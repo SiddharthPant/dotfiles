@@ -1,5 +1,4 @@
 local augroup = require("config.autocmds").group
-local folds = require("config.folds")
 local lsp_capabilities = vim.tbl_deep_extend("force", require("config.completion").capabilities, {
 	workspace = {
 		fileOperations = {
@@ -8,6 +7,10 @@ local lsp_capabilities = vim.tbl_deep_extend("force", require("config.completion
 		},
 	},
 })
+
+vim.lsp.inlay_hint.enable(true)
+vim.lsp.codelens.enable(true)
+vim.lsp.inline_completion.enable(true)
 
 local diagnostic_signs = {
 	Error = " ",
@@ -40,34 +43,8 @@ vim.diagnostic.config({
 })
 
 local function enable_lsp_buffer_features(client, bufnr)
-	folds.refresh(bufnr)
-
-	if client:supports_method("textDocument/inlayHint") then
-		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-	end
-
-	if client:supports_method("textDocument/codeLens") then
-		vim.lsp.codelens.enable(true, { bufnr = bufnr })
-		if not vim.b[bufnr].lsp_codelens_refresh then
-			vim.b[bufnr].lsp_codelens_refresh = true
-			vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-				group = augroup,
-				buffer = bufnr,
-				callback = function()
-					if vim.lsp.codelens.is_enabled({ bufnr = bufnr }) then
-						pcall(vim.lsp.codelens.enable, true, { bufnr = bufnr })
-					end
-				end,
-			})
-		end
-	end
-
 	if client:supports_method("textDocument/linkedEditingRange") then
 		vim.lsp.linked_editing_range.enable(true, { client_id = client.id })
-	end
-
-	if client:supports_method("textDocument/inlineCompletion") then
-		vim.lsp.inline_completion.enable(true, { bufnr = bufnr, client_id = client.id })
 	end
 end
 
@@ -95,25 +72,25 @@ local function lsp_on_attach(ev)
 		vim.diagnostic.open_float({ scope = "cursor" })
 	end, "Cursor Diagnostics")
 
-	-- LSP Pickers (using snacks.nvim instead of fzf-lua)
-	map("n", "<leader>fd", function()
+	-- LSP list pickers (using snacks.nvim instead of fzf-lua)
+	map("n", "<leader>ld", function()
 		require("snacks").picker.lsp_definitions()
-	end, "Find definitions")
-	map("n", "<leader>fr", function()
+	end, "LSP definitions")
+	map("n", "<leader>lr", function()
 		require("snacks").picker.lsp_references()
-	end, "Find references")
-	map("n", "<leader>ft", function()
+	end, "LSP references")
+	map("n", "<leader>lt", function()
 		require("snacks").picker.lsp_type_definitions()
-	end, "Find type definitions")
-	map("n", "<leader>fs", function()
+	end, "LSP type definitions")
+	map("n", "<leader>ls", function()
 		require("snacks").picker.lsp_symbols()
-	end, "Find document symbols")
-	map("n", "<leader>fw", function()
+	end, "LSP document symbols")
+	map("n", "<leader>lw", function()
 		require("snacks").picker.lsp_workspace_symbols()
-	end, "Find workspace symbols")
-	map("n", "<leader>fi", function()
+	end, "LSP workspace symbols")
+	map("n", "<leader>li", function()
 		require("snacks").picker.lsp_implementations()
-	end, "Find implementations")
+	end, "LSP implementations")
 
 	if client:supports_method("textDocument/codeAction", bufnr) then
 		map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
@@ -141,20 +118,19 @@ local function lsp_on_attach(ev)
 	end
 
 	if client:supports_method("textDocument/inlayHint") then
-		map("n", "<leader>ch", function()
+		map("n", "<leader>th", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
 		end, "Toggle Inlay Hints")
 	end
 
 	if client:supports_method("textDocument/codeLens") then
-		map({ "n", "x" }, "<leader>cc", vim.lsp.codelens.run, "Run CodeLens")
-		map("n", "<leader>cC", function()
+		map("n", "<leader>tC", function()
 			vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
 		end, "Toggle CodeLens")
 	end
 
 	if client:supports_method("textDocument/inlineCompletion") then
-		map("n", "<leader>ci", function()
+		map("n", "<leader>ti", function()
 			vim.lsp.inline_completion.enable(
 				not vim.lsp.inline_completion.is_enabled({ bufnr = bufnr }),
 				{ bufnr = bufnr }
@@ -162,9 +138,9 @@ local function lsp_on_attach(ev)
 		end, "Toggle Inline Completion")
 	end
 
-	map("n", "<leader>cL", function()
+	map("n", "<leader>lR", function()
 		for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
-			vim.lsp.stop_client(c.id, true)
+			c:stop(true)
 		end
 		vim.defer_fn(function()
 			vim.cmd("edit")
@@ -175,16 +151,8 @@ local function lsp_on_attach(ev)
 end
 
 vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lsp_on_attach })
-vim.api.nvim_create_autocmd("LspDetach", {
-	group = augroup,
-	callback = function(ev)
-		vim.schedule(function()
-			folds.refresh(ev.buf)
-		end)
-	end,
-})
 
-vim.keymap.set("n", "<leader>qd", function()
+vim.keymap.set("n", "<leader>cq", function()
 	if vim.tbl_isempty(vim.diagnostic.get(0)) then
 		require("snacks").notify("No diagnostics available", {
 			title = "LSP Diagnostics",
@@ -275,7 +243,7 @@ vim.lsp.config("clangd", {})
 vim.lsp.config("taplo", {})
 vim.lsp.config("templ", {})
 
--- rust_analyzer is started by rustaceanvim (see lua/plugins/editor.lua),
+-- rust_analyzer is started by rustaceanvim (see lua/plugins/lang.lua),
 -- which owns its server settings and DAP wiring. Do not add it here.
 
 -- Note: LSP servers should be installed manually via your package manager

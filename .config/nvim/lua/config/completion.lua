@@ -8,8 +8,8 @@ require("supermaven-nvim").setup({
 	disable_keymaps = true,
 })
 
--- Start supermaven then immediately stop it so it's "off" by default
--- User can toggle on with :SupermavenToggle or <leader>ts
+-- Supermaven needs to initialize once before its toggle command behaves
+-- consistently; start it, then stop it so AI suggestions are off by default.
 vim.defer_fn(function()
 	local api = require("supermaven-nvim.api")
 	if api.is_running() then
@@ -34,8 +34,8 @@ blink.setup({
 		["<CR>"] = { "accept", "fallback" },
 		["<C-n>"] = { "select_next", "fallback" },
 		["<C-p>"] = { "select_prev", "fallback" },
-		["<Tab>"] = { "snippet_forward", "fallback" },
-		["<S-Tab>"] = { "snippet_backward", "fallback" },
+		["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+		["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
 	},
 	appearance = { nerd_font_variant = "mono" },
 	completion = {
