@@ -1,4 +1,11 @@
-require("mini.pairs").setup()
+local mini_pairs = require("mini.pairs")
+
+mini_pairs.setup({
+	mappings = {
+		["<"] = { action = "open", pair = "<>", neigh_pattern = "^[^%s\\]" },
+		[">"] = { action = "close", pair = "<>", neigh_pattern = "^[^\\]" },
+	},
+})
 
 require("mini.surround").setup({
 	mappings = {
