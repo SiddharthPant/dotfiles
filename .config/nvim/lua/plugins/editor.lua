@@ -71,6 +71,15 @@ require("snacks").setup({
 						position = "right",
 					},
 				},
+				actions = {
+					explorer_update = function(picker)
+						local cwd = picker:cwd()
+						require("snacks.explorer.git").refresh(cwd)
+						require("snacks.explorer.tree"):refresh(cwd)
+						picker.list:set_target()
+						picker:find()
+					end,
+				},
 				win = {
 					list = {
 						keys = {
