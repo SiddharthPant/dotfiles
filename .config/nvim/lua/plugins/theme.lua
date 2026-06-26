@@ -1,5 +1,6 @@
 require("catppuccin").setup({
 	flavour = "mocha",
+	transparent_background = true,
 	integrations = {
 		blink_cmp = true,
 		bufferline = true,
