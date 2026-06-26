@@ -181,10 +181,28 @@ require("codediff").setup({
 	},
 })
 
+local bufferline_base = require("catppuccin.special.bufferline").get_theme()
+local bufferline_highlights = function()
+	local palette = require("catppuccin.palettes").get_palette()
+	local hl = bufferline_base()
+	for name, spec in pairs(hl) do
+		if name:match("_selected$") then
+			spec.bg = palette.surface0
+			spec.underline = true
+			spec.sp = palette.lavender
+		else
+			spec.underline = true
+			spec.sp = palette.surface1
+		end
+	end
+	return hl
+end
+
 require("bufferline").setup({
+	highlights = bufferline_highlights,
 	options = {
 		numbers = "buffer_id",
-		indicator = { style = "underline" },
+		indicator = { style = "none" },
 		separator_style = "thin",
 		show_buffer_icons = false,
 		show_close_icon = false,
