@@ -64,6 +64,9 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/b0o/SchemaStore.nvim",
+	"https://github.com/tpope/vim-dadbod",
+	"https://github.com/kristijanhusak/vim-dadbod-ui",
+	"https://github.com/kristijanhusak/vim-dadbod-completion",
 	"https://www.github.com/echasnovski/mini.nvim", -- pairs + surround + clue
 	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/mbbill/undotree",
@@ -111,6 +114,9 @@ packadd("flash.nvim")
 packadd("LuaSnip")
 packadd("friendly-snippets")
 packadd("SchemaStore.nvim")
+packadd("vim-dadbod")
+packadd("vim-dadbod-ui")
+packadd("vim-dadbod-completion")
 packadd("mini.nvim") -- pairs + surround + clue + statusline
 packadd("bufferline.nvim")
 packadd("undotree")

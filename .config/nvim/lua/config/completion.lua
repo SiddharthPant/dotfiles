@@ -50,8 +50,14 @@ blink.setup({
 		default = { "lsp", "path", "buffer", "snippets" },
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
+			sql = { "dadbod", "snippets", "buffer" },
 		},
 		providers = {
+			dadbod = {
+				name = "Dadbod",
+				module = "vim_dadbod_completion.blink",
+				score_offset = 100,
+			},
 			lazydev = {
 				name = "LazyDev",
 				module = "lazydev.integrations.blink",

@@ -66,9 +66,9 @@ local function debounce_buffer(ms, fn)
 	end
 end
 
--- Run linting after reads, insert exits, and writes with a small debounce.
+-- Run linting after reads, buffer entry, insert exits, and writes with a small debounce.
 -- Keep golangci-lint save-only; gopls already covers fast edit-time feedback.
-vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave", "BufWritePost" }, {
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "InsertLeave", "BufWritePost" }, {
 	group = augroup,
 	callback = debounce_buffer(100, lint_buffer),
 })

@@ -63,6 +63,15 @@ require("lazydev").setup({
 	},
 })
 
+vim.g.db_ui_save_location = vim.fn.stdpath("data") .. "/dadbod_ui"
+vim.g.db_ui_use_nerd_fonts = 1
+
+vim.keymap.set("n", "<leader>su", "<cmd>DBUIToggle<CR>", { desc = "Toggle DB UI" })
+vim.keymap.set("n", "<leader>sa", "<cmd>DBUIAddConnection<CR>", { desc = "Add DB connection" })
+vim.keymap.set("n", "<leader>sf", "<cmd>DBUIFindBuffer<CR>", { desc = "Find DB buffer" })
+vim.keymap.set("n", "<leader>sr", "<cmd>DBUIRenameBuffer<CR>", { desc = "Rename DB buffer" })
+vim.keymap.set("n", "<leader>sR", "<cmd>DBCompletionClearCache<CR>", { desc = "Clear DB completion cache" })
+
 require("snacks").setup({
 	bigfile = { enabled = true },
 	bufdelete = { enabled = true },

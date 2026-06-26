@@ -8,6 +8,12 @@ require("conform").setup({
 	default_format_opts = {
 		lsp_format = "never",
 	},
+	formatters = {
+		sqlfluff = {
+			require_cwd = false,
+			exit_codes = { 0, 1 },
+		},
+	},
 	notify_no_formatters = false,
 	format_on_save = function(bufnr)
 		if vim.bo[bufnr].buftype ~= "" or not vim.bo[bufnr].modifiable then
