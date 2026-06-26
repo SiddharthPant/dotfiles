@@ -2,6 +2,11 @@ local function setup_treesitter()
 	local treesitter = require("nvim-treesitter")
 	treesitter.setup({})
 
+	local treesitter_runtime = vim.fn.stdpath("data") .. "/site/pack/core/opt/nvim-treesitter/runtime"
+	if vim.fn.isdirectory(treesitter_runtime) == 1 then
+		vim.opt.runtimepath:append(treesitter_runtime)
+	end
+
 	local ensure_installed = {
 		"vim",
 		"vimdoc",
@@ -21,20 +26,31 @@ local function setup_treesitter()
 		"vue",
 		"svelte",
 		"bash",
+		"sql",
 	}
 
 	treesitter.install(ensure_installed)
+
+	local function start_treesitter(bufnr, filetype)
+		local lang = vim.treesitter.language.get_lang(filetype)
+		if lang and vim.list_contains(treesitter.get_installed(), lang) then
+			pcall(vim.treesitter.start, bufnr, lang)
+		end
+	end
 
 	local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
 	vim.api.nvim_create_autocmd("FileType", {
 		group = group,
 		callback = function(args)
-			local lang = vim.treesitter.language.get_lang(args.match)
-			if vim.list_contains(treesitter.get_installed(), lang) then
-				vim.treesitter.start(args.buf)
-			end
+			start_treesitter(args.buf, args.match)
 		end,
 	})
+
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].filetype ~= "" then
+			start_treesitter(bufnr, vim.bo[bufnr].filetype)
+		end
+	end
 end
 
 setup_treesitter()
@@ -74,10 +90,21 @@ require("snacks").setup({
 				actions = {
 					explorer_update = function(picker)
 						local cwd = picker:cwd()
-						require("snacks.explorer.git").refresh(cwd)
+						local git = require("snacks.explorer.git")
+						local git_untracked = picker.opts["git_untracked"] ~= false
 						require("snacks.explorer.tree"):refresh(cwd)
-						picker.list:set_target()
-						picker:find()
+						git.update(cwd, {
+							force = true,
+							untracked = git_untracked,
+							on_update = function()
+								if picker.closed then
+									return
+								end
+								picker.list:set_target()
+								picker:find()
+							end,
+						})
+						require("snacks.explorer.actions").update(picker, { refresh = true })
 					end,
 				},
 				win = {
