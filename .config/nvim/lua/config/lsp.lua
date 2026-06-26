@@ -40,7 +40,7 @@ vim.diagnostic.config({
 	},
 })
 
-local function enable_lsp_buffer_features(client, bufnr)
+local function enable_lsp_buffer_features(client)
 	if client:supports_method("textDocument/linkedEditingRange") then
 		vim.lsp.linked_editing_range.enable(true, { client_id = client.id })
 	end
@@ -155,7 +155,7 @@ local function lsp_on_attach(ev)
 		end, 100)
 	end, "Restart LSP")
 
-	enable_lsp_buffer_features(client, bufnr)
+	enable_lsp_buffer_features(client)
 end
 
 vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lsp_on_attach })
