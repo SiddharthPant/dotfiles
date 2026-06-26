@@ -24,6 +24,7 @@ lint.linters_by_ft = {
 	go = { "golangcilint" },
 	rust = {}, -- rust-analyzer handles linting via clippy
 	toml = {},
+	sql = { "sqlfluff" },
 }
 
 local lint_timers = {}

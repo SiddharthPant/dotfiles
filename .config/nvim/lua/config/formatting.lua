@@ -43,6 +43,7 @@ require("conform").setup({
 		rust = { "rustfmt" },
 		templ = { "templ" },
 		toml = { "taplo" },
+		sql = { "sqlfluff" },
 	},
 })
 
