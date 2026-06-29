@@ -15,6 +15,7 @@ Common links:
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
 - `.config/zed/` -> `~/.config/zed`
+- `.config/emacs/` -> `~/.config/emacs`
 - `.config/starship.toml` -> `~/.config/starship.toml`
 - `.config/mise/config.toml` -> `~/.config/mise/config.toml`
 
@@ -40,6 +41,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
 - `.config/zed/`: Zed editor configuration
+- `.config/emacs/`: Emacs configuration
 - `.config/starship.toml`: Starship prompt configuration
 - `.config/mise/config.toml`: Global mise tools
 - `zshrc/macos/.zshrc`: macOS shell configuration

@@ -1,0 +1,19 @@
+# straight.el package manager (clones + builds)
+/straight/
+
+# package.el archives
+/elpa/
+
+# Compiled tree-sitter grammars
+/tree-sitter/
+
+# Emacs session / state files
+/auto-save-list/
+/history
+/recentf
+/custom.el
+
+# Backup and lock files
+*~
+.\#*
+\#*
