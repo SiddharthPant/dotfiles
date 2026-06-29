@@ -12,6 +12,7 @@
 /history
 /recentf
 /custom.el
+/transient/
 
 # Backup and lock files
 *~
