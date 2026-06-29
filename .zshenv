@@ -12,9 +12,9 @@ export FFF_FRECENCY_DB="$HOME/.cache/nvim/fff_frecency"
 export FFF_HISTORY_DB="$HOME/.local/share/nvim/fff_history"
 
 if [ -d "$HOME/Library/Application Support/Herd/config/php/83" ]; then
-	export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
+  export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
 fi
 
 if [ -d "$HOME/Library/Application Support/Herd/config/php/84" ]; then
-	export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
+  export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
 fi
