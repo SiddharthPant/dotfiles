@@ -66,8 +66,8 @@ map("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", { desc = "Navigate down (tmux awa
 map("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { desc = "Navigate up (tmux aware)" })
 map("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { desc = "Navigate right (tmux aware)" })
 
-map("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
-map("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
+map("n", "<leader>|", "<cmd>vsplit<CR>", { desc = "Split window vertically" })
+map("n", "<leader>-", "<cmd>split<CR>", { desc = "Split window horizontally" })
 map("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
 map("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
 map("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
@@ -82,9 +82,13 @@ map("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>", { desc = "Delete buffers
 map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>", { desc = "Delete other buffers" })
 
 -- Flash
-map({ "n", "x", "o" }, "s", function()
+map({ "x", "o" }, "s", function()
 	require("flash").jump()
 end, { desc = "Flash" })
+-- `s` is intentionally not mapped in normal mode so it cannot shadow the
+-- `<leader>s` search group (no which-key here to intercept the timeout).
+-- Use `cl` / `cc` for the builtin substitute behavior, or enter Flash from
+-- visual mode (v then s).
 map({ "n", "o", "x" }, "S", function()
 	require("flash").treesitter()
 end, { desc = "Flash Treesitter" })
@@ -148,16 +152,16 @@ map("n", "<leader>e", function()
 end, { desc = "Toggle Explorer" })
 
 -- Find/search
-map("n", "<leader><leader>", function()
+map("n", "<leader><Space>", function()
 	require("fff").find_files()
 end, { desc = "Find files" })
 map("n", "<leader>fo", function()
 	require("snacks").picker.recent()
 end, { desc = "Find old files" })
-map("n", "<leader>fg", function()
+map("n", "<leader>/", function()
 	require("fff").live_grep()
 end, { desc = "Live grep" })
-map("n", "<leader>fc", function()
+map("n", "<leader>sw", function()
 	require("fff").live_grep({ query = vim.fn.expand("<cword>") })
 end, { desc = "Grep current word" })
 map("n", "<leader>fb", function()
@@ -180,7 +184,7 @@ map("n", "<leader>fn", function()
 end, { desc = "Show notifications" })
 
 -- Replace
-map({ "n", "x" }, "<leader>rr", function()
+map({ "n", "x" }, "<leader>sr", function()
 	require("grug-far").open({
 		prefills = {
 			paths = vim.fn.expand("%"),
@@ -188,7 +192,7 @@ map({ "n", "x" }, "<leader>rr", function()
 		visualSelectionUsage = "auto-detect",
 	})
 end, { desc = "Search and replace in file" })
-map({ "n", "x" }, "<leader>rR", function()
+map({ "n", "x" }, "<leader>sR", function()
 	require("grug-far").open({ visualSelectionUsage = "auto-detect" })
 end, { desc = "Search and replace" })
 

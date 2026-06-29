@@ -65,7 +65,15 @@ local function lsp_on_attach(ev)
 	end
 
 	-- Neovim already provides modern defaults for: gra, grn, grr, gri, grt, gO, K
-	map("n", "<leader>lv", function()
+	-- but `gd` is still Vim's file-local builtin. Override it to use the LSP
+	-- cross-file definition jump when a server supports it; otherwise the
+	-- builtin behavior is preserved by not mapping.
+	if client:supports_method("textDocument/definition", bufnr) then
+		map("n", "gd", vim.lsp.buf.definition, "Goto definition")
+		map("n", "gD", vim.lsp.buf.declaration, "Goto declaration")
+	end
+
+	map("n", "<leader>cv", function()
 		vim.cmd("vsplit")
 		vim.lsp.buf.definition()
 	end, "LSP definition in split")
@@ -78,22 +86,22 @@ local function lsp_on_attach(ev)
 	end, "Cursor Diagnostics")
 
 	-- LSP list pickers (using snacks.nvim instead of fzf-lua)
-	map("n", "<leader>ld", function()
+	map("n", "<leader>cg", function()
 		require("snacks").picker.lsp_definitions()
 	end, "LSP definitions")
-	map("n", "<leader>lr", function()
+	map("n", "<leader>cu", function()
 		require("snacks").picker.lsp_references()
-	end, "LSP references")
-	map("n", "<leader>lt", function()
+	end, "LSP references (usages)")
+	map("n", "<leader>ct", function()
 		require("snacks").picker.lsp_type_definitions()
 	end, "LSP type definitions")
-	map("n", "<leader>ls", function()
+	map("n", "<leader>cs", function()
 		require("snacks").picker.lsp_symbols()
 	end, "LSP document symbols")
-	map("n", "<leader>lw", function()
+	map("n", "<leader>cw", function()
 		require("snacks").picker.lsp_workspace_symbols()
 	end, "LSP workspace symbols")
-	map("n", "<leader>li", function()
+	map("n", "<leader>ci", function()
 		require("snacks").picker.lsp_implementations()
 	end, "LSP implementations")
 
@@ -146,7 +154,7 @@ local function lsp_on_attach(ev)
 		end, "Toggle Inline Completion")
 	end
 
-	map("n", "<leader>lR", function()
+	map("n", "<leader>cL", function()
 		for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
 			c:stop(true)
 		end
