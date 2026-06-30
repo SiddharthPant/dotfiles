@@ -13,6 +13,7 @@
 /recentf
 /custom.el
 /transient/
+/projects
 
 # Backup and lock files
 *~

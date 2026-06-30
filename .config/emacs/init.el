@@ -56,7 +56,10 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 ;;; ─── Theme + font ─────────────────────────────────────────────────────────
-(load-theme 'modus-vivendi t)
+;; (load-theme 'modus-vivendi t)
+(use-package solarized-theme
+  :config
+  (load-theme 'solarized-dark t))
 
 (let ((font "Maple Mono NF"))
   (when (member font (font-family-list))
@@ -124,9 +127,9 @@
   (setq-default eglot-workspace-configuration
                 '(:rust-analyzer
                   (:check     (:command "clippy")
-                   :procMacro (:enable t)
-                   :cargo     (:buildScripts (:enable t)
-                               :features "all")))))
+                              :procMacro (:enable t)
+                              :cargo     (:buildScripts (:enable t)
+                                                        :features "all")))))
 
 ;;; ─── Rust ─────────────────────────────────────────────────────────────────
 (use-package rust-ts-mode

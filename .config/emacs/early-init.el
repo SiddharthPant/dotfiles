@@ -3,16 +3,20 @@
 ;; Crank the GC threshold during startup; init.el resets it to a sane value.
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; We initialize package.el ourselves in init.el, so don't do it twice.
+(setq select-enable-clipboard nil)
+
+;; Disable package.el; We use straight.el for package management instead
 (setq package-enable-at-startup nil)
 
 ;; Kill the UI chrome before the first frame paints (avoids a visible flash).
 (setq inhibit-startup-message t
       frame-resize-pixelwise t
+      initial-frame-alist '((fullscreen . maximized))
       default-frame-alist '((tool-bar-lines . 0)
                             (menu-bar-lines . 0)
                             (vertical-scroll-bars . nil)
-                            (ns-transparent-titlebar . t)))
+                            (ns-transparent-titlebar . t)
+                            (fullscreen . maximized)))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
