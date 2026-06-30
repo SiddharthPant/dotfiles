@@ -55,7 +55,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 vim.pack.add({
-	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	{ src = "https://github.com/shaunsingh/nord.nvim", name = "nord" },
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/folke/snacks.nvim",
 	"https://github.com/dmtrKovalenko/fff.nvim",
@@ -135,5 +135,5 @@ packadd("nvim-dap-ui")
 packadd("markdown-preview.nvim")
 packadd("render-markdown.nvim")
 packadd("vim-tmux-navigator")
-packadd("catppuccin")
+packadd("nord")
 packadd("persistence.nvim")

@@ -17,10 +17,6 @@
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
       "src": "https://github.com/akinsho/bufferline.nvim"
     },
-    "catppuccin": {
-      "rev": "0303a7208dba448c459767486a38a6ec05c4216b",
-      "src": "https://github.com/catppuccin/nvim"
-    },
     "codediff.nvim": {
       "rev": "832f1ecc5f8b15a44cf7537e31d3266d657775b1",
       "src": "https://github.com/esmuellert/codediff.nvim"
@@ -65,6 +61,10 @@
     "mini.nvim": {
       "rev": "3923662bf3d6ca49a9503f8d7196ea0450983e6a",
       "src": "https://www.github.com/echasnovski/mini.nvim"
+    },
+    "nord": {
+      "rev": "80c1e5321505aeb22b7a9f23eb82f1e193c12470",
+      "src": "https://github.com/shaunsingh/nord.nvim"
     },
     "nvim-dap": {
       "rev": "9e848e09a697ee95302a3ef2dd43fd6eb709e570",

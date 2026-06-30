@@ -136,6 +136,9 @@ require("snacks").setup({
 	words = { enabled = true },
 })
 
+-- SnacksPickerPathHidden defaults to NonText (#3B4252), near-invisible in nord; use nord's dim comment color.
+Snacks.util.set_hl({ PathHidden = { fg = require("nord.colors").nord3_gui_bright } }, { prefix = "SnacksPicker" })
+
 require("flash").setup({})
 
 -- fff.nvim: file finder + live grep. Its native search binary is built on
@@ -181,18 +184,18 @@ require("codediff").setup({
 	},
 })
 
-local bufferline_base = require("catppuccin.special.bufferline").get_theme()
 local bufferline_highlights = function()
-	local palette = require("catppuccin.palettes").get_palette()
-	local hl = bufferline_base()
+	local palette = require("nord.colors")
+	local hl = require("nord").bufferline.highlights({ italic = true, bold = true })
 	for name, spec in pairs(hl) do
 		if name:match("_selected$") then
-			spec.bg = palette.surface0
+			spec.bg = palette.nord1_gui
 			spec.underline = true
-			spec.sp = palette.lavender
+			spec.sp = palette.nord8_gui
 		else
+			spec.bg = "NONE"
 			spec.underline = true
-			spec.sp = palette.surface1
+			spec.sp = palette.nord3_gui
 		end
 	end
 	return hl
