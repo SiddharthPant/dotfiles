@@ -78,6 +78,12 @@
         ns-option-modifier 'meta          ; Opt  -> Meta
         ns-right-option-modifier 'none))   ; right Opt types accented chars
 
+;;; ─── Tab bar (built-in, Emacs 27+) ────────────────────────────────────────
+(tab-bar-mode 1)
+(setq tab-bar-show 1                     ; only display when more than one tab
+      tab-bar-new-tab-choice t           ; new tab opens with the current buffer
+      tab-bar-tab-name-truncated-max 24) ; keep tab labels short
+
 ;;; ─── Minibuffer completion (the "Vertico stack") ──────────────────────────
 (use-package vertico
   :init (vertico-mode))
@@ -98,12 +104,47 @@
          ("M-s r" . consult-ripgrep)      ; project-wide grep (needs `rg`)
          ("M-s f" . consult-find)))
 
-;;; ─── In-buffer completion (built-in, Emacs 30+) ───────────────────────────
-;; Inline preview as you type, fed by eglot's completion-at-point.
-;; C-M-i opens the full completion menu on demand.
-(add-hook 'prog-mode-hook #'completion-preview-mode)
-(setq completion-auto-help 'visible
-      completion-auto-select 'second-tab)
+;;; ─── In-buffer completion: Corfu (popup at point) ───────────────────────────
+;; Corfu rides the standard `completion-at-point' machinery, so eglot's capf
+;; feeds it directly. Orderless (set above) makes the popup matches fuzzy.
+;; SPC inside the popup inserts an Orderless component separator; RET is left
+;; free so the popup can't swallow your newlines.
+(use-package corfu
+  :custom
+  (corfu-cycle t)                      ; wrap around at top/bottom
+  (corfu-auto t)                       ; pop up while typing
+  (corfu-auto-delay 0.25)
+  (corfu-auto-prefix 2)                ; need >= 2 chars before auto-popup
+  :bind (:map corfu-map
+              ("RET" . nil)
+              ("SPC" . corfu-insert-separator))
+  :init
+  (global-corfu-mode)
+  :config
+  (corfu-history-mode 1)               ; sort candidates by frecency
+  (add-to-list 'savehist-additional-variables 'corfu-history)) ; persist it
+
+;; Icons in the Corfu margin. Maple Mono NF (set above) already carries the
+;; Nerd Font glyphs, so they render with no extra font install. If you ever
+;; see boxes instead of icons, run M-x nerd-icons-install-fonts.
+(use-package nerd-icons-corfu
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+;;; ─── Project navigation (built-in project.el + consult) ───────────────────
+;; `C-x p f' (project-find-file) already gives project-scoped fuzzy file
+;; finding through the Vertico + Orderless stack — no new package needed. We
+;; just layer consult onto the project prefix for live-preview buffer switching
+;; and a project-root-scoped ripgrep.
+(defun sid/consult-ripgrep-project ()
+  "Run `consult-ripgrep' from the current project's root."
+  (interactive)
+  (consult-ripgrep (project-root (project-current t))))
+
+(with-eval-after-load 'project
+  (define-key project-prefix-map (kbd "b") #'consult-project-buffer)
+  (define-key project-prefix-map (kbd "g") #'sid/consult-ripgrep-project))
 
 ;;; ─── Tree-sitter grammars ─────────────────────────────────────────────────
 ;; Auto-installs grammars and remaps foo-mode -> foo-ts-mode where one exists.
@@ -160,6 +201,32 @@
 ;;; ─── Git ──────────────────────────────────────────────────────────────────
 (use-package magit
   :bind ("C-x g" . magit-status))
+
+;;; ─── Treemacs (file sidebar) ──────────────────────────────────────────────
+;; Bound under `C-c t' so it never fights the built-in tab-bar `C-x t' prefix.
+;; treemacs-magit refreshes the sidebar after magit operations; icons-dired
+;; paints Treemacs's icons into Dired buffers (enabled lazily on first dired).
+(use-package treemacs
+  :defer t
+  :custom
+  (treemacs-width 30)
+  :config
+  (treemacs-git-mode 'deferred)          ; git status colours, computed async
+  (treemacs-filewatch-mode t)            ; auto-refresh on filesystem changes
+  :bind
+  (:map global-map
+        ("C-c t t" . treemacs)                   ; open / toggle the sidebar
+        ("C-c t 0" . treemacs-select-window)     ; jump focus to the sidebar
+        ("C-c t f" . treemacs-find-file)         ; reveal current file in sidebar
+        ("C-c t d" . treemacs-select-directory)
+        ("C-c t B" . treemacs-bookmark)
+        ("C-c t 1" . treemacs-delete-other-windows)))
+
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
+
+(use-package treemacs-magit
+  :after (treemacs magit))
 
 ;;; ─── Markdown (docs / READMEs) ────────────────────────────────────────────
 (use-package markdown-mode
