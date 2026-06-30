@@ -11,9 +11,10 @@
 /auto-save-list/
 /history
 /recentf
+/projects
 /custom.el
 /transient/
-/projects
+/.cache/
 
 # Backup and lock files
 *~
