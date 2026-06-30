@@ -65,6 +65,23 @@
   (when (member font (font-family-list))
     (set-face-attribute 'default nil :family font :height 140)))
 
+;;; ─── Dashboard (startup screen) ───────────────────────────────────────────
+(use-package dashboard
+  :custom
+  (dashboard-banner-logo-title "Welcome to Emacs")
+  (dashboard-center-content t)
+  (dashboard-vertically-center-content t)
+  (dashboard-projects-backend 'project-el)
+  (dashboard-items '((recents . 10) (projects . 5) (agenda . 5)))
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-icon-type 'nerd-icons)
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-footer-messages
+        (remove "Welcome to the church of Emacs" dashboard-footer-messages))
+  (setq initial-buffer-choice 'dashboard-open))
+
 ;;; ─── macOS integration ────────────────────────────────────────────────────
 ;; GUI Emacs on macOS does NOT inherit your shell PATH. Without this, eglot
 ;; can't find rust-analyzer/cargo/psql. (emacs-mac users: swap ns-* for mac-*.)
@@ -77,12 +94,6 @@
   (setq ns-command-modifier 'super        ; Cmd  -> Super
         ns-option-modifier 'meta          ; Opt  -> Meta
         ns-right-option-modifier 'none))   ; right Opt types accented chars
-
-;;; ─── Tab bar (built-in, Emacs 27+) ────────────────────────────────────────
-(tab-bar-mode 1)
-(setq tab-bar-show 1                     ; only display when more than one tab
-      tab-bar-new-tab-choice t           ; new tab opens with the current buffer
-      tab-bar-tab-name-truncated-max 24) ; keep tab labels short
 
 ;;; ─── Minibuffer completion (the "Vertico stack") ──────────────────────────
 (use-package vertico
@@ -105,38 +116,27 @@
          ("M-s f" . consult-find)))
 
 ;;; ─── In-buffer completion: Corfu (popup at point) ───────────────────────────
-;; Corfu rides the standard `completion-at-point' machinery, so eglot's capf
-;; feeds it directly. Orderless (set above) makes the popup matches fuzzy.
-;; SPC inside the popup inserts an Orderless component separator; RET is left
-;; free so the popup can't swallow your newlines.
 (use-package corfu
   :custom
-  (corfu-cycle t)                      ; wrap around at top/bottom
-  (corfu-auto t)                       ; pop up while typing
+  (corfu-cycle t)
+  (corfu-auto t)
   (corfu-auto-delay 0.25)
-  (corfu-auto-prefix 2)                ; need >= 2 chars before auto-popup
+  (corfu-auto-prefix 2)
   :bind (:map corfu-map
               ("RET" . nil)
               ("SPC" . corfu-insert-separator))
   :init
   (global-corfu-mode)
   :config
-  (corfu-history-mode 1)               ; sort candidates by frecency
-  (add-to-list 'savehist-additional-variables 'corfu-history)) ; persist it
+  (corfu-history-mode 1)
+  (add-to-list 'savehist-additional-variables 'corfu-history))
 
-;; Icons in the Corfu margin. Maple Mono NF (set above) already carries the
-;; Nerd Font glyphs, so they render with no extra font install. If you ever
-;; see boxes instead of icons, run M-x nerd-icons-install-fonts.
 (use-package nerd-icons-corfu
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;;; ─── Project navigation (built-in project.el + consult) ───────────────────
-;; `C-x p f' (project-find-file) already gives project-scoped fuzzy file
-;; finding through the Vertico + Orderless stack — no new package needed. We
-;; just layer consult onto the project prefix for live-preview buffer switching
-;; and a project-root-scoped ripgrep.
 (defun sid/consult-ripgrep-project ()
   "Run `consult-ripgrep' from the current project's root."
   (interactive)
@@ -202,25 +202,35 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+(use-package diff-hl
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  :config
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode))
+
 ;;; ─── Treemacs (file sidebar) ──────────────────────────────────────────────
-;; Bound under `C-c t' so it never fights the built-in tab-bar `C-x t' prefix.
-;; treemacs-magit refreshes the sidebar after magit operations; icons-dired
-;; paints Treemacs's icons into Dired buffers (enabled lazily on first dired).
 (use-package treemacs
   :defer t
   :custom
   (treemacs-width 30)
+  :init
+  (setq treemacs--icon-size 16)
   :config
-  (treemacs-git-mode 'deferred)          ; git status colours, computed async
-  (treemacs-filewatch-mode t)            ; auto-refresh on filesystem changes
+  (treemacs-git-mode 'deferred)
+  (treemacs-filewatch-mode t)
+  (set-face-attribute 'treemacs-root-face nil
+                      :height 0.9 :weight 'normal :underline nil)
+  (set-face-attribute 'treemacs-directory-face nil :height 0.9)
+  (set-face-attribute 'treemacs-file-face nil :height 0.9)
   :bind
   (:map global-map
-        ("C-c t t" . treemacs)                   ; open / toggle the sidebar
-        ("C-c t 0" . treemacs-select-window)     ; jump focus to the sidebar
-        ("C-c t f" . treemacs-find-file)         ; reveal current file in sidebar
-        ("C-c t d" . treemacs-select-directory)
-        ("C-c t B" . treemacs-bookmark)
-        ("C-c t 1" . treemacs-delete-other-windows)))
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once))
