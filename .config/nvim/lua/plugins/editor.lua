@@ -344,6 +344,13 @@ end, { desc = "Select session" })
 vim.keymap.set("n", "<leader>ql", function()
 	require("persistence").load({ last = true })
 end, { desc = "Restore last session" })
-vim.keymap.set("n", "<leader>qD", function()
+vim.keymap.set("n", "<leader>qd", function()
+	local file = require("persistence").current()
+	if file and vim.fn.filereadable(file) == 1 then
+		vim.fn.delete(file)
+		Snacks.notify("Deleted session: " .. vim.fn.fnamemodify(file, ":p:~"), { title = "Persistence" })
+	else
+		Snacks.notify("No stored session for " .. vim.fn.getcwd(), { title = "Persistence", level = "warn" })
+	end
 	require("persistence").stop()
-end, { desc = "Stop session save on exit" })
+end, { desc = "Delete stored session for cwd" })
