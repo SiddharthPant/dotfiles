@@ -151,11 +151,15 @@ require("snacks").setup({
 })
 
 -- Nord tuning for explorer highlights:
---  - PathHidden defaults to NonText (#3B4252), near-invisible in nord; use nord's dim comment color.
 --  - Directory defaults to vim's Directory (nord7 teal #8FBCBB); use nord9 glacier blue for a clearly blue tree.
+--  - PathHidden/PathIgnored default to NonText (#3B4252), near-invisible in nord; use brighter muted blue-slates
+--    so dotfiles and gitignored entries stay readable instead of merging into the background.
+--  - Totals (the match count in the search bar) also defaults to NonText; use nord8 for a readable accent.
 Snacks.util.set_hl({
-	PathHidden = { fg = require("nord.colors").nord3_gui_bright },
+	PathHidden = { fg = "#a7b1c7" },
+	PathIgnored = { fg = "#74808f" },
 	Directory = { fg = require("nord.colors").nord9_gui },
+	Totals = { fg = require("nord.colors").nord8_gui },
 }, { prefix = "SnacksPicker" })
 
 require("flash").setup({})
