@@ -83,6 +83,20 @@ require("snacks").setup({
 	gitbrowse = { enabled = true },
 	indent = { enabled = true },
 	input = { enabled = true },
+	lazygit = {
+		theme = {
+			[241] = { fg = "Special" }, -- nord4: default UI text
+			activeBorderColor = { fg = "Function", bold = true }, -- nord8: active pane = signature blue
+			inactiveBorderColor = { fg = "Comment" }, -- nord3_bright: subtle inactive borders
+			searchingActiveBorderColor = { fg = "Todo", bold = true }, -- nord13: live-search = yellow
+			selectedLineBgColor = { bg = "Visual" }, -- nord2: selection bg
+			unstagedChangesColor = { fg = "DiagnosticError" }, -- nord11: unstaged = red
+			optionsTextColor = { fg = "Statement" }, -- nord9: options menu = glacier blue
+			cherryPickedCommitBgColor = { bg = "Search" }, -- nord10: cherry-pick bg = blue
+			cherryPickedCommitFgColor = { fg = "Special" }, -- nord4: light fg on blue
+			defaultFgColor = { fg = "Normal" }, -- nord4
+		},
+	},
 	notifier = { enabled = true },
 	notify = { enabled = true },
 	picker = {
@@ -136,8 +150,13 @@ require("snacks").setup({
 	words = { enabled = true },
 })
 
--- SnacksPickerPathHidden defaults to NonText (#3B4252), near-invisible in nord; use nord's dim comment color.
-Snacks.util.set_hl({ PathHidden = { fg = require("nord.colors").nord3_gui_bright } }, { prefix = "SnacksPicker" })
+-- Nord tuning for explorer highlights:
+--  - PathHidden defaults to NonText (#3B4252), near-invisible in nord; use nord's dim comment color.
+--  - Directory defaults to vim's Directory (nord7 teal #8FBCBB); use nord9 glacier blue for a clearly blue tree.
+Snacks.util.set_hl({
+	PathHidden = { fg = require("nord.colors").nord3_gui_bright },
+	Directory = { fg = require("nord.colors").nord9_gui },
+}, { prefix = "SnacksPicker" })
 
 require("flash").setup({})
 
