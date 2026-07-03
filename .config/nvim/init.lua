@@ -206,6 +206,21 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Colorscheme: Nord
 pack({ "https://github.com/shaunsingh/nord.nvim" })
 vim.cmd.colorscheme("nord")
+-- Overrides and autocmds to auto-completion info window backgrounds
+vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
+vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
+
+vim.api.nvim_create_autocmd("CompleteChanged", {
+	group = M.group,
+	callback = function()
+		local preview = vim.fn.complete_info({ "selected" }).preview_winid
+		if preview and vim.api.nvim_win_is_valid(preview) then
+			-- reuse existing position; only add a border
+			vim.api.nvim_win_set_config(preview, { border = "rounded" })
+			vim.wo[preview].winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder"
+		end
+	end,
+})
 
 -- File picker: fff.nvim
 pack({ "https://github.com/dmtrKovalenko/fff.nvim" })
