@@ -97,9 +97,6 @@ map("v", "<", "<gv", { desc = "Indent left and reselect" })
 map("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Splits and buffers
-map("n", "<leader>\\", "<cmd>vsplit<CR>", { desc = "Split window vertically" })
-map("n", "<leader>-", "<cmd>split<CR>", { desc = "Split window horizontally" })
-
 map("n", "<leader>bd", "<cmd>bn|bd #<CR>", { desc = "Delete buffer keep split" })
 local function close_other_buffers()
 	local cur = vim.api.nvim_get_current_buf()
@@ -110,7 +107,7 @@ local function close_other_buffers()
 	for _, b in ipairs(targets) do
 		pcall(vim.api.nvim_buf_delete, b, {})
 	end
-	vim.notify(("Closed %d buffer(s), kept unsaved ones open"):format(#targets), vim.log.levels.INFO)
+	vim.notify(("Closed %d buffer(s), any unsaved will remain open"):format(#targets), vim.log.levels.INFO)
 end
 map("n", "<leader>bo", close_other_buffers, { desc = "Close other buffers" })
 
@@ -145,6 +142,11 @@ end, { desc = "Toggle system clipboard" })
 
 -- Sessions and quit
 map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
+
+-- Map Q to start recording macros
+map("n", "Q", "q", { desc = "Record macro" })
+-- Disable the original q key
+map("n", "q", "<Nop>", { desc = "Disable macro recording" })
 
 -- Misc autocmds
 
@@ -306,6 +308,11 @@ conform.setup({
 		timeout_ms = 500,
 	},
 })
+
+-- The one and only best git manager for vim
+pack({ "https://github.com/tpope/vim-fugitive" })
+
+-- LSP and Diagnostics
 
 vim.diagnostic.config({
 	virtual_text = true,
