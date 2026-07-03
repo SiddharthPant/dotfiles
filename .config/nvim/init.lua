@@ -23,7 +23,7 @@ vim.o.smartcase = true -- case sensitive if uppercase in string
 vim.o.signcolumn = "yes" -- always show a sign column
 vim.o.colorcolumn = "80" -- show a column at 80 position chars
 vim.o.showmatch = true -- highlights matching brackets
-vim.o.completeopt = "menuone,noselect,popup" -- completion options
+vim.opt.completeopt = { "fuzzy", "menuone", "noselect", "popup" } -- completion options
 vim.o.laststatus = 3 -- use a single global statusline
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
@@ -231,6 +231,8 @@ function _G.get_oil_winbar()
 		return vim.api.nvim_buf_get_name(0)
 	end
 end
+
+local detail = false
 oil.setup({
 	delete_to_trash = true,
 	view_options = {
@@ -246,9 +248,9 @@ oil.setup({
 			callback = function()
 				detail = not detail
 				if detail then
-					require("oil").set_columns({ "icon", "permissions", "size", "mtime" })
+					oil.set_columns({ "icon", "permissions", "size", "mtime" })
 				else
-					require("oil").set_columns({ "icon" })
+					oil.set_columns({ "icon" })
 				end
 			end,
 			desc = "Toggle file detail view",
@@ -281,19 +283,17 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- Reliable file formatting: conform.nvim
 pack({ "https://github.com/stevearc/conform.nvim" })
-require("conform").setup({
+local conform = require("conform")
+conform.setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		go = { "goimports", "gofumpt" },
 		rust = { "rustfmt" },
-		javascript = { "prettierd", "prettier", stop_after_first = true },
-		python = function(bufnr)
-			if require("conform").get_formatter_info("ruff_format", bufnr).available then
-				return { "ruff_format" }
-			else
-				return { "isort", "black" }
-			end
-		end,
+		python = { "ruff_format" },
+		javascript = { "prettier" },
+		typescript = { "prettier" },
+		javascriptreact = { "prettier" },
+		typescriptreact = { "prettier" },
 		-- Use the "_" filetype to run formatters on filetypes that don't
 		-- have other formatters configured.
 		["_"] = { "trim_whitespace" },
@@ -306,3 +306,191 @@ require("conform").setup({
 		timeout_ms = 500,
 	},
 })
+
+vim.diagnostic.config({
+	virtual_text = true,
+	underline = true,
+	signs = true,
+	severity_sort = true,
+})
+
+vim.api.nvim_create_autocmd("InsertCharPre", {
+	group = vim.api.nvim_create_augroup("my-lsp-completion", { clear = true }),
+	callback = function()
+		if vim.fn.pumvisible() == 1 then
+			return
+		end
+
+		if vim.v.char:match("[%w_]") then
+			vim.lsp.completion.get()
+		end
+	end,
+})
+map("i", "<C-Space>", function()
+	vim.lsp.completion.get()
+end, { desc = "Trigger LSP completion" })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("my-lsp", { clear = true }),
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if not client then
+			return
+		end
+
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, ev.buf, {
+				autotrigger = true,
+			})
+		end
+
+		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
+		map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
+		map("n", "<leader>cf", function()
+			conform.format({ bufnr = ev.buf, async = true, lsp_format = "fallback" })
+		end, { buffer = ev.buf, desc = "Format buffer" })
+	end,
+})
+
+local function lsp(name, cfg)
+	if vim.fn.executable(cfg.cmd[1]) == 0 then
+		return
+	end
+
+	vim.lsp.config(name, cfg)
+	vim.lsp.enable(name)
+end
+
+local lua_library = { vim.env.VIMRUNTIME }
+lsp("lua_ls", {
+	cmd = { "lua-language-server" },
+	filetypes = { "lua" },
+	root_markers = {
+		".luarc.json",
+		".luarc.jsonc",
+		".stylua.toml",
+		"stylua.toml",
+		"selene.toml",
+		"init.lua",
+		".git",
+	},
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				checkThirdParty = false,
+				library = lua_library,
+			},
+			completion = {
+				callSnippet = "Replace",
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
+})
+
+lsp("rust_analyzer", {
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
+})
+
+lsp("gopls", {
+	cmd = { "gopls" },
+	filetypes = { "go", "gomod", "gowork", "gotmpl" },
+	root_markers = { "go.work", "go.mod", ".git" },
+})
+
+lsp("ty", {
+	cmd = { "ty", "server" },
+	filetypes = { "python" },
+	root_markers = {
+		"ty.toml",
+		"pyproject.toml",
+		"uv.lock",
+		"requirements.txt",
+		".git",
+	},
+})
+
+lsp("ts_ls", {
+	cmd = { "typescript-language-server", "--stdio" },
+	filetypes = {
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+	},
+	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+})
+
+lsp("phpantom", {
+	cmd = { "phpantom_lsp" },
+	filetypes = { "php", "blade" },
+	root_markers = { "artisan", "composer.json", ".git" },
+	settings = {
+		intelephense = {
+			files = {
+				associations = { "*.php", "*.blade.php" },
+			},
+		},
+	},
+})
+
+local snippets = {
+	lua = {
+		req = 'local ${1:name} = require("${2:module}")',
+		fn = "local function ${1:name}(${2:args})\n\t${0}\nend",
+		map = 'map("${1:n}", "${2:lhs}", ${3:rhs}, { desc = "${4:desc}" })',
+	},
+	rust = {
+		test = "#[test]\nfn ${1:name}() {\n\t${0}\n}",
+	},
+	go = {
+		err = "if err != nil {\n\treturn ${1:err}\n}",
+	},
+	python = {
+		main = 'if __name__ == "__main__":\n\t${0}',
+	},
+	javascript = {
+		fn = "function ${1:name}(${2:args}) {\n\t${0}\n}",
+		afn = "const ${1:name} = (${2:args}) => {\n\t${0}\n}",
+	},
+	typescript = {
+		fn = "function ${1:name}(${2:args}): ${3:void} {\n\t${0}\n}",
+		afn = "const ${1:name} = (${2:args}): ${3:void} => {\n\t${0}\n}",
+	},
+	php = {
+		route = "Route::get('/${1:path}', [${2:Controller}::class, '${3:method}']);",
+	},
+	blade = {
+		forelse = "@forelse (\\$${1:items} as \\$${2:item})\n\t${0}\n@empty\n@endforelse",
+	},
+}
+
+local function snippet_body(trigger)
+	local ft = vim.bo.filetype
+	local by_ft = snippets[ft] or snippets[ft:gsub("react$", "")]
+	return by_ft and by_ft[trigger]
+end
+
+map("i", "<C-k>", function()
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local line = vim.api.nvim_get_current_line()
+	local trigger = line:sub(1, col):match("([%w_]+)$")
+	local body = trigger and snippet_body(trigger)
+	if not body then
+		return
+	end
+
+	vim.api.nvim_buf_set_text(0, row - 1, col - #trigger, row - 1, col, {})
+	vim.api.nvim_win_set_cursor(0, { row, col - #trigger })
+	vim.snippet.expand(body)
+end, { desc = "Expand snippet trigger" })
