@@ -165,6 +165,37 @@ map("n", "q", "<Nop>", { desc = "Disable macro recording" })
 
 -- Misc autocmds
 
+-- Winbar: show only on INACTIVE normal-file windows
+local winbar_str = "%#WinBarFile#%f%* %#WinBarMod#%m%*%=%#WinBarFT#%{&filetype}%*"
+
+local function is_normal_file(buf)
+	local bt = vim.bo[buf].buftype
+	local fname = vim.api.nvim_buf_get_name(buf)
+	return bt == "" and fname ~= ""
+end
+
+-- Window becoming active: hide its winbar
+vim.api.nvim_create_autocmd("WinEnter", {
+	group = M.group,
+	desc = "Hide winbar on the now-active window",
+	callback = function()
+		vim.wo.winbar = nil
+	end,
+})
+
+-- Window becoming inactive: show winbar if it's a normal file buffer
+vim.api.nvim_create_autocmd("WinLeave", {
+	group = M.group,
+	desc = "Show winbar on the now-inactive window (normal files only)",
+	callback = function()
+		if is_normal_file(0) then
+			vim.wo.winbar = winbar_str
+		else
+			vim.wo.winbar = nil
+		end
+	end,
+})
+
 -- return to last cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
 	group = M.group,
@@ -224,6 +255,15 @@ vim.cmd.colorscheme("nord")
 -- Overrides and autocmds to auto-completion info window backgrounds
 vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
 vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
+-- match nord's WinBar background so segments blend with the bar
+local winbar_bg = "#3B4252" -- nord0; change to "#3B4252" (nord1) if you want it slightly raised
+vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
+vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
+vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
+vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
+vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
+vim.api.nvim_set_hl(0, "StatusLineErr", { fg = "#BF616A", bold = true }) -- nord11
+vim.api.nvim_set_hl(0, "StatusLineWarn", { fg = "#D08770" }) -- nord12
 
 vim.api.nvim_create_autocmd("CompleteChanged", {
 	group = M.group,
