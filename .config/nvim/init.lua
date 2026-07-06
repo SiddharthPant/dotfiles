@@ -139,6 +139,10 @@ map("n", "<leader>tc", function()
 	end
 	notify_toggle("System clipboard", not enabled)
 end, { desc = "Toggle system clipboard" })
+local termfeatures = vim.g.termfeatures or {}
+termfeatures.osc52 = false
+vim.g.termfeatures = termfeatures
+vim.g.clipboard = "osc52"
 
 -- Sessions and quit
 map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
