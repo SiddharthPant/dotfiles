@@ -113,10 +113,7 @@ map("n", "<leader>bo", close_other_buffers, { desc = "Close other buffers" })
 
 -- Toggles
 local function notify_toggle(title, enabled)
-	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), {
-		title = title,
-		level = "info",
-	})
+	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
 end
 
 map("n", "<leader>tw", function()
