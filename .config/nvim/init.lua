@@ -139,10 +139,21 @@ map("n", "<leader>tc", function()
 	end
 	notify_toggle("System clipboard", not enabled)
 end, { desc = "Toggle system clipboard" })
-local termfeatures = vim.g.termfeatures or {}
-termfeatures.osc52 = false
-vim.g.termfeatures = termfeatures
-vim.g.clipboard = "osc52"
+-- explicitly set clipboard to force follow osc52 spec and not local cli utility
+vim.g.clipboard = {
+	name = "OSC 52",
+	copy = {
+		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+	},
+	paste = {
+		-- setting empty as most terminals ban paste operation and neovim hangs
+		-- while waiting for terminal output. We anyways can use the terminal's
+		-- paste shortcut instead of neovim's.
+		["+"] = function() end,
+		["*"] = function() end,
+	},
+}
 
 -- Sessions and quit
 map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
