@@ -342,6 +342,17 @@ conform.setup({
 -- The one and only best git manager for vim
 pack({ "https://github.com/tpope/vim-fugitive" })
 
+-- Helpful keymaps with which-key
+pack({ "https://github.com/folke/which-key.nvim" })
+-- local wk = require("which-key")
+-- wk.setup({
+--
+-- })
+-- wk.show({
+-- 	keys = "C-w",
+-- 	loop = true,
+-- })
+
 -- LSP and Diagnostics
 
 vim.diagnostic.config({
@@ -350,6 +361,19 @@ vim.diagnostic.config({
 	signs = true,
 	severity_sort = true,
 })
+map("n", "<leader>cx", function()
+	vim.diagnostic.setloclist({ open = true, title = "Diagnostics" })
+end, { desc = "Open location list with buffer diagnostics" })
+map("n", "<leader>cX", function()
+	vim.diagnostic.setqflist({ open = true, title = "Workspace diagnostics" })
+end, { desc = "Open quickfix list with all diagnostics" })
+map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Show line diagnostic float" })
+map("n", "]d", function()
+	vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Next diagnostic" })
+map("n", "[d", function()
+	vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Previous diagnostic" })
 
 vim.api.nvim_create_autocmd("InsertCharPre", {
 	group = vim.api.nvim_create_augroup("my-lsp-completion", { clear = true }),
