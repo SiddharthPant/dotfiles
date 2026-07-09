@@ -53,39 +53,48 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 
 For the Neovim-specific README, see `.config/nvim/README.md`.
 
-Everything lives in `.config/nvim/init.lua`, roughly in this order:
+Behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour). Snippet **bodies** live under `lua/snippets/`. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds; `lua/snippets/` uses the same style. Modelines set `foldmethod=marker`.
 
-1. Leader keys and `vim.loader`
-2. Options
-3. Keymaps and toggles
-4. Autocmds (winbar, yank highlight, cursor restore, etc.)
-5. Plugin install via `vim.pack.add` / `pack({ ... })`
-6. Theme / highlight overrides
-7. Plugin setup (fff, grug-far, oil, conform, which-key, fugitive)
-8. Diagnostics, LSP completion, `LspAttach`, language servers
-9. Snippets
+Top-level folds:
+
+- Bootstrap — loader, leaders, `map` / `pack` / augroup
+- Options
+- Core editing maps
+- Buffers
+- Clipboard (OSC52 + toggles)
+- Pack (`PackChanged` then `pack({ ... })`)
+- Theme / highlights
+- UI chrome (inactive winbar, completion doc styling)
+- General autocmds
+- Plugins (each setup + its maps, nested)
+- Diagnostics
+- LSP (nested attach/servers)
+- Snippet keymaps (bodies in `lua/snippets/`)
 
 Related files:
 
 - `.config/nvim/init.lua`: the full Neovim config
+- `.config/nvim/lua/snippets/`: per-language snippet bodies + loader
 - `.config/nvim/nvim-pack-lock.json`: `vim.pack` lockfile (do not hand-edit in normal use)
 - `.config/nvim/.luarc.json`: LuaLS workspace hints for this config
 
 ## Where To Edit
 
-For common Neovim tasks, edit the matching section of `.config/nvim/init.lua`:
+For common Neovim tasks, edit the matching section of `.config/nvim/init.lua` (or `lua/snippets/` for snippet bodies):
 
 - New plugin or removing plugin: the `pack({ ... })` list, then restart and `vim.pack.del` if needed (see `.config/nvim/README.md`)
 - Plugins with install/build hooks (e.g. fff binary): register `PackChanged` **before** `pack()`
 - Plugin setup or plugin-tied keymaps: near that plugin's `setup` / `require` block
 - Theme, highlight, colorscheme: Nord + `apply_highlights` / `ColorScheme` autocmd
-- General non-LSP keymaps and toggles: keymap section near the top
-- LSP keymaps, diagnostics, servers: LSP and Diagnostics section
-- Formatting: `conform.setup`
-- Completion: `vim.lsp.completion` enable + `<C-Space>` map
-- Snippets: `snippets` table and `<C-k>` / jump maps
+- Core editing / buffer maps: early keymap sections
+- Clipboard / wrap toggles: clipboard section
+- Diagnostics maps and `<leader>td`: Diagnostics section
+- LSP keymaps, completion, servers: LSP section
+- Formatting: conform block (`setup` + `<leader>cf`)
+- Snippet bodies: `lua/snippets/<ft>.lua` (+ register in `lua/snippets/init.lua` if new)
+- Snippet keymaps: end of `init.lua`
 - Options (numbers, tabs, search, UI): options block near the top
-- Autocmd behavior: autocmd section (shared `group`)
+- Autocmd behavior: UI chrome or general autocmds (shared `group`)
 
 ## Git Conventions
 
@@ -95,7 +104,7 @@ For common Neovim tasks, edit the matching section of `.config/nvim/init.lua`:
 ## Current Conventions
 
 - Plugin installation uses native `vim.pack`, not `lazy.nvim`.
-- Keep the Neovim config in a single `init.lua` unless a split is clearly justified.
+- Keep behaviour in a single `init.lua` unless a split is clearly justified; snippet data may live under `lua/snippets/`.
 - Keep new mappings near related existing mappings.
 - Prefer buffer-local mappings when a command only makes sense for one filetype.
 - Prefer `vim.notify` for user-facing messages unless a plugin already owns that UI.
