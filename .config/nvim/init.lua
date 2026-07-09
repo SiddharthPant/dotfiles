@@ -1,3 +1,4 @@
+-- Bootstrap {{{
 vim.loader.enable()
 
 vim.g.mapleader = " "
@@ -6,7 +7,9 @@ vim.g.maplocalleader = ","
 local map = vim.keymap.set
 local pack = vim.pack.add
 local group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+-- }}}
 
+-- Options {{{
 vim.o.termguicolors = true
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
@@ -53,27 +56,11 @@ vim.opt.diffopt:append("linematch:60") -- improve diff display
 -- Tested with ghostty/wezterm; overrides the shell's title while nvim is running.
 vim.o.title = true
 vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
+-- }}}
 
-local function close_lsp_floating_previews()
-	local closed = false
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local ok, preview_buf = pcall(function()
-			return vim.w[win].lsp_floating_bufnr
-		end)
-		if ok and preview_buf and vim.api.nvim_win_is_valid(win) then
-			pcall(vim.api.nvim_win_close, win, true)
-			closed = true
-		end
-	end
-	return closed
-end
-map("n", "<Esc>", function()
-	close_lsp_floating_previews()
-	vim.cmd.nohlsearch()
-end, { silent = true, desc = "Close LSP float and clear search highlight" })
+-- Core editing {{{
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- Movement and editing basics
 map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
 end, { expr = true, silent = true, desc = "Down (wrap-aware)" })
@@ -94,7 +81,15 @@ map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 map("v", "<", "<gv", { desc = "Indent left and reselect" })
 map("v", ">", ">gv", { desc = "Indent right and reselect" })
 
--- Splits and buffers
+-- Macros {{{
+-- Map Q to start recording macros
+map("n", "Q", "q", { desc = "Record macro" })
+-- Disable the original q key
+map("n", "q", "<Nop>", { desc = "Disable macro recording" })
+-- }}}
+-- }}}
+
+-- Buffers {{{
 map("n", "<leader>bd", "<cmd>bn|bd #<CR>", { desc = "Delete buffer keep split" })
 local function close_other_buffers()
 	local cur = vim.api.nvim_get_current_buf()
@@ -108,32 +103,13 @@ local function close_other_buffers()
 	vim.notify(("Closed %d buffer(s), any unsaved will remain open"):format(#targets), vim.log.levels.INFO)
 end
 map("n", "<leader>bo", close_other_buffers, { desc = "Close other buffers" })
+-- }}}
 
--- Toggles
+-- Clipboard {{{
 local function notify_toggle(title, enabled)
 	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
 end
 
-map("n", "<leader>tw", function()
-	vim.wo.wrap = not vim.wo.wrap
-	notify_toggle("Line wrap", vim.wo.wrap)
-end, { desc = "Toggle line wrap" })
-
-map("n", "<leader>td", function()
-	local enabled = vim.diagnostic.is_enabled()
-	vim.diagnostic.enable(not enabled)
-	notify_toggle("Diagnostics", not enabled)
-end, { desc = "Toggle diagnostics" })
-
-map("n", "<leader>tc", function()
-	local enabled = vim.list_contains(vim.opt.clipboard:get(), "unnamedplus")
-	if enabled then
-		vim.opt.clipboard:remove("unnamedplus")
-	else
-		vim.opt.clipboard:append("unnamedplus")
-	end
-	notify_toggle("System clipboard", not enabled)
-end, { desc = "Toggle system clipboard" })
 -- explicitly set clipboard to force follow osc52 spec and not local cli utility
 vim.g.clipboard = {
 	name = "OSC 52",
@@ -150,13 +126,78 @@ vim.g.clipboard = {
 	},
 }
 
--- Map Q to start recording macros
-map("n", "Q", "q", { desc = "Record macro" })
--- Disable the original q key
-map("n", "q", "<Nop>", { desc = "Disable macro recording" })
+map("n", "<leader>tc", function()
+	local enabled = vim.list_contains(vim.opt.clipboard:get(), "unnamedplus")
+	if enabled then
+		vim.opt.clipboard:remove("unnamedplus")
+	else
+		vim.opt.clipboard:append("unnamedplus")
+	end
+	notify_toggle("System clipboard", not enabled)
+end, { desc = "Toggle system clipboard" })
 
--- Misc autocmds
+map("n", "<leader>tw", function()
+	vim.wo.wrap = not vim.wo.wrap
+	notify_toggle("Line wrap", vim.wo.wrap)
+end, { desc = "Toggle line wrap" })
+-- }}}
 
+-- Pack {{{
+-- fff binary hook {{{
+-- fff.nvim ships a native binary; download/build it on install and update.
+-- Must be registered before pack() so the install PackChanged event is seen.
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = group,
+	desc = "Download or build fff.nvim binary after install/update",
+	callback = function(ev)
+		local spec = ev.data.spec
+		local kind = ev.data.kind
+		if spec and spec.name == "fff.nvim" and (kind == "install" or kind == "update") then
+			if not ev.data.active then
+				vim.cmd.packadd("fff.nvim")
+			end
+			require("fff.download").download_or_build_binary()
+		end
+	end,
+})
+-- }}}
+
+-- plugin list {{{
+pack({
+	"https://github.com/shaunsingh/nord.nvim",
+	"https://github.com/dmtrKovalenko/fff.nvim",
+	"https://github.com/MagicDuck/grug-far.nvim",
+	"https://github.com/stevearc/oil.nvim",
+	"https://github.com/stevearc/conform.nvim",
+	"https://github.com/tpope/vim-fugitive",
+	"https://github.com/folke/which-key.nvim",
+})
+-- }}}
+-- }}}
+
+-- Theme {{{
+local function apply_highlights()
+	-- Overrides for auto-completion info window backgrounds
+	vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
+	vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
+	-- match nord's WinBar background so segments blend with the bar
+	local winbar_bg = "#3B4252" -- nord1
+	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
+	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
+	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
+	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
+	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = group,
+	callback = apply_highlights,
+})
+vim.cmd.colorscheme("nord")
+-- }}}
+
+-- UI chrome {{{
+-- Inactive winbar {{{
 -- Winbar: show only on INACTIVE normal-file windows
 local winbar_str = "%#WinBarFile#%f%* %#WinBarMod#%m%*%=%#WinBarFT#%{&filetype}%*"
 
@@ -187,8 +228,25 @@ vim.api.nvim_create_autocmd("WinLeave", {
 		end
 	end,
 })
+-- }}}
 
--- return to last cursor position
+-- Completion doc styling {{{
+vim.api.nvim_create_autocmd("CompleteChanged", {
+	group = group,
+	callback = function()
+		local preview = vim.fn.complete_info({ "selected" }).preview_winid
+		if preview and vim.api.nvim_win_is_valid(preview) then
+			-- reuse existing position; only add a border
+			vim.api.nvim_win_set_config(preview, { border = "rounded" })
+			vim.wo[preview].winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder"
+		end
+	end,
+})
+-- }}}
+-- }}}
+
+-- General autocmds {{{
+-- Cursor restore {{{
 vim.api.nvim_create_autocmd("BufReadPost", {
 	group = group,
 	desc = "Restore last cursor position",
@@ -208,16 +266,18 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
 	end,
 })
+-- }}}
 
--- highlight yanked text
+-- Yank highlight {{{
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = group,
 	callback = function()
 		vim.hl.on_yank()
 	end,
 })
+-- }}}
 
--- close quickfix and location list windows with q
+-- Quickfix {{{
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = "qf",
@@ -229,8 +289,9 @@ vim.api.nvim_create_autocmd("FileType", {
 		})
 	end,
 })
+-- }}}
 
--- spellcheck commit messages
+-- Gitcommit spell {{{
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = "gitcommit",
@@ -238,79 +299,28 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.spell = true
 	end,
 })
+-- }}}
+-- }}}
 
--- Plugin Config
--- fff.nvim ships a native binary; download/build it on install and update.
--- Must be registered before pack() so the install PackChanged event is seen.
-vim.api.nvim_create_autocmd("PackChanged", {
-	group = group,
-	desc = "Download or build fff.nvim binary after install/update",
-	callback = function(ev)
-		local spec = ev.data.spec
-		local kind = ev.data.kind
-		if spec and spec.name == "fff.nvim" and (kind == "install" or kind == "update") then
-			if not ev.data.active then
-				vim.cmd.packadd("fff.nvim")
-			end
-			require("fff.download").download_or_build_binary()
-		end
-	end,
-})
+-- Plugins {{{
+-- which-key {{{
+require("which-key").setup({})
+-- }}}
 
-pack({
-	"https://github.com/shaunsingh/nord.nvim",
-	"https://github.com/dmtrKovalenko/fff.nvim",
-	"https://github.com/MagicDuck/grug-far.nvim",
-	"https://github.com/stevearc/oil.nvim",
-	"https://github.com/stevearc/conform.nvim",
-	"https://github.com/tpope/vim-fugitive",
-	"https://github.com/folke/which-key.nvim",
-})
-
--- Colorscheme: Nord
-local function apply_highlights()
-	-- Overrides for auto-completion info window backgrounds
-	vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
-	vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
-	-- match nord's WinBar background so segments blend with the bar
-	local winbar_bg = "#3B4252" -- nord1
-	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
-	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
-	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
-	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
-	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
-end
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-	group = group,
-	callback = apply_highlights,
-})
-vim.cmd.colorscheme("nord")
-
-vim.api.nvim_create_autocmd("CompleteChanged", {
-	group = group,
-	callback = function()
-		local preview = vim.fn.complete_info({ "selected" }).preview_winid
-		if preview and vim.api.nvim_win_is_valid(preview) then
-			-- reuse existing position; only add a border
-			vim.api.nvim_win_set_config(preview, { border = "rounded" })
-			vim.wo[preview].winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder"
-		end
-	end,
-})
-
--- File picker: fff.nvim
+-- fff {{{
 map("n", "<leader><SPACE>", function()
 	require("fff").find_files()
 end, { desc = "FFFind files" })
 map("n", "<leader>/", function()
 	require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
 end, { desc = "Live fffuzy grep" })
+-- }}}
 
--- Nice global search/replace UI: grug-far
+-- grug-far {{{
 require("grug-far").setup({})
+-- }}}
 
--- Make neovim a well oiled Dir editor: Oil.nvim
+-- oil {{{
 local oil = require("oil")
 -- Declare a global function to retrieve the current directory
 function _G.get_oil_winbar()
@@ -372,8 +382,9 @@ oil.setup({
 	},
 })
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- }}}
 
--- Reliable file formatting: conform.nvim
+-- conform {{{
 local conform = require("conform")
 conform.setup({
 	formatters_by_ft = {
@@ -397,10 +408,13 @@ conform.setup({
 		timeout_ms = 500,
 	},
 })
+map("n", "<leader>cf", function()
+	conform.format({ async = true, lsp_format = "fallback" })
+end, { desc = "Format buffer" })
+-- }}}
+-- }}}
 
-require("which-key").setup({})
-
--- LSP and Diagnostics
+-- Diagnostics {{{
 vim.diagnostic.config({
 	virtual_text = true,
 	severity_sort = true,
@@ -418,16 +432,40 @@ end, { desc = "Next diagnostic" })
 map("n", "[d", function()
 	vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Previous diagnostic" })
-map("n", "<leader>cf", function()
-	conform.format({ async = true, lsp_format = "fallback" })
-end, { desc = "Format buffer" })
+map("n", "<leader>td", function()
+	local enabled = vim.diagnostic.is_enabled()
+	vim.diagnostic.enable(not enabled)
+	notify_toggle("Diagnostics", not enabled)
+end, { desc = "Toggle diagnostics" })
+-- }}}
 
+-- LSP {{{
+-- Esc / float clear {{{
+local function close_lsp_floating_previews()
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local ok, preview_buf = pcall(function()
+			return vim.w[win].lsp_floating_bufnr
+		end)
+		if ok and preview_buf and vim.api.nvim_win_is_valid(win) then
+			pcall(vim.api.nvim_win_close, win, true)
+		end
+	end
+end
+map("n", "<Esc>", function()
+	close_lsp_floating_previews()
+	vim.cmd.nohlsearch()
+end, { silent = true, desc = "Close LSP float and clear search highlight" })
+-- }}}
+
+-- Completion {{{
 map("i", "<C-Space>", function()
 	vim.lsp.completion.get()
 end, { desc = "Trigger LSP completion" })
+-- }}}
 
+-- LspAttach {{{
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("my-lsp", { clear = true }),
+	group = group,
 	callback = function(ev)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
 		if not client then
@@ -444,7 +482,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
 	end,
 })
+-- }}}
 
+-- Servers {{{
 local function lsp(name, cfg)
 	if vim.fn.executable(cfg.cmd[1]) == 0 then
 		return
@@ -454,6 +494,7 @@ local function lsp(name, cfg)
 	vim.lsp.enable(name)
 end
 
+-- lua_ls {{{
 lsp("lua_ls", {
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
@@ -470,25 +511,33 @@ lsp("lua_ls", {
 		},
 	},
 })
+-- }}}
 
+-- rust_analyzer {{{
 lsp("rust_analyzer", {
 	cmd = { "rust-analyzer" },
 	filetypes = { "rust" },
 	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
 })
+-- }}}
 
+-- gopls {{{
 lsp("gopls", {
 	cmd = { "gopls" },
 	filetypes = { "go", "gomod", "gowork", "gotmpl" },
 	root_markers = { "go.work", "go.mod", ".git" },
 })
+-- }}}
 
+-- ty {{{
 lsp("ty", {
 	cmd = { "ty", "server" },
 	filetypes = { "python" },
 	root_markers = { "ty.toml", "pyproject.toml", ".git" },
 })
+-- }}}
 
+-- ts_ls {{{
 lsp("ts_ls", {
 	cmd = { "typescript-language-server", "--stdio" },
 	filetypes = {
@@ -499,55 +548,26 @@ lsp("ts_ls", {
 	},
 	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 })
+-- }}}
 
+-- phpantom {{{
 lsp("phpantom", {
 	cmd = { "phpantom_lsp" },
 	filetypes = { "php", "blade" },
 	root_markers = { "artisan", "composer.json", ".git" },
 })
+-- }}}
+-- }}}
+-- }}}
 
-local snippets = {
-	lua = {
-		req = 'local ${1:name} = require("${2:module}")',
-		fn = "local function ${1:name}(${2:args})\n\t${0}\nend",
-		map = 'map("${1:n}", "${2:lhs}", ${3:rhs}, { desc = "${4:desc}" })',
-	},
-	rust = {
-		test = "#[test]\nfn ${1:name}() {\n\t${0}\n}",
-	},
-	go = {
-		err = "if err != nil {\n\treturn ${1:err}\n}",
-	},
-	python = {
-		main = 'if __name__ == "__main__":\n\t${0}',
-	},
-	javascript = {
-		fn = "function ${1:name}(${2:args}) {\n\t${0}\n}",
-		afn = "const ${1:name} = (${2:args}) => {\n\t${0}\n}",
-	},
-	typescript = {
-		fn = "function ${1:name}(${2:args}): ${3:void} {\n\t${0}\n}",
-		afn = "const ${1:name} = (${2:args}): ${3:void} => {\n\t${0}\n}",
-	},
-	php = {
-		route = "Route::get('/${1:path}', [${2:Controller}::class, '${3:method}']);",
-	},
-	blade = {
-		forelse = "@forelse (\\$${1:items} as \\$${2:item})\n\t${0}\n@empty\n@endforelse",
-	},
-}
-
-local function snippet_body(trigger)
-	local ft = vim.bo.filetype
-	local by_ft = snippets[ft] or snippets[ft:gsub("react$", "")]
-	return by_ft and by_ft[trigger]
-end
+-- Snippets {{{
+local snippets = require("snippets")
 
 map("i", "<C-k>", function()
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 	local line = vim.api.nvim_get_current_line()
 	local trigger = line:sub(1, col):match("([%w_]+)$")
-	local body = trigger and snippet_body(trigger)
+	local body = trigger and snippets.get(trigger)
 	if not body then
 		return
 	end
@@ -567,3 +587,6 @@ map({ "i", "s" }, "<C-h>", function()
 		vim.snippet.jump(-1)
 	end
 end, { desc = "Jump to previous snippet placeholder" })
+-- }}}
+
+-- vim: foldmethod=marker foldlevel=0
