@@ -22,8 +22,10 @@ These paths are currently managed by `Makefile`:
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
 - `.config/zed/` -> `~/.config/zed`
+- `.config/emacs/` -> `~/.config/emacs`
 - `.config/starship.toml` -> `~/.config/starship.toml`
 - `.config/mise/config.toml` -> `~/.config/mise/config.toml`
+- `.config/sqlfluff/.sqlfluff` -> `~/.config/sqlfluff/.sqlfluff`
 - `zshrc/macos/.zshrc` -> `~/.zshrc` on macOS
 - `zshrc/arch-i3/.zshrc` -> `~/.zshrc` on Arch Linux
 
@@ -36,26 +38,19 @@ These paths are currently managed by `Makefile`:
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
 - `.config/zed/`: Zed editor configuration
+- `.config/emacs/`: Emacs configuration
 - `.config/starship.toml`: Starship prompt configuration
 - `.config/mise/config.toml`: Global mise tools
+- `.config/sqlfluff/.sqlfluff`: sqlfluff configuration
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration
 
 ## Neovim
 
-Neovim is organized by responsibility instead of by plugin.
+Neovim is a compact single-file config using native `vim.pack`.
 
-- `init.lua`: top-level load order for config modules
-- `lua/config/options.lua`: editor options
-- `lua/config/keymaps.lua`: general keymaps and toggles
-- `lua/config/autocmds.lua`: autocommands
-- `lua/config/completion.lua`: completion and Supermaven setup
-- `lua/config/formatting.lua`: formatting tools
-- `lua/config/linting.lua`: linting setup
-- `lua/config/lsp.lua`: LSP and diagnostics behavior
-- `lua/plugins/pack.lua`: plugin installation via `vim.pack`
-- `lua/plugins/editor.lua`: editor/plugin runtime setup
-- `lua/plugins/theme.lua`: colorscheme and theme config
+- `init.lua`: options, keymaps, autocmds, plugins, LSP, completion, and snippets
+- `nvim-pack-lock.json`: lockfile managed by `vim.pack`
 
-See `.config/nvim/README.md` for the Neovim-specific layout.
+See `.config/nvim/README.md` for plugin install/remove notes.
 See `AGENTS.md` for the repo-wide edit map for automated changes.
