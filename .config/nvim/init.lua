@@ -35,16 +35,12 @@ vim.o.winborder = "rounded" -- rounded borders for floating windows
 vim.o.writebackup = false -- do not write to a backup file
 vim.o.swapfile = false -- do not create a swapfile
 vim.o.undofile = true -- do create an undo file
-local undodir = vim.fn.stdpath("state") .. "/undo"
-vim.fn.mkdir(undodir, "p")
-vim.o.undodir = undodir
 vim.o.updatetime = 300 -- faster completion
 vim.o.timeoutlen = 500 -- timeout duration
 -- Setting it to 0 causes terminals on windows to send OSC11 to send r on startup
 vim.o.ttimeoutlen = 10 -- key code timeout.
 
 vim.opt.iskeyword:append("-") -- include - in words
--- vim.o.path:append("**") -- include subdirs in search
 vim.o.mouse = "a" -- enable mouse support
 
 vim.o.splitbelow = true -- horizontal splits go below
@@ -153,9 +149,6 @@ vim.g.clipboard = {
 		["*"] = function() end,
 	},
 }
-
--- Sessions and quit
-map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit all" })
 
 -- Map Q to start recording macros
 map("n", "Q", "q", { desc = "Record macro" })
@@ -286,8 +279,6 @@ local function apply_highlights()
 	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
 	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
 	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
-	vim.api.nvim_set_hl(0, "StatusLineErr", { fg = "#BF616A", bold = true }) -- nord11
-	vim.api.nvim_set_hl(0, "StatusLineWarn", { fg = "#D08770" }) -- nord12
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -412,8 +403,6 @@ require("which-key").setup({})
 -- LSP and Diagnostics
 vim.diagnostic.config({
 	virtual_text = true,
-	underline = true,
-	signs = true,
 	severity_sort = true,
 })
 map("n", "<leader>cx", function()
@@ -429,6 +418,9 @@ end, { desc = "Next diagnostic" })
 map("n", "[d", function()
 	vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Previous diagnostic" })
+map("n", "<leader>cf", function()
+	conform.format({ async = true, lsp_format = "fallback" })
+end, { desc = "Format buffer" })
 
 map("i", "<C-Space>", function()
 	vim.lsp.completion.get()
@@ -450,9 +442,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
 		map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
-		map("n", "<leader>cf", function()
-			conform.format({ bufnr = ev.buf, async = true, lsp_format = "fallback" })
-		end, { buffer = ev.buf, desc = "Format buffer" })
 	end,
 })
 
@@ -465,37 +454,19 @@ local function lsp(name, cfg)
 	vim.lsp.enable(name)
 end
 
-local lua_library = { vim.env.VIMRUNTIME }
 lsp("lua_ls", {
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
-	root_markers = {
-		".luarc.json",
-		".luarc.jsonc",
-		".stylua.toml",
-		"stylua.toml",
-		"selene.toml",
-		"init.lua",
-		".git",
-	},
+	root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
 	settings = {
 		Lua = {
-			runtime = {
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				globals = { "vim" },
-			},
+			runtime = { version = "LuaJIT" },
+			diagnostics = { globals = { "vim" } },
 			workspace = {
 				checkThirdParty = false,
-				library = lua_library,
+				library = { vim.env.VIMRUNTIME },
 			},
-			completion = {
-				callSnippet = "Replace",
-			},
-			telemetry = {
-				enable = false,
-			},
+			completion = { callSnippet = "Replace" },
 		},
 	},
 })
@@ -515,13 +486,7 @@ lsp("gopls", {
 lsp("ty", {
 	cmd = { "ty", "server" },
 	filetypes = { "python" },
-	root_markers = {
-		"ty.toml",
-		"pyproject.toml",
-		"uv.lock",
-		"requirements.txt",
-		".git",
-	},
+	root_markers = { "ty.toml", "pyproject.toml", ".git" },
 })
 
 lsp("ts_ls", {
