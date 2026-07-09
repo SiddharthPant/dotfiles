@@ -1,8 +1,11 @@
-local map = vim.keymap.set
-local M = {}
-local pack = vim.pack.add
+vim.loader.enable()
 
-M.group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+
+local map = vim.keymap.set
+local pack = vim.pack.add
+local group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
 vim.o.termguicolors = true
 vim.o.number = true -- line number
@@ -32,7 +35,9 @@ vim.o.winborder = "rounded" -- rounded borders for floating windows
 vim.o.writebackup = false -- do not write to a backup file
 vim.o.swapfile = false -- do not create a swapfile
 vim.o.undofile = true -- do create an undo file
-vim.o.undodir = vim.fn.expand("~/.vim/undodir") -- set the undo directory
+local undodir = vim.fn.stdpath("state") .. "/undo"
+vim.fn.mkdir(undodir, "p")
+vim.o.undodir = undodir
 vim.o.updatetime = 300 -- faster completion
 vim.o.timeoutlen = 500 -- timeout duration
 -- Setting it to 0 causes terminals on windows to send OSC11 to send r on startup
@@ -52,9 +57,6 @@ vim.opt.diffopt:append("linematch:60") -- improve diff display
 -- Tested with ghostty/wezterm; overrides the shell's title while nvim is running.
 vim.o.title = true
 vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
-
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
 
 local function close_lsp_floating_previews()
 	local closed = false
@@ -171,31 +173,31 @@ local function is_normal_file(buf)
 	return bt == "" and fname ~= ""
 end
 
--- Window becoming active: hide its winbar
+-- Window becoming active: hide winbar only for normal files (keep Oil/etc.)
 vim.api.nvim_create_autocmd("WinEnter", {
-	group = M.group,
-	desc = "Hide winbar on the now-active window",
+	group = group,
+	desc = "Hide winbar on the now-active normal-file window",
 	callback = function()
-		vim.wo.winbar = nil
+		if is_normal_file(0) then
+			vim.wo.winbar = nil
+		end
 	end,
 })
 
 -- Window becoming inactive: show winbar if it's a normal file buffer
 vim.api.nvim_create_autocmd("WinLeave", {
-	group = M.group,
+	group = group,
 	desc = "Show winbar on the now-inactive window (normal files only)",
 	callback = function()
 		if is_normal_file(0) then
 			vim.wo.winbar = winbar_str
-		else
-			vim.wo.winbar = nil
 		end
 	end,
 })
 
 -- return to last cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
-	group = M.group,
+	group = group,
 	desc = "Restore last cursor position",
 	callback = function()
 		if vim.o.diff then -- except in diff mode
@@ -216,7 +218,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
-	group = M.group,
+	group = group,
 	callback = function()
 		vim.hl.on_yank()
 	end,
@@ -224,7 +226,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- close quickfix and location list windows with q
 vim.api.nvim_create_autocmd("FileType", {
-	group = M.group,
+	group = group,
 	pattern = "qf",
 	callback = function(args)
 		vim.keymap.set("n", "q", "<cmd>close<CR>", {
@@ -237,7 +239,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- spellcheck commit messages
 vim.api.nvim_create_autocmd("FileType", {
-	group = M.group,
+	group = group,
 	pattern = "gitcommit",
 	callback = function()
 		vim.opt_local.spell = true
@@ -245,25 +247,57 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Plugin Config
+-- fff.nvim ships a native binary; download/build it on install and update.
+-- Must be registered before pack() so the install PackChanged event is seen.
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = group,
+	desc = "Download or build fff.nvim binary after install/update",
+	callback = function(ev)
+		local spec = ev.data.spec
+		local kind = ev.data.kind
+		if spec and spec.name == "fff.nvim" and (kind == "install" or kind == "update") then
+			if not ev.data.active then
+				vim.cmd.packadd("fff.nvim")
+			end
+			require("fff.download").download_or_build_binary()
+		end
+	end,
+})
+
+pack({
+	"https://github.com/shaunsingh/nord.nvim",
+	"https://github.com/dmtrKovalenko/fff.nvim",
+	"https://github.com/MagicDuck/grug-far.nvim",
+	"https://github.com/stevearc/oil.nvim",
+	"https://github.com/stevearc/conform.nvim",
+	"https://github.com/tpope/vim-fugitive",
+	"https://github.com/folke/which-key.nvim",
+})
 
 -- Colorscheme: Nord
-pack({ "https://github.com/shaunsingh/nord.nvim" })
+local function apply_highlights()
+	-- Overrides for auto-completion info window backgrounds
+	vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
+	vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
+	-- match nord's WinBar background so segments blend with the bar
+	local winbar_bg = "#3B4252" -- nord1
+	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
+	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
+	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
+	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
+	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
+	vim.api.nvim_set_hl(0, "StatusLineErr", { fg = "#BF616A", bold = true }) -- nord11
+	vim.api.nvim_set_hl(0, "StatusLineWarn", { fg = "#D08770" }) -- nord12
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = group,
+	callback = apply_highlights,
+})
 vim.cmd.colorscheme("nord")
--- Overrides and autocmds to auto-completion info window backgrounds
-vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
-vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
--- match nord's WinBar background so segments blend with the bar
-local winbar_bg = "#3B4252" -- nord0; change to "#3B4252" (nord1) if you want it slightly raised
-vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
-vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
-vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
-vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
-vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
-vim.api.nvim_set_hl(0, "StatusLineErr", { fg = "#BF616A", bold = true }) -- nord11
-vim.api.nvim_set_hl(0, "StatusLineWarn", { fg = "#D08770" }) -- nord12
 
 vim.api.nvim_create_autocmd("CompleteChanged", {
-	group = M.group,
+	group = group,
 	callback = function()
 		local preview = vim.fn.complete_info({ "selected" }).preview_winid
 		if preview and vim.api.nvim_win_is_valid(preview) then
@@ -275,7 +309,6 @@ vim.api.nvim_create_autocmd("CompleteChanged", {
 })
 
 -- File picker: fff.nvim
-pack({ "https://github.com/dmtrKovalenko/fff.nvim" })
 map("n", "<leader><SPACE>", function()
 	require("fff").find_files()
 end, { desc = "FFFind files" })
@@ -284,10 +317,9 @@ map("n", "<leader>/", function()
 end, { desc = "Live fffuzy grep" })
 
 -- Nice global search/replace UI: grug-far
-pack({ "https://github.com/MagicDuck/grug-far.nvim" })
+require("grug-far").setup({})
 
 -- Make neovim a well oiled Dir editor: Oil.nvim
-pack({ "https://github.com/stevearc/oil.nvim" })
 local oil = require("oil")
 -- Declare a global function to retrieve the current directory
 function _G.get_oil_winbar()
@@ -351,7 +383,6 @@ oil.setup({
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- Reliable file formatting: conform.nvim
-pack({ "https://github.com/stevearc/conform.nvim" })
 local conform = require("conform")
 conform.setup({
 	formatters_by_ft = {
@@ -376,22 +407,9 @@ conform.setup({
 	},
 })
 
--- The one and only best git manager for vim
-pack({ "https://github.com/tpope/vim-fugitive" })
-
--- Helpful keymaps with which-key
-pack({ "https://github.com/folke/which-key.nvim" })
--- local wk = require("which-key")
--- wk.setup({
---
--- })
--- wk.show({
--- 	keys = "C-w",
--- 	loop = true,
--- })
+require("which-key").setup({})
 
 -- LSP and Diagnostics
-
 vim.diagnostic.config({
 	virtual_text = true,
 	underline = true,
@@ -412,18 +430,6 @@ map("n", "[d", function()
 	vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Previous diagnostic" })
 
-vim.api.nvim_create_autocmd("InsertCharPre", {
-	group = vim.api.nvim_create_augroup("my-lsp-completion", { clear = true }),
-	callback = function()
-		if vim.fn.pumvisible() == 1 then
-			return
-		end
-
-		if vim.v.char:match("[%w_]") then
-			vim.lsp.completion.get()
-		end
-	end,
-})
 map("i", "<C-Space>", function()
 	vim.lsp.completion.get()
 end, { desc = "Trigger LSP completion" })
@@ -533,13 +539,6 @@ lsp("phpantom", {
 	cmd = { "phpantom_lsp" },
 	filetypes = { "php", "blade" },
 	root_markers = { "artisan", "composer.json", ".git" },
-	settings = {
-		intelephense = {
-			files = {
-				associations = { "*.php", "*.blade.php" },
-			},
-		},
-	},
 })
 
 local snippets = {
@@ -592,3 +591,14 @@ map("i", "<C-k>", function()
 	vim.api.nvim_win_set_cursor(0, { row, col - #trigger })
 	vim.snippet.expand(body)
 end, { desc = "Expand snippet trigger" })
+
+map({ "i", "s" }, "<C-l>", function()
+	if vim.snippet.active({ direction = 1 }) then
+		vim.snippet.jump(1)
+	end
+end, { desc = "Jump to next snippet placeholder" })
+map({ "i", "s" }, "<C-h>", function()
+	if vim.snippet.active({ direction = -1 }) then
+		vim.snippet.jump(-1)
+	end
+end, { desc = "Jump to previous snippet placeholder" })
