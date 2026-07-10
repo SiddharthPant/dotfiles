@@ -53,7 +53,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 
 For the Neovim-specific README, see `.config/nvim/README.md`.
 
-Behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour). Snippet **bodies** live under `lua/snippets/`. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds; `lua/snippets/` uses the same style. Modelines set `foldmethod=marker`.
+Behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour). UX modules come from `mini.nvim` (completion, pairs, snippets, clue, diff, sessions, icons, statusline); Git UI from `vim-fugitive` and `diffview-plus.nvim`; snippet bodies from `friendly-snippets`. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds. Modelines set `foldmethod=marker`.
 
 Top-level folds:
 
@@ -66,33 +66,33 @@ Top-level folds:
 - Theme / highlights
 - UI chrome (inactive winbar, completion doc styling)
 - General autocmds
-- Plugins (each setup + its maps, nested)
+- Plugins (each setup + its maps, nested; includes treesitter / autotag / mini)
 - Diagnostics
 - LSP (nested attach/servers)
-- Snippet keymaps (bodies in `lua/snippets/`)
 
 Related files:
 
 - `.config/nvim/init.lua`: the full Neovim config
-- `.config/nvim/lua/snippets/`: per-language snippet bodies + loader
 - `.config/nvim/nvim-pack-lock.json`: `vim.pack` lockfile (do not hand-edit in normal use)
 - `.config/nvim/.luarc.json`: LuaLS workspace hints for this config
 
 ## Where To Edit
 
-For common Neovim tasks, edit the matching section of `.config/nvim/init.lua` (or `lua/snippets/` for snippet bodies):
+For common Neovim tasks, edit the matching section of `.config/nvim/init.lua`:
 
 - New plugin or removing plugin: the `pack({ ... })` list, then restart and `vim.pack.del` if needed (see `.config/nvim/README.md`)
-- Plugins with install/build hooks (e.g. fff binary): register `PackChanged` **before** `pack()`
+- Plugins with install/build hooks (fff binary, treesitter `:TSUpdate`): register `PackChanged` **before** `pack()`
+- Treesitter parsers / highlight / Askama `htmldjango` filetype: treesitter plugin block
+- Bracket/quote pairs: `mini.pairs` (curly braces disabled in template fts); HTML tags: autotag
+- Completion / snippets / clues / git hunks / sessions / statusline: mini plugin block; fugitive / diffview nearby
 - Plugin setup or plugin-tied keymaps: near that plugin's `setup` / `require` block
 - Theme, highlight, colorscheme: Nord + `apply_highlights` / `ColorScheme` autocmd
 - Core editing / buffer maps: early keymap sections
 - Clipboard / wrap toggles: clipboard section
 - Diagnostics maps and `<leader>td`: Diagnostics section
-- LSP keymaps, completion, servers: LSP section
+- LSP keymaps / servers: LSP section (`mason` + `nvim-lspconfig`; completion is `mini.completion`)
+- Mason UI: `:Mason` (no leader map)
 - Formatting: conform block (`setup` + `<leader>cf`)
-- Snippet bodies: `lua/snippets/<ft>.lua` (+ register in `lua/snippets/init.lua` if new)
-- Snippet keymaps: end of `init.lua`
 - Options (numbers, tabs, search, UI): options block near the top
 - Autocmd behavior: UI chrome or general autocmds (shared `group`)
 
@@ -104,9 +104,10 @@ For common Neovim tasks, edit the matching section of `.config/nvim/init.lua` (o
 ## Current Conventions
 
 - Plugin installation uses native `vim.pack`, not `lazy.nvim`.
-- Keep behaviour in a single `init.lua` unless a split is clearly justified; snippet data may live under `lua/snippets/`.
+- Keep behaviour in a single `init.lua` unless a split is clearly justified.
 - Keep new mappings near related existing mappings.
 - Prefer buffer-local mappings when a command only makes sense for one filetype.
+- Do not add leader maps for simple Ex/Lua commands (`:Mason`, `MiniSessions.select()`, etc.). Maps are for frequent, multi-step, or awkward-to-type actions only.
 - Prefer `vim.notify` for user-facing messages unless a plugin already owns that UI.
 - Theme highlight overrides belong in `apply_highlights` so they survive `:colorscheme`.
 
