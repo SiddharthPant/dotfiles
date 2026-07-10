@@ -68,7 +68,7 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.config/emacs,$(HOME)/.config/emacs)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/config.toml,$(HOME)/.config/mise/config.toml)
-	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff/.sqlfluff,$(HOME)/.config/sqlfluff/.sqlfluff)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	@echo "Common dotfiles linked"
 
 # target: clean - Remove all dotfile symlinks
@@ -85,5 +85,5 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/emacs,$(HOME)/.config/emacs)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/config.toml,$(HOME)/.config/mise/config.toml)
-	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff/.sqlfluff,$(HOME)/.config/sqlfluff/.sqlfluff)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	@echo "Dotfiles unlinked"
