@@ -151,6 +151,7 @@ vim.pack.add({
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/stevearc/conform.nvim",
+	"https://github.com/mfussenegger/nvim-lint",
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	"https://github.com/windwp/nvim-ts-autotag",
 	"https://github.com/windwp/nvim-autopairs",
@@ -163,6 +164,7 @@ vim.pack.add({
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
+	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 })
 -- }}}
 -- }}}
@@ -321,6 +323,18 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 -- }}}
+
+-- SQL indentation {{{
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = "sql",
+	desc = "Match SQLFluff's four-space indentation",
+	callback = function(ev)
+		vim.bo[ev.buf].tabstop = 4
+		vim.bo[ev.buf].shiftwidth = 4
+	end,
+})
+-- }}}
 -- }}}
 
 -- Plugins {{{
@@ -329,18 +343,23 @@ require("nvim-treesitter").install({
 	"bash",
 	"c",
 	"css",
+	"diff",
+	"dockerfile",
+	"gitcommit",
 	"go",
 	"html",
 	"htmldjango",
 	"javascript",
 	"json",
 	"lua",
+	"make",
 	"markdown",
 	"markdown_inline",
 	"php",
 	"python",
 	"query",
 	"rust",
+	"sql",
 	"toml",
 	"tsx",
 	"typescript",
@@ -451,6 +470,7 @@ conform.setup({
 		go = { "goimports", "gofumpt" },
 		rust = { "rustfmt" },
 		python = { "ruff_format" },
+		sql = { "sqlfluff" },
 		javascript = { "prettier" },
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
@@ -460,13 +480,45 @@ conform.setup({
 	default_format_opts = {
 		lsp_format = "fallback",
 	},
-	format_on_save = {
-		timeout_ms = 500,
+	format_on_save = function(bufnr)
+		return { timeout_ms = vim.bo[bufnr].filetype == "sql" and 2000 or 500 }
+	end,
+	formatters = {
+		-- The shared PostgreSQL config lives outside individual projects.
+		sqlfluff = {
+			args = { "format", "-" },
+			require_cwd = false,
+		},
 	},
 })
 map("n", "<leader>cf", function()
 	conform.format({ async = true })
 end, { desc = "Format buffer" })
+-- }}}
+
+-- lint {{{
+local lint = require("lint")
+lint.linters_by_ft = {
+	env = { "dotenv_linter" },
+	make = { "checkmake" },
+	python = { "ruff" },
+	sql = { "sqlfluff" },
+}
+vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+	group = group,
+	pattern = { "*.py", "*.pyi" },
+	desc = "Lint Python with Ruff",
+	callback = function()
+		lint.try_lint()
+	end,
+})
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = group,
+	desc = "Lint configured filetypes after saving",
+	callback = function()
+		lint.try_lint()
+	end,
+})
 -- }}}
 
 -- mini {{{
@@ -716,25 +768,69 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- nvim-lspconfig supplies default cmd/filetypes/root; only override here.
 -- Mason installs binaries; mason-lspconfig auto-enables installed servers.
 
+-- rust-analyzer {{{
+vim.lsp.config("rust_analyzer", {
+	settings = {
+		["rust-analyzer"] = {
+			check = {
+				command = "clippy",
+			},
+		},
+	},
+})
+-- }}}
+
 -- phpantom {{{
 vim.lsp.config("phpantom_lsp", {
 	filetypes = { "php", "blade" },
 	root_markers = { "artisan", ".phpantom.toml", "composer.json", ".git" },
 })
-vim.lsp.enable("phpantom_lsp")
 -- }}}
 
 -- mason {{{
+local lsp_servers = {
+	"bashls",
+	"clangd",
+	"cssls",
+	"docker_language_server",
+	"gopls",
+	"html",
+	"jsonls",
+	"lua_ls",
+	"marksman",
+	"phpantom_lsp",
+	"rust_analyzer",
+	"sqls",
+	"taplo",
+	"ts_ls",
+	"ty",
+	"vimls",
+	"yamlls",
+}
+
+-- Prefer the active Go toolchain binary over shims that override Mason's GOBIN.
+local go_bin = vim.env.GOROOT and vim.fs.joinpath(vim.env.GOROOT, "bin")
+if go_bin and vim.fn.isdirectory(go_bin) == 1 then
+	vim.env.PATH = go_bin .. ":" .. vim.env.PATH
+end
+
 require("mason").setup()
-require("mason-lspconfig").setup({
+require("mason-tool-installer").setup({
 	ensure_installed = {
-		"lua_ls",
-		"rust_analyzer",
-		"gopls",
-		"ts_ls",
-		"ty",
-		"phpantom_lsp",
+		"checkmake",
+		"dotenv-linter",
+		"gofumpt",
+		"goimports",
+		"prettier",
+		"ruff",
+		"shellcheck",
+		"sqlfluff",
+		"stylua",
 	},
+})
+require("mason-lspconfig").setup({
+	ensure_installed = lsp_servers,
+	automatic_enable = lsp_servers,
 })
 -- }}}
 -- }}}

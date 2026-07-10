@@ -53,7 +53,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 
 For the Neovim-specific README, see `.config/nvim/README.md`.
 
-Most behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour); Askama snippet bodies live in `lua/snippets/htmldjango.lua`. UX modules come from `mini.nvim` (completion, snippets, diff, sessions, icons, statusline); pairs from `nvim-autopairs`; keymap hints from `which-key`; Git UI from `vim-fugitive` and `diffview-plus.nvim`; HTML snippet bodies from `friendly-snippets` plus the local Askama set. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds. Modelines set `foldmethod=marker`.
+Most behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour); Askama snippet bodies live in `lua/snippets/htmldjango.lua`. UX modules come from `mini.nvim` (completion, snippets, diff, sessions, icons, statusline); pairs from `nvim-autopairs`; linting from `nvim-lint`; keymap hints from `which-key`; Git UI from `vim-fugitive` and `diffview-plus.nvim`; HTML snippet bodies from `friendly-snippets` plus the local Askama set. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds. Modelines set `foldmethod=marker`.
 
 Top-level folds:
 
@@ -66,7 +66,7 @@ Top-level folds:
 - Theme / highlights
 - UI chrome (file winbar)
 - General autocmds
-- Plugins (each setup + its maps, nested; includes treesitter / autotag / mini)
+- Plugins (each setup + its maps, nested; includes treesitter / autotag / lint / mini)
 - Diagnostics
 - LSP (nested attach/servers)
 
@@ -94,7 +94,9 @@ For common Neovim tasks, edit the matching section of `.config/nvim/init.lua`:
 - Diagnostics maps and `<leader>td`: Diagnostics section
 - LSP keymaps / servers: LSP section (`mason` + `nvim-lspconfig`; completion is `mini.completion`)
 - Mason UI: `:Mason` (no leader map)
+- Mason-managed tools: mason-tool-installer setup in the LSP servers fold
 - Formatting: conform block (`setup` + `<leader>cf`)
+- Python linting: nvim-lint block (Ruff diagnostics)
 - Options (numbers, tabs, search, UI): options block near the top
 - Autocmd behavior: UI chrome or general autocmds (shared `group`)
 
