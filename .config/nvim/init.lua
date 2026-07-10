@@ -29,7 +29,6 @@ vim.o.smartcase = true -- case sensitive if uppercase in string
 vim.o.signcolumn = "yes" -- always show a sign column
 vim.o.colorcolumn = "80" -- show a column at 80 position chars
 vim.o.showmatch = true -- highlights matching brackets
-vim.opt.completeopt = { "fuzzy", "menuone", "noselect", "popup" } -- completion options
 vim.o.laststatus = 3 -- use a single global statusline
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
@@ -38,10 +37,6 @@ vim.o.winborder = "rounded" -- rounded borders for floating windows
 vim.o.writebackup = false -- do not write to a backup file
 vim.o.swapfile = false -- do not create a swapfile
 vim.o.undofile = true -- do create an undo file
-vim.o.updatetime = 300 -- faster completion
-vim.o.timeoutlen = 500 -- timeout duration
--- Setting it to 0 causes terminals on windows to send OSC11 to send r on startup
-vim.o.ttimeoutlen = 10 -- key code timeout.
 
 vim.opt.iskeyword:append("-") -- include - in words
 vim.o.mouse = "a" -- enable mouse support
@@ -143,20 +138,29 @@ end, { desc = "Toggle line wrap" })
 -- }}}
 
 -- Pack {{{
--- fff binary hook {{{
--- fff.nvim ships a native binary; download/build it on install and update.
--- Must be registered before pack() so the install PackChanged event is seen.
+-- install/update hooks {{{
+-- Must be registered before pack() so PackChanged events are seen.
 vim.api.nvim_create_autocmd("PackChanged", {
 	group = group,
-	desc = "Download or build fff.nvim binary after install/update",
+	desc = "Post-install hooks for plugins that need a build step",
 	callback = function(ev)
 		local spec = ev.data.spec
 		local kind = ev.data.kind
-		if spec and spec.name == "fff.nvim" and (kind == "install" or kind == "update") then
+		if not spec or (kind ~= "install" and kind ~= "update") then
+			return
+		end
+		local function ensure_loaded()
 			if not ev.data.active then
-				vim.cmd.packadd("fff.nvim")
+				vim.cmd.packadd(spec.name)
 			end
+		end
+		-- fff.nvim ships a native binary; download/build it on install and update.
+		if spec.name == "fff.nvim" then
+			ensure_loaded()
 			require("fff.download").download_or_build_binary()
+		elseif spec.name == "nvim-treesitter" then
+			ensure_loaded()
+			vim.cmd.TSUpdate()
 		end
 	end,
 })
@@ -169,17 +173,21 @@ pack({
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/stevearc/conform.nvim",
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	"https://github.com/windwp/nvim-ts-autotag",
+	"https://github.com/nvim-mini/mini.nvim",
+	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/tpope/vim-fugitive",
-	"https://github.com/folke/which-key.nvim",
+	"https://github.com/dlyongemallo/diffview-plus.nvim",
+	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/mason-org/mason.nvim",
+	"https://github.com/mason-org/mason-lspconfig.nvim",
 })
 -- }}}
 -- }}}
 
 -- Theme {{{
 local function apply_highlights()
-	-- Overrides for auto-completion info window backgrounds
-	vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#3B4252", fg = "#D8DEE9" }) -- nord1 bg, nord4 fg
-	vim.api.nvim_set_hl(0, "CmpDocBorder", { bg = "#3B4252", fg = "#88C0D0" }) -- nord8 border
 	-- match nord's WinBar background so segments blend with the bar
 	local winbar_bg = "#3B4252" -- nord1
 	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
@@ -225,20 +233,6 @@ vim.api.nvim_create_autocmd("WinLeave", {
 	callback = function()
 		if is_normal_file(0) then
 			vim.wo.winbar = winbar_str
-		end
-	end,
-})
--- }}}
-
--- Completion doc styling {{{
-vim.api.nvim_create_autocmd("CompleteChanged", {
-	group = group,
-	callback = function()
-		local preview = vim.fn.complete_info({ "selected" }).preview_winid
-		if preview and vim.api.nvim_win_is_valid(preview) then
-			-- reuse existing position; only add a border
-			vim.api.nvim_win_set_config(preview, { border = "rounded" })
-			vim.wo[preview].winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder"
 		end
 	end,
 })
@@ -303,8 +297,61 @@ vim.api.nvim_create_autocmd("FileType", {
 -- }}}
 
 -- Plugins {{{
--- which-key {{{
-require("which-key").setup({})
+-- treesitter {{{
+require("nvim-treesitter").install({
+	"bash",
+	"c",
+	"css",
+	"go",
+	"html",
+	"htmldjango",
+	"javascript",
+	"json",
+	"lua",
+	"markdown",
+	"markdown_inline",
+	"php",
+	"python",
+	"query",
+	"rust",
+	"toml",
+	"tsx",
+	"typescript",
+	"vim",
+	"vimdoc",
+	"yaml",
+})
+
+-- Askama templates live under templates/*.html (Jinja-like).
+vim.filetype.add({
+	pattern = {
+		[".*/templates/.*%.html"] = "htmldjango",
+	},
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	desc = "Enable treesitter highlight + indent when a parser exists",
+	callback = function(ev)
+		if not pcall(vim.treesitter.start) then
+			return
+		end
+		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+	end,
+})
+-- }}}
+
+-- autotag {{{
+require("nvim-ts-autotag").setup({
+	opts = {
+		enable_close = true,
+		enable_rename = true,
+		enable_close_on_slash = false,
+	},
+	aliases = {
+		htmldjango = "html",
+	},
+})
 -- }}}
 
 -- fff {{{
@@ -412,6 +459,187 @@ map("n", "<leader>cf", function()
 	conform.format({ async = true, lsp_format = "fallback" })
 end, { desc = "Format buffer" })
 -- }}}
+
+-- mini {{{
+-- icons {{{
+require("mini.icons").setup()
+MiniIcons.mock_nvim_web_devicons()
+MiniIcons.tweak_lsp_kind()
+-- }}}
+
+-- snippets {{{
+-- friendly-snippets via runtimepath. Default `**/html.json` also pulls Vue/Angular.
+local gen_loader = require("mini.snippets").gen_loader
+local from_lang = gen_loader.from_lang({
+	lang_patterns = {
+		html = { "html.json" },
+		htmldjango = { "frameworks/djangohtml.json", "html.json" },
+		blade = { "frameworks/blade/**/*.json" },
+		javascriptreact = {
+			"javascript/javascript.json",
+			"javascript/react.json",
+			"javascript/react-es7.json",
+		},
+		typescriptreact = {
+			"javascript/typescript.json",
+			"javascript/react-ts.json",
+			"javascript/react-es7.json",
+		},
+	},
+})
+require("mini.snippets").setup({
+	snippets = {
+		-- Askama/htmldjango often report treesitter lang "html" at the cursor.
+		function(context)
+			if context and vim.bo[context.buf_id].filetype == "htmldjango" then
+				context = vim.tbl_extend("force", {}, context, { lang = "htmldjango" })
+			end
+			return from_lang(context)
+		end,
+	},
+	mappings = {
+		expand = "<C-k>",
+		jump_next = "<C-l>",
+		jump_prev = "<C-h>",
+		stop = "<C-c>",
+	},
+})
+require("mini.snippets").start_lsp_server()
+-- }}}
+
+-- completion {{{
+require("mini.completion").setup()
+vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
+-- }}}
+
+-- pairs {{{
+require("mini.pairs").setup()
+-- Don't auto-close `{` in Jinja-like templates (typing `{%` / `{{`).
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = { "htmldjango", "jinja", "jinja2" },
+	desc = "Disable curly brace pairing in template filetypes",
+	callback = function(ev)
+		vim.keymap.set("i", "{", "{", { buffer = ev.buf })
+		vim.keymap.set("i", "}", "}", { buffer = ev.buf })
+	end,
+})
+
+-- Accept selected completion item; otherwise use mini.pairs <CR>.
+_G.cr_action = function()
+	if vim.fn.complete_info().selected ~= -1 then
+		return "\25" -- <C-y>
+	end
+	return MiniPairs.cr()
+end
+vim.keymap.set("i", "<CR>", "v:lua.cr_action()", { expr = true })
+-- }}}
+
+-- clue {{{
+local miniclue = require("mini.clue")
+miniclue.setup({
+	triggers = {
+		{ mode = { "n", "x" }, keys = "<Leader>" },
+		{ mode = "n", keys = "[" },
+		{ mode = "n", keys = "]" },
+		{ mode = "i", keys = "<C-x>" },
+		{ mode = { "n", "x" }, keys = "g" },
+		{ mode = { "n", "x" }, keys = "'" },
+		{ mode = { "n", "x" }, keys = "`" },
+		{ mode = { "n", "x" }, keys = '"' },
+		{ mode = { "i", "c" }, keys = "<C-r>" },
+		{ mode = "n", keys = "<C-w>" },
+		{ mode = { "n", "x" }, keys = "z" },
+	},
+	clues = {
+		{ mode = "n", keys = "<Leader>b", desc = "+buffer" },
+		{ mode = "n", keys = "<Leader>c", desc = "+code" },
+		{ mode = "n", keys = "<Leader>g", desc = "+git" },
+		{ mode = "n", keys = "<Leader>t", desc = "+toggle" },
+		miniclue.gen_clues.builtin_completion(),
+		miniclue.gen_clues.g(),
+		miniclue.gen_clues.marks(),
+		miniclue.gen_clues.registers(),
+		miniclue.gen_clues.windows(),
+		miniclue.gen_clues.z(),
+		miniclue.gen_clues.square_brackets(),
+	},
+	window = { delay = 300 },
+})
+-- }}}
+
+-- diff {{{
+require("mini.diff").setup({
+	view = {
+		style = "sign",
+		signs = { add = "│", change = "│", delete = "▁" },
+	},
+})
+map("n", "<leader>go", function()
+	MiniDiff.toggle_overlay()
+end, { desc = "Toggle diff overlay" })
+-- }}}
+
+-- diffview {{{
+require("diffview").setup({
+	enhanced_diff_hl = true,
+	use_icons = true,
+})
+-- }}}
+
+-- sessions {{{
+-- Local Session.vim per cwd: auto-save on quit, auto-resume on start if present.
+-- :SessionClear deletes it and skips save for this Neovim instance.
+local session_save = true
+require("mini.sessions").setup({
+	autoread = false,
+	autowrite = false,
+	directory = "",
+	verbose = { read = false, write = false, delete = true },
+})
+local session_file = MiniSessions.config.file
+vim.api.nvim_create_autocmd("VimEnter", {
+	group = group,
+	nested = true,
+	once = true,
+	desc = "Resume local session if present",
+	callback = function()
+		-- Don't clobber an explicit file open (`nvim foo.txt`).
+		if vim.fn.argc() > 0 then
+			return
+		end
+		if MiniSessions.detected[session_file] == nil then
+			return
+		end
+		MiniSessions.read(session_file)
+	end,
+})
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	group = group,
+	desc = "Save local session on quit",
+	callback = function()
+		if not session_save then
+			return
+		end
+		pcall(MiniSessions.write, session_file, { force = true, verbose = false })
+	end,
+})
+vim.api.nvim_create_user_command("Session", function()
+	MiniSessions.read(session_file)
+end, { desc = "Resume local session" })
+vim.api.nvim_create_user_command("SessionClear", function()
+	local path = vim.fs.joinpath(vim.fn.getcwd(), session_file)
+	pcall(vim.fn.delete, path)
+	MiniSessions.detected[session_file] = nil
+	vim.v.this_session = ""
+	session_save = false
+end, { desc = "Delete local session and skip save on quit" })
+-- }}}
+
+-- statusline {{{
+require("mini.statusline").setup({ use_icons = true })
+-- }}}
+-- }}}
 -- }}}
 
 -- Diagnostics {{{
@@ -457,12 +685,6 @@ map("n", "<Esc>", function()
 end, { silent = true, desc = "Close LSP float and clear search highlight" })
 -- }}}
 
--- Completion {{{
-map("i", "<C-Space>", function()
-	vim.lsp.completion.get()
-end, { desc = "Trigger LSP completion" })
--- }}}
-
 -- LspAttach {{{
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = group,
@@ -472,11 +694,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			return
 		end
 
-		if client:supports_method("textDocument/completion") then
-			vim.lsp.completion.enable(true, client.id, ev.buf, {
-				autotrigger = true,
-			})
-		end
+		-- Keep mini.clue triggers as the latest buffer-local maps.
+		pcall(MiniClue.ensure_buf_triggers)
 
 		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
 		map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
@@ -485,20 +704,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- }}}
 
 -- Servers {{{
-local function lsp(name, cfg)
-	if vim.fn.executable(cfg.cmd[1]) == 0 then
-		return
-	end
-
-	vim.lsp.config(name, cfg)
-	vim.lsp.enable(name)
-end
+-- nvim-lspconfig supplies default cmd/filetypes/root; only override here.
+-- Mason installs binaries; mason-lspconfig auto-enables installed servers.
 
 -- lua_ls {{{
-lsp("lua_ls", {
-	cmd = { "lua-language-server" },
-	filetypes = { "lua" },
-	root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git" },
+vim.lsp.config("lua_ls", {
 	settings = {
 		Lua = {
 			runtime = { version = "LuaJIT" },
@@ -508,85 +718,40 @@ lsp("lua_ls", {
 				library = { vim.env.VIMRUNTIME },
 			},
 			completion = { callSnippet = "Replace" },
+			-- Formatting is owned by conform/stylua.
+			format = { enable = false },
 		},
 	},
 })
 -- }}}
 
--- rust_analyzer {{{
-lsp("rust_analyzer", {
-	cmd = { "rust-analyzer" },
-	filetypes = { "rust" },
-	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
-})
--- }}}
-
--- gopls {{{
-lsp("gopls", {
-	cmd = { "gopls" },
-	filetypes = { "go", "gomod", "gowork", "gotmpl" },
-	root_markers = { "go.work", "go.mod", ".git" },
-})
--- }}}
-
--- ty {{{
-lsp("ty", {
-	cmd = { "ty", "server" },
-	filetypes = { "python" },
-	root_markers = { "ty.toml", "pyproject.toml", ".git" },
-})
--- }}}
-
--- ts_ls {{{
-lsp("ts_ls", {
-	cmd = { "typescript-language-server", "--stdio" },
-	filetypes = {
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-	},
-	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
-})
--- }}}
-
 -- phpantom {{{
-lsp("phpantom", {
-	cmd = { "phpantom_lsp" },
-	filetypes = { "php", "blade" },
-	root_markers = { "artisan", "composer.json", ".git" },
+-- Not in Mason; enable only when the binary is on PATH.
+if vim.fn.executable("phpantom_lsp") == 1 then
+	vim.lsp.config("phpantom", {
+		cmd = { "phpantom_lsp" },
+		filetypes = { "php", "blade" },
+		root_markers = { "artisan", "composer.json", ".git" },
+	})
+	vim.lsp.enable("phpantom")
+end
+-- }}}
+
+-- mason {{{
+require("mason").setup()
+require("mason-lspconfig").setup({
+	ensure_installed = {
+		"lua_ls",
+		"rust_analyzer",
+		"gopls",
+		"ts_ls",
+		"ty",
+	},
+	-- Enable installed servers via vim.lsp.enable() (nvim-lspconfig configs).
+	automatic_enable = true,
 })
 -- }}}
 -- }}}
--- }}}
-
--- Snippets {{{
-local snippets = require("snippets")
-
-map("i", "<C-k>", function()
-	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-	local line = vim.api.nvim_get_current_line()
-	local trigger = line:sub(1, col):match("([%w_]+)$")
-	local body = trigger and snippets.get(trigger)
-	if not body then
-		return
-	end
-
-	vim.api.nvim_buf_set_text(0, row - 1, col - #trigger, row - 1, col, {})
-	vim.api.nvim_win_set_cursor(0, { row, col - #trigger })
-	vim.snippet.expand(body)
-end, { desc = "Expand snippet trigger" })
-
-map({ "i", "s" }, "<C-l>", function()
-	if vim.snippet.active({ direction = 1 }) then
-		vim.snippet.jump(1)
-	end
-end, { desc = "Jump to next snippet placeholder" })
-map({ "i", "s" }, "<C-h>", function()
-	if vim.snippet.active({ direction = -1 }) then
-		vim.snippet.jump(-1)
-	end
-end, { desc = "Jump to previous snippet placeholder" })
 -- }}}
 
 -- vim: foldmethod=marker foldlevel=0

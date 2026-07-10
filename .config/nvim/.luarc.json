@@ -1,5 +1,13 @@
 {
-    "diagnostics.globals": [
-        "vim"
-    ]
+	"diagnostics.globals": [
+		"vim",
+		"MiniIcons",
+		"MiniSnippets",
+		"MiniCompletion",
+		"MiniPairs",
+		"MiniClue",
+		"MiniDiff",
+		"MiniSessions",
+		"MiniStatusline"
+	]
 }
