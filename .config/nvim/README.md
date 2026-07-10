@@ -1,91 +1,46 @@
-# Neovim Configuration
+# Neovim
 
-Compact single-file Neovim config. Entry point is `init.lua`; plugins use Neovim's native `vim.pack`. UX modules come from `mini.nvim`; snippets from `friendly-snippets`.
+Main config: `init.lua`; Askama snippets live in `lua/snippets/htmldjango.lua`.
+Plugins via native `vim.pack`. UX from `mini.nvim`.
 
-## Layout
+## Conventions
 
-- `init.lua` — bootstrap, options, core maps, pack, theme/UI, plugins (LoB), diagnostics, LSP
-- `nvim-pack-lock.json` — lockfile managed by `vim.pack`; do not edit manually during normal use
-- `.luarc.json` — LuaLS hints for editing this config
+- **Locality of Behaviour** — plugin setup, maps, and related autocmds live together in one fold.
+- **Marker folds** — navigate with `za` / `zR` / `zM`. Do not add leader maps for simple Ex commands (`:Mason`, `:Git`, `:Markview`, …).
+- Edit `init.lua` unless a dedicated file already exists (e.g. `.luarc.json`).
 
-Sections in `init.lua` use marker folds (`-- Name {{{` … `-- }}}`) with nested plugin/LSP/autocmd subfolds. Modelines set `foldmethod=marker` and `foldlevel=0` (outline on open). Useful: `za` toggle, `zR`/`zM` open/close all, `zj`/`zk` next/prev fold.
+## Gotchas
 
-Top-level folds (Locality of Behaviour: setup + maps for a feature stay together):
+- Register `PackChanged` hooks **before** `pack()` (fff binary, treesitter `TSUpdate`).
+- Askama `templates/*.html` → `htmldjango`.
+- Askama blocks use `<C-k>` snippets; standard autopairs provide the brace pairing
+  around template expressions and tags.
+- Sessions are per-cwd under `stdpath("data")/session` (not in the project tree). `:SessionClear` also skips save on that quit.
+- Markdown colors for markview are overridden in the Theme fold (Nord’s default `@markup.heading.*` are all green).
 
-- Bootstrap — loader, leaders, `map` / `pack` / augroup
-- Options — including `completeopt`, title
-- Core editing — wrap-aware motion, search/scroll center, Alt move, indent, macros
-- Buffers — `bd` / `bo`
-- Clipboard — OSC52 + toggles (`tc`, `tw`)
-- Pack — fff binary hook + `pack({ ... })`
-- Theme — colorscheme + highlight overrides
-- UI chrome — inactive winbar, completion doc styling
-- General autocmds — cursor restore, yank, qf, gitcommit
-- Plugins — treesitter, autotag, fff, grug-far, oil, conform, mini (nested)
-- Diagnostics — config, jump/list maps, `<leader>td`
-- LSP — Esc float clear, `LspAttach`, mason / lspconfig servers (nested)
+## Remove a plugin
 
-## Plugin Management
-
-Plugins are declared with `pack({ ... })` in `init.lua`.
-
-`PackChanged` hooks (registered before `pack()`):
-
-- `fff.nvim` — download/build its native binary on install/update
-- `nvim-treesitter` — run `:TSUpdate` on install/update
-
-If the fff binary is missing anyway:
-
-```vim
-:lua require("fff.download").download_or_build_binary()
-```
-
-Treesitter parsers are requested via `require("nvim-treesitter").install({ ... })` in `init.lua`. Askama templates under `templates/*.html` are detected as `htmldjango`; `nvim-ts-autotag` handles HTML tags.
-
-### mini.nvim modules
-
-Enabled from the full `mini.nvim` library:
-
-| Module | Role |
-|---|---|
-| `mini.icons` | Icons (+ web-devicons mock, LSP kind tweak) |
-| `mini.snippets` | Snippet engine + `friendly-snippets` loaders |
-| `mini.completion` | Autocompletion / signature help (module defaults) |
-| `mini.pairs` | Bracket/quote pairs (`{` disabled in template fts) |
-| `mini.clue` | Which-key-style clues |
-| `mini.diff` | Git hunk signs / overlay |
-| `mini.sessions` | Session write/read/select |
-| `mini.statusline` | Global statusline |
-
-Also: `vim-fugitive` (`:Git`), `diffview-plus.nvim` (`:DiffviewOpen`, `:DiffviewFileHistory`, …).
-
-Snippet expand/jump: `<C-k>` / `<C-l>` / `<C-h>`. Diff overlay: `<leader>go`. Sessions: per-cwd under `stdpath("data")/session`; auto-resume on start if present; auto-save on quit; `:Session` / `:SessionClear` (clear also skips save this quit).
-
-### LSP / Mason
-
-- `nvim-lspconfig` — default server configs (`cmd` / filetypes / root)
-- `mason.nvim` — install UI (`:Mason`)
-- `mason-lspconfig.nvim` — `ensure_installed` + `automatic_enable`
-
-Server overrides live in the LSP Servers fold (`lua_ls` settings, custom `phpantom`). Mason ensures: `lua_ls`, `rust_analyzer`, `gopls`, `ts_ls`, `ty`.
-
-To remove a plugin:
-
-1. Remove its spec from `pack({ ... })`.
+1. Remove its spec from `pack({ ... })` in `init.lua`.
 2. Restart Neovim.
-3. Run:
+3. Delete the installed package:
 
 ```vim
 :lua vim.pack.del({ "plugin-name.nvim" })
 ```
 
-After this mini migration, inactive leftovers to delete if present:
+## Quick reference
 
-```vim
-:lua vim.pack.del({ "which-key.nvim", "nvim-autopairs", "mini.snippets" })
-```
+| Area | Notes |
+|---|---|
+| Snippets | `<C-k>` expand, `<C-l>` / `<C-h>` jump |
+| Diff overlay | `<leader>go` |
+| Sessions | auto on start/quit; `:Session` / `:SessionClear` |
+| Git | `:Git`, `:DiffviewOpen`, `:DiffviewFileHistory` |
+| Markdown | `:Markview` |
+| LSP install | `:Mason` — ensures `lua_ls`, `rust_analyzer`, `gopls`, `ts_ls`, `ty` |
+| fff binary missing | `:lua require("fff.download").download_or_build_binary()` |
 
-## Verification
+## Check
 
 ```sh
 nvim --headless -i NONE '+qa'

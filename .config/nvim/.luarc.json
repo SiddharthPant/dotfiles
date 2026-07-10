@@ -4,10 +4,12 @@
 		"MiniIcons",
 		"MiniSnippets",
 		"MiniCompletion",
-		"MiniPairs",
-		"MiniClue",
 		"MiniDiff",
 		"MiniSessions",
 		"MiniStatusline"
-	]
+	],
+	"runtime.version": "LuaJIT",
+	"workspace.checkThirdParty": false,
+	"completion.callSnippet": "Replace",
+	"format.enable": false
 }

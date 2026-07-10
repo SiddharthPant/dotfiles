@@ -5,12 +5,10 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 local map = vim.keymap.set
-local pack = vim.pack.add
 local group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 -- }}}
 
 -- Options {{{
-vim.o.termguicolors = true
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
 vim.o.cursorline = true -- highlight current line
@@ -19,7 +17,7 @@ vim.o.sidescrolloff = 10 -- keep 10 lines to left/right of cursor
 
 vim.o.tabstop = 2 -- tabwidth
 vim.o.shiftwidth = 2 -- indent width
-vim.o.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
+vim.o.softtabstop = -1 -- soft tab stop not tabs on tab/backspace
 vim.o.expandtab = true -- use spaces instead of tabs
 vim.o.smartindent = true -- smart auto-indent
 
@@ -39,8 +37,6 @@ vim.o.swapfile = false -- do not create a swapfile
 vim.o.undofile = true -- do create an undo file
 
 vim.opt.iskeyword:append("-") -- include - in words
-vim.o.mouse = "a" -- enable mouse support
-
 vim.o.splitbelow = true -- horizontal splits go below
 vim.o.splitright = true -- vertical splits go right
 
@@ -66,15 +62,19 @@ map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
+map("n", "J", function()
+	local view = vim.fn.winsaveview()
+	vim.cmd.normal({ args = { vim.v.count1 .. "J" }, bang = true })
+	vim.fn.winrestview(view)
+end, { desc = "Join lines and keep cursor position" })
 
 map("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
 map("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+map("x", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+map("x", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
-map("v", "<", "<gv", { desc = "Indent left and reselect" })
-map("v", ">", ">gv", { desc = "Indent right and reselect" })
+map("x", "<", "<gv", { desc = "Indent left and reselect" })
+map("x", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Macros {{{
 -- Map Q to start recording macros
@@ -89,7 +89,7 @@ map("n", "<leader>bd", "<cmd>bn|bd #<CR>", { desc = "Delete buffer keep split" }
 local function close_other_buffers()
 	local cur = vim.api.nvim_get_current_buf()
 	local targets = vim.tbl_filter(function(b)
-		return b ~= cur and vim.bo[b].buflisted and vim.api.nvim_buf_is_loaded(b) and not vim.bo[b].modified
+		return b ~= cur and vim.bo[b].buflisted and not vim.bo[b].modified
 	end, vim.api.nvim_list_bufs())
 
 	for _, b in ipairs(targets) do
@@ -105,36 +105,14 @@ local function notify_toggle(title, enabled)
 	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
 end
 
--- explicitly set clipboard to force follow osc52 spec and not local cli utility
-vim.g.clipboard = {
-	name = "OSC 52",
-	copy = {
-		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-	},
-	paste = {
-		-- setting empty as most terminals ban paste operation and neovim hangs
-		-- while waiting for terminal output. We anyways can use the terminal's
-		-- paste shortcut instead of neovim's.
-		["+"] = function() end,
-		["*"] = function() end,
-	},
-}
+-- OSC52 copy without making the unnamed register depend on terminal paste.
+local osc52_copy = require("vim.ui.clipboard.osc52").copy("+")
+local system_clipboard_copy = false
 
 map("n", "<leader>tc", function()
-	local enabled = vim.list_contains(vim.opt.clipboard:get(), "unnamedplus")
-	if enabled then
-		vim.opt.clipboard:remove("unnamedplus")
-	else
-		vim.opt.clipboard:append("unnamedplus")
-	end
-	notify_toggle("System clipboard", not enabled)
-end, { desc = "Toggle system clipboard" })
-
-map("n", "<leader>tw", function()
-	vim.wo.wrap = not vim.wo.wrap
-	notify_toggle("Line wrap", vim.wo.wrap)
-end, { desc = "Toggle line wrap" })
+	system_clipboard_copy = not system_clipboard_copy
+	notify_toggle("System clipboard copy", system_clipboard_copy)
+end, { desc = "Toggle system clipboard copy" })
 -- }}}
 
 -- Pack {{{
@@ -167,7 +145,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 -- }}}
 
 -- plugin list {{{
-pack({
+vim.pack.add({
 	"https://github.com/shaunsingh/nord.nvim",
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
@@ -175,10 +153,13 @@ pack({
 	"https://github.com/stevearc/conform.nvim",
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	"https://github.com/windwp/nvim-ts-autotag",
+	"https://github.com/windwp/nvim-autopairs",
+	"https://github.com/folke/which-key.nvim",
 	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/tpope/vim-fugitive",
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
+	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
@@ -189,21 +170,26 @@ pack({
 -- Theme {{{
 -- Prefer soft backgrounds over reverse for Diff* (fugitive / diffview / mini overlay).
 vim.g.nord_uniform_diff_background = true
+-- Stronger markview heading/code tint backgrounds (default ~0.15 on dark).
+vim.g.markview_alpha = 0.28
 
 local function apply_highlights()
 	-- Nord palette accents used below.
-	local nord1, nord2 = "#3B4252", "#434C5E"
+	local nord1, nord2, nord3 = "#3B4252", "#434C5E", "#4C566A"
+	local nord4 = "#D8DEE9"
+	local cyan, blue, deep = "#88C0D0", "#81A1C1", "#5E81AC" -- nord8 / nord9 / nord10
 	local green, yellow, red = "#A3BE8C", "#EBCB8B", "#BF616A" -- nord14/13/11
+	local purple, orange, teal = "#B48EAD", "#D08770", "#8FBCBB" -- nord15 / nord12 / nord7
 	-- Soft tinted backgrounds (nord polar night + accent).
 	local add_bg, change_bg, delete_bg = "#3B4A3F", "#4A463B", "#4A3B3F"
 
 	-- match nord's WinBar background so segments blend with the bar
 	local winbar_bg = nord1
-	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
-	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
-	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
+	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = nord4 }) -- nord4 fg for filler/uncolored text
+	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = nord3 }) -- nord3 dim for non-current window
+	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = cyan, bold = true }) -- nord8 cyan filename
 	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = red, bold = true }) -- nord11 red [+]
-	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
+	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = blue }) -- nord9 dim cyan filetype
 
 	-- Built-in diff (also drives diffview + mini.diff overlay via links).
 	vim.api.nvim_set_hl(0, "DiffAdd", { bg = add_bg })
@@ -218,6 +204,31 @@ local function apply_highlights()
 	vim.api.nvim_set_hl(0, "diffAdded", { fg = green })
 	vim.api.nvim_set_hl(0, "diffChanged", { fg = yellow })
 	vim.api.nvim_set_hl(0, "diffRemoved", { fg = red })
+
+	-- Markdown: nord links all @markup.heading.* to green Title; give each level an accent
+	-- so treesitter + markview palettes (derived from these) look colorful.
+	-- Skip nord11 red for headings — too loud; use frost/aurora accents instead.
+	local headings = { cyan, green, deep, purple, teal, yellow }
+	for i, fg in ipairs(headings) do
+		vim.api.nvim_set_hl(0, ("@markup.heading.%d.markdown"):format(i), { fg = fg, bold = true })
+		vim.api.nvim_set_hl(0, ("markdownH%d"):format(i), { fg = fg, bold = true })
+	end
+	vim.api.nvim_set_hl(0, "@markup.heading", { fg = cyan, bold = true })
+	vim.api.nvim_set_hl(0, "@markup.strong", { fg = nord4, bold = true })
+	vim.api.nvim_set_hl(0, "@markup.italic", { fg = nord4, italic = true })
+	vim.api.nvim_set_hl(0, "@markup.strikethrough", { fg = nord3, strikethrough = true })
+	vim.api.nvim_set_hl(0, "@markup.link", { fg = cyan, underline = true })
+	vim.api.nvim_set_hl(0, "@markup.link.label", { fg = blue, underline = true })
+	vim.api.nvim_set_hl(0, "@markup.link.url", { fg = teal, underline = true })
+	vim.api.nvim_set_hl(0, "@markup.raw", { fg = teal })
+	vim.api.nvim_set_hl(0, "@markup.raw.block", { fg = nord4 })
+	vim.api.nvim_set_hl(0, "@markup.list", { fg = orange })
+	vim.api.nvim_set_hl(0, "@markup.quote", { fg = nord3, italic = true })
+
+	-- Rebuild markview palettes after our markup colors (it may have run earlier on ColorScheme).
+	pcall(function()
+		require("markview.highlights").setup()
+	end)
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -228,8 +239,8 @@ vim.cmd.colorscheme("nord")
 -- }}}
 
 -- UI chrome {{{
--- Inactive winbar {{{
--- Winbar: show only on INACTIVE normal-file windows
+-- File winbar {{{
+-- Show file, modified state, and filetype for normal file buffers.
 local winbar_str = "%#WinBarFile#%f%* %#WinBarMod#%m%*%=%#WinBarFT#%{&filetype}%*"
 
 local function is_normal_file(buf)
@@ -238,25 +249,11 @@ local function is_normal_file(buf)
 	return bt == "" and fname ~= ""
 end
 
--- Window becoming active: hide winbar only for normal files (keep Oil/etc.)
-vim.api.nvim_create_autocmd("WinEnter", {
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 	group = group,
-	desc = "Hide winbar on the now-active normal-file window",
+	desc = "Show winbar for normal file buffers",
 	callback = function()
-		if is_normal_file(0) then
-			vim.wo.winbar = nil
-		end
-	end,
-})
-
--- Window becoming inactive: show winbar if it's a normal file buffer
-vim.api.nvim_create_autocmd("WinLeave", {
-	group = group,
-	desc = "Show winbar on the now-inactive window (normal files only)",
-	callback = function()
-		if is_normal_file(0) then
-			vim.wo.winbar = winbar_str
-		end
+		vim.wo.winbar = is_normal_file(0) and winbar_str or nil
 	end,
 })
 -- }}}
@@ -267,13 +264,17 @@ vim.api.nvim_create_autocmd("WinLeave", {
 vim.api.nvim_create_autocmd("BufReadPost", {
 	group = group,
 	desc = "Restore last cursor position",
-	callback = function()
-		if vim.o.diff then -- except in diff mode
+	callback = function(ev)
+		if ev.buf ~= vim.api.nvim_get_current_buf() then
+			return
+		end
+		local ft = vim.bo[ev.buf].filetype
+		if vim.wo.diff or vim.tbl_contains({ "gitcommit", "gitrebase", "xxd" }, ft) then
 			return
 		end
 
-		local last_pos = vim.api.nvim_buf_get_mark(0, '"') -- {line, col}
-		local last_line = vim.api.nvim_buf_line_count(0)
+		local last_pos = vim.api.nvim_buf_get_mark(ev.buf, '"') -- {line, col}
+		local last_line = vim.api.nvim_buf_line_count(ev.buf)
 
 		local row = last_pos[1]
 		if row < 1 or row > last_line then
@@ -290,6 +291,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = group,
 	callback = function()
 		vim.hl.on_yank()
+		if system_clipboard_copy and vim.v.event.operator == "y" and vim.v.event.regname ~= "_" then
+			osc52_copy(vim.v.event.regcontents, vim.v.event.regtype)
+		end
 	end,
 })
 -- }}}
@@ -356,7 +360,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	desc = "Enable treesitter highlight + indent when a parser exists",
 	callback = function(ev)
-		if not pcall(vim.treesitter.start) then
+		if not pcall(vim.treesitter.start, ev.buf) then
 			return
 		end
 		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -365,16 +369,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- }}}
 
 -- autotag {{{
-require("nvim-ts-autotag").setup({
-	opts = {
-		enable_close = true,
-		enable_rename = true,
-		enable_close_on_slash = false,
-	},
-	aliases = {
-		htmldjango = "html",
-	},
-})
+require("nvim-ts-autotag").setup()
 -- }}}
 
 -- fff {{{
@@ -384,10 +379,6 @@ end, { desc = "FFFind files" })
 map("n", "<leader>/", function()
 	require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
 end, { desc = "Live fffuzy grep" })
--- }}}
-
--- grug-far {{{
-require("grug-far").setup({})
 -- }}}
 
 -- oil {{{
@@ -414,8 +405,6 @@ oil.setup({
 		winbar = "%!v:lua.get_oil_winbar()",
 	},
 	keymaps = {
-		-- free up some as we use them for navigation already
-		-- Keymap immediately next replaces the one above when false
 		["gd"] = {
 			callback = function()
 				detail = not detail
@@ -427,7 +416,7 @@ oil.setup({
 			end,
 			desc = "Toggle file detail view",
 		},
-		-- Use grug-far to open search in dir
+		-- Replace Oil's default sort picker with Grug Far scoped to this directory.
 		["gs"] = {
 			callback = function()
 				-- get the current directory
@@ -466,9 +455,6 @@ conform.setup({
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
-		-- Use the "_" filetype to run formatters on filetypes that don't
-		-- have other formatters configured.
-		["_"] = { "trim_whitespace" },
 	},
 	-- This will also affect the default values for format_on_save/format_after_save
 	default_format_opts = {
@@ -479,7 +465,7 @@ conform.setup({
 	},
 })
 map("n", "<leader>cf", function()
-	conform.format({ async = true, lsp_format = "fallback" })
+	conform.format({ async = true })
 end, { desc = "Format buffer" })
 -- }}}
 
@@ -491,12 +477,12 @@ MiniIcons.tweak_lsp_kind()
 -- }}}
 
 -- snippets {{{
--- friendly-snippets via runtimepath. Default `**/html.json` also pulls Vue/Angular.
+-- friendly-snippets supplies HTML snippets; template constructs live in a
+-- filetype module so Django-only tags do not leak into Askama files.
 local gen_loader = require("mini.snippets").gen_loader
 local from_lang = gen_loader.from_lang({
 	lang_patterns = {
 		html = { "html.json" },
-		htmldjango = { "frameworks/djangohtml.json", "html.json" },
 		blade = { "frameworks/blade/**/*.json" },
 		javascriptreact = {
 			"javascript/javascript.json",
@@ -510,12 +496,17 @@ local from_lang = gen_loader.from_lang({
 		},
 	},
 })
+
+local askama_snippets = require("snippets.htmldjango")
+
 require("mini.snippets").setup({
 	snippets = {
-		-- Askama/htmldjango often report treesitter lang "html" at the cursor.
 		function(context)
 			if context and vim.bo[context.buf_id].filetype == "htmldjango" then
-				context = vim.tbl_extend("force", {}, context, { lang = "htmldjango" })
+				-- Treesitter may report an injected language; use HTML snippets plus
+				-- the Askama set for this template filetype.
+				local html_context = vim.tbl_extend("force", {}, context, { lang = "html" })
+				return { from_lang(html_context), askama_snippets }
 			end
 			return from_lang(context)
 		end,
@@ -535,59 +526,35 @@ require("mini.completion").setup()
 vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 -- }}}
 
--- pairs {{{
-require("mini.pairs").setup()
--- Don't auto-close `{` in Jinja-like templates (typing `{%` / `{{`).
-vim.api.nvim_create_autocmd("FileType", {
-	group = group,
-	pattern = { "htmldjango", "jinja", "jinja2" },
-	desc = "Disable curly brace pairing in template filetypes",
-	callback = function(ev)
-		vim.keymap.set("i", "{", "{", { buffer = ev.buf })
-		vim.keymap.set("i", "}", "}", { buffer = ev.buf })
-	end,
+-- autopairs {{{
+local npairs = require("nvim-autopairs")
+
+npairs.setup({
+	check_ts = true,
+	map_cr = false,
+	disable_filetype = { "TelescopePrompt", "spectre_panel", "fff_input" },
 })
 
--- Accept selected completion item; otherwise use mini.pairs <CR>.
-_G.cr_action = function()
-	if vim.fn.complete_info().selected ~= -1 then
-		return "\25" -- <C-y>
+-- Confirm a selected completion item; otherwise dismiss the popup and run
+-- nvim-autopairs' normal CR behavior.
+vim.keymap.set("i", "<CR>", function()
+	if vim.fn.pumvisible() ~= 0 then
+		if vim.fn.complete_info({ "selected" }).selected ~= -1 then
+			return npairs.esc("<C-y>")
+		end
+		return npairs.esc("<C-e>") .. npairs.autopairs_cr()
 	end
-	return MiniPairs.cr()
-end
-vim.keymap.set("i", "<CR>", "v:lua.cr_action()", { expr = true })
+	return npairs.autopairs_cr()
+end, { expr = true, replace_keycodes = false, desc = "autopairs CR" })
 -- }}}
 
--- clue {{{
-local miniclue = require("mini.clue")
-miniclue.setup({
-	triggers = {
-		{ mode = { "n", "x" }, keys = "<Leader>" },
-		{ mode = "n", keys = "[" },
-		{ mode = "n", keys = "]" },
-		{ mode = "i", keys = "<C-x>" },
-		{ mode = { "n", "x" }, keys = "g" },
-		{ mode = { "n", "x" }, keys = "'" },
-		{ mode = { "n", "x" }, keys = "`" },
-		{ mode = { "n", "x" }, keys = '"' },
-		{ mode = { "i", "c" }, keys = "<C-r>" },
-		{ mode = "n", keys = "<C-w>" },
-		{ mode = { "n", "x" }, keys = "z" },
-	},
-	clues = {
-		{ mode = "n", keys = "<Leader>b", desc = "+buffer" },
-		{ mode = "n", keys = "<Leader>c", desc = "+code" },
-		{ mode = "n", keys = "<Leader>g", desc = "+git" },
-		{ mode = "n", keys = "<Leader>t", desc = "+toggle" },
-		miniclue.gen_clues.builtin_completion(),
-		miniclue.gen_clues.g(),
-		miniclue.gen_clues.marks(),
-		miniclue.gen_clues.registers(),
-		miniclue.gen_clues.windows(),
-		miniclue.gen_clues.z(),
-		miniclue.gen_clues.square_brackets(),
-	},
-	window = { delay = 300 },
+-- which-key {{{
+require("which-key").setup({})
+require("which-key").add({
+	{ "<leader>b", group = "buffer" },
+	{ "<leader>c", group = "code" },
+	{ "<leader>g", group = "git" },
+	{ "<leader>t", group = "toggle" },
 })
 -- }}}
 
@@ -606,7 +573,14 @@ end, { desc = "Toggle diff overlay" })
 -- diffview {{{
 require("diffview").setup({
 	enhanced_diff_hl = true,
-	use_icons = true,
+})
+-- }}}
+
+-- markview {{{
+require("markview").setup({
+	preview = {
+		icon_provider = "mini",
+	},
 })
 -- }}}
 
@@ -615,18 +589,23 @@ require("diffview").setup({
 -- :SessionClear deletes it and skips save for this Neovim instance.
 local session_save = true
 require("mini.sessions").setup({
-	autoread = false,
 	autowrite = false,
 	file = "",
-	verbose = { read = false, write = false, delete = true },
+	verbose = { write = false, delete = false },
 })
-local function session_name()
-	return vim.fn.fnamemodify(vim.fn.getcwd(), ":p"):gsub("/", "%%")
+local function session_cwd()
+	return vim.fn.getcwd(-1, -1)
 end
+
+local function session_name()
+	local cwd = session_cwd()
+	local base = vim.fn.fnamemodify(cwd, ":t")
+	return ("%s-%s"):format(base == "" and "root" or base, vim.fn.sha256(cwd):sub(1, 12))
+end
+
 vim.api.nvim_create_autocmd("VimEnter", {
 	group = group,
 	nested = true,
-	once = true,
 	desc = "Resume cwd session if present",
 	callback = function()
 		-- Don't clobber an explicit file open (`nvim foo.txt`).
@@ -647,7 +626,10 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 		if not session_save then
 			return
 		end
-		pcall(MiniSessions.write, session_name(), { force = true, verbose = false })
+		local ok, err = pcall(MiniSessions.write, session_name())
+		if not ok then
+			vim.notify(("Failed to save session: %s"):format(err), vim.log.levels.ERROR)
+		end
 	end,
 })
 vim.api.nvim_create_user_command("Session", function()
@@ -655,16 +637,18 @@ vim.api.nvim_create_user_command("Session", function()
 end, { desc = "Resume cwd session" })
 vim.api.nvim_create_user_command("SessionClear", function()
 	local name = session_name()
-	pcall(MiniSessions.delete, name, { force = true })
-	pcall(vim.fn.delete, vim.fs.joinpath(MiniSessions.config.directory, name))
-	MiniSessions.detected[name] = nil
-	vim.v.this_session = ""
+	if MiniSessions.detected[name] then
+		local ok, err = pcall(MiniSessions.delete, name, { force = true })
+		if not ok then
+			vim.notify(("Failed to delete session: %s"):format(err), vim.log.levels.ERROR)
+		end
+	end
 	session_save = false
 end, { desc = "Delete cwd session and skip save on quit" })
 -- }}}
 
 -- statusline {{{
-require("mini.statusline").setup({ use_icons = true })
+require("mini.statusline").setup()
 -- }}}
 -- }}}
 -- }}}
@@ -673,6 +657,13 @@ require("mini.statusline").setup({ use_icons = true })
 vim.diagnostic.config({
 	virtual_text = true,
 	severity_sort = true,
+	jump = {
+		on_jump = function(diagnostic, bufnr)
+			if diagnostic then
+				vim.diagnostic.open_float(bufnr, { scope = "cursor", focus = false })
+			end
+		end,
+	},
 })
 map("n", "<leader>cx", function()
 	vim.diagnostic.setloclist({ open = true, title = "Diagnostics" })
@@ -680,13 +671,6 @@ end, { desc = "Open location list with buffer diagnostics" })
 map("n", "<leader>cX", function()
 	vim.diagnostic.setqflist({ open = true, title = "Workspace diagnostics" })
 end, { desc = "Open quickfix list with all diagnostics" })
-map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Show line diagnostic float" })
-map("n", "]d", function()
-	vim.diagnostic.jump({ count = 1, float = true })
-end, { desc = "Next diagnostic" })
-map("n", "[d", function()
-	vim.diagnostic.jump({ count = -1, float = true })
-end, { desc = "Previous diagnostic" })
 map("n", "<leader>td", function()
 	local enabled = vim.diagnostic.is_enabled()
 	vim.diagnostic.enable(not enabled)
@@ -698,11 +682,8 @@ end, { desc = "Toggle diagnostics" })
 -- Esc / float clear {{{
 local function close_lsp_floating_previews()
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local ok, preview_buf = pcall(function()
-			return vim.w[win].lsp_floating_bufnr
-		end)
-		if ok and preview_buf and vim.api.nvim_win_is_valid(win) then
-			pcall(vim.api.nvim_win_close, win, true)
+		if vim.w[win].lsp_floating_bufnr then
+			vim.api.nvim_win_close(win, true)
 		end
 	end
 end
@@ -721,11 +702,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			return
 		end
 
-		-- Keep mini.clue triggers as the latest buffer-local maps.
-		pcall(MiniClue.ensure_buf_triggers)
-
-		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
-		map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
+		if client:supports_method("textDocument/definition", ev.buf) then
+			map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
+		end
+		if client:supports_method("textDocument/declaration", ev.buf) then
+			map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
+		end
 	end,
 })
 -- }}}
@@ -734,34 +716,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- nvim-lspconfig supplies default cmd/filetypes/root; only override here.
 -- Mason installs binaries; mason-lspconfig auto-enables installed servers.
 
--- lua_ls {{{
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			diagnostics = { globals = { "vim" } },
-			workspace = {
-				checkThirdParty = false,
-				library = { vim.env.VIMRUNTIME },
-			},
-			completion = { callSnippet = "Replace" },
-			-- Formatting is owned by conform/stylua.
-			format = { enable = false },
-		},
-	},
-})
--- }}}
-
 -- phpantom {{{
--- Not in Mason; enable only when the binary is on PATH.
-if vim.fn.executable("phpantom_lsp") == 1 then
-	vim.lsp.config("phpantom", {
-		cmd = { "phpantom_lsp" },
-		filetypes = { "php", "blade" },
-		root_markers = { "artisan", "composer.json", ".git" },
-	})
-	vim.lsp.enable("phpantom")
-end
+vim.lsp.config("phpantom_lsp", {
+	filetypes = { "php", "blade" },
+	root_markers = { "artisan", ".phpantom.toml", "composer.json", ".git" },
+})
+vim.lsp.enable("phpantom_lsp")
 -- }}}
 
 -- mason {{{
@@ -773,9 +733,8 @@ require("mason-lspconfig").setup({
 		"gopls",
 		"ts_ls",
 		"ty",
+		"phpantom_lsp",
 	},
-	-- Enable installed servers via vim.lsp.enable() (nvim-lspconfig configs).
-	automatic_enable = true,
 })
 -- }}}
 -- }}}

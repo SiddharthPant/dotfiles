@@ -38,7 +38,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 - `.tmux.conf`: tmux configuration
 - `.gitconfig`: Git configuration
 - `.zshenv`: non-interactive-safe Zsh environment and PATH setup
-- `.config/nvim/`: Neovim configuration (single-file `init.lua`)
+- `.config/nvim/`: Neovim configuration (`init.lua` plus `lua/snippets/`)
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
 - `.config/zed/`: Zed editor configuration
@@ -53,7 +53,7 @@ If a task touches setup or installation behavior, inspect `Makefile` first.
 
 For the Neovim-specific README, see `.config/nvim/README.md`.
 
-Behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour). UX modules come from `mini.nvim` (completion, pairs, snippets, clue, diff, sessions, icons, statusline); Git UI from `vim-fugitive` and `diffview-plus.nvim`; snippet bodies from `friendly-snippets`. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds. Modelines set `foldmethod=marker`.
+Most behaviour stays in `.config/nvim/init.lua` (Locality of Behaviour); Askama snippet bodies live in `lua/snippets/htmldjango.lua`. UX modules come from `mini.nvim` (completion, snippets, diff, sessions, icons, statusline); pairs from `nvim-autopairs`; keymap hints from `which-key`; Git UI from `vim-fugitive` and `diffview-plus.nvim`; HTML snippet bodies from `friendly-snippets` plus the local Askama set. Sections use marker folds (`-- Name {{{` / `-- }}}`), including nested plugin and LSP subfolds. Modelines set `foldmethod=marker`.
 
 Top-level folds:
 
@@ -64,7 +64,7 @@ Top-level folds:
 - Clipboard (OSC52 + toggles)
 - Pack (`PackChanged` then `pack({ ... })`)
 - Theme / highlights
-- UI chrome (inactive winbar, completion doc styling)
+- UI chrome (file winbar)
 - General autocmds
 - Plugins (each setup + its maps, nested; includes treesitter / autotag / mini)
 - Diagnostics
@@ -73,6 +73,7 @@ Top-level folds:
 Related files:
 
 - `.config/nvim/init.lua`: the full Neovim config
+- `.config/nvim/lua/snippets/htmldjango.lua`: Askama snippets for the `htmldjango` filetype
 - `.config/nvim/nvim-pack-lock.json`: `vim.pack` lockfile (do not hand-edit in normal use)
 - `.config/nvim/.luarc.json`: LuaLS workspace hints for this config
 
@@ -83,8 +84,9 @@ For common Neovim tasks, edit the matching section of `.config/nvim/init.lua`:
 - New plugin or removing plugin: the `pack({ ... })` list, then restart and `vim.pack.del` if needed (see `.config/nvim/README.md`)
 - Plugins with install/build hooks (fff binary, treesitter `:TSUpdate`): register `PackChanged` **before** `pack()`
 - Treesitter parsers / highlight / Askama `htmldjango` filetype: treesitter plugin block
-- Bracket/quote pairs: `mini.pairs` (curly braces disabled in template fts); HTML tags: autotag
-- Completion / snippets / clues / git hunks / sessions / statusline: mini plugin block; fugitive / diffview nearby
+- Askama snippet bodies: `.config/nvim/lua/snippets/htmldjango.lua`
+- Bracket/quote pairs: `nvim-autopairs`; Askama snippets: `mini.snippets`; HTML tags: autotag
+- Completion / snippets / git hunks / sessions / statusline: mini plugin block; which-key / fugitive / diffview nearby
 - Plugin setup or plugin-tied keymaps: near that plugin's `setup` / `require` block
 - Theme, highlight, colorscheme: Nord + `apply_highlights` / `ColorScheme` autocmd
 - Core editing / buffer maps: early keymap sections
