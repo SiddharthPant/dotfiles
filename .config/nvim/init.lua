@@ -800,7 +800,6 @@ local lsp_servers = {
 	"marksman",
 	"phpantom_lsp",
 	"rust_analyzer",
-	"sqls",
 	"taplo",
 	"ts_ls",
 	"ty",
