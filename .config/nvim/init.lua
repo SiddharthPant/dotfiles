@@ -187,14 +187,37 @@ pack({
 -- }}}
 
 -- Theme {{{
+-- Prefer soft backgrounds over reverse for Diff* (fugitive / diffview / mini overlay).
+vim.g.nord_uniform_diff_background = true
+
 local function apply_highlights()
+	-- Nord palette accents used below.
+	local nord1, nord2 = "#3B4252", "#434C5E"
+	local green, yellow, red = "#A3BE8C", "#EBCB8B", "#BF616A" -- nord14/13/11
+	-- Soft tinted backgrounds (nord polar night + accent).
+	local add_bg, change_bg, delete_bg = "#3B4A3F", "#4A463B", "#4A3B3F"
+
 	-- match nord's WinBar background so segments blend with the bar
-	local winbar_bg = "#3B4252" -- nord1
+	local winbar_bg = nord1
 	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = "#D8DEE9" }) -- nord4 fg for filler/uncolored text
 	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = "#4C566A" }) -- nord3 dim for non-current window
 	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = "#88C0D0", bold = true }) -- nord8 cyan filename
-	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = "#BF616A", bold = true }) -- nord11 red [+]
+	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = red, bold = true }) -- nord11 red [+]
 	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = "#81A1C1" }) -- nord9 dim cyan filetype
+
+	-- Built-in diff (also drives diffview + mini.diff overlay via links).
+	vim.api.nvim_set_hl(0, "DiffAdd", { bg = add_bg })
+	vim.api.nvim_set_hl(0, "DiffChange", { bg = change_bg })
+	vim.api.nvim_set_hl(0, "DiffDelete", { fg = red, bg = delete_bg })
+	vim.api.nvim_set_hl(0, "DiffText", { fg = yellow, bg = nord2, bold = true })
+
+	-- Sign / status colors: mini.diff → Added/Changed/Removed; fugitive/diffview → diff*.
+	vim.api.nvim_set_hl(0, "Added", { fg = green })
+	vim.api.nvim_set_hl(0, "Changed", { fg = yellow })
+	vim.api.nvim_set_hl(0, "Removed", { fg = red })
+	vim.api.nvim_set_hl(0, "diffAdded", { fg = green })
+	vim.api.nvim_set_hl(0, "diffChanged", { fg = yellow })
+	vim.api.nvim_set_hl(0, "diffRemoved", { fg = red })
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -588,52 +611,56 @@ require("diffview").setup({
 -- }}}
 
 -- sessions {{{
--- Local Session.vim per cwd: auto-save on quit, auto-resume on start if present.
+-- Per-cwd sessions under stdpath("data")/session (not in the project tree).
 -- :SessionClear deletes it and skips save for this Neovim instance.
 local session_save = true
 require("mini.sessions").setup({
 	autoread = false,
 	autowrite = false,
-	directory = "",
+	file = "",
 	verbose = { read = false, write = false, delete = true },
 })
-local session_file = MiniSessions.config.file
+local function session_name()
+	return vim.fn.fnamemodify(vim.fn.getcwd(), ":p"):gsub("/", "%%")
+end
 vim.api.nvim_create_autocmd("VimEnter", {
 	group = group,
 	nested = true,
 	once = true,
-	desc = "Resume local session if present",
+	desc = "Resume cwd session if present",
 	callback = function()
 		-- Don't clobber an explicit file open (`nvim foo.txt`).
 		if vim.fn.argc() > 0 then
 			return
 		end
-		if MiniSessions.detected[session_file] == nil then
+		local name = session_name()
+		if MiniSessions.detected[name] == nil then
 			return
 		end
-		MiniSessions.read(session_file)
+		MiniSessions.read(name)
 	end,
 })
 vim.api.nvim_create_autocmd("VimLeavePre", {
 	group = group,
-	desc = "Save local session on quit",
+	desc = "Save cwd session on quit",
 	callback = function()
 		if not session_save then
 			return
 		end
-		pcall(MiniSessions.write, session_file, { force = true, verbose = false })
+		pcall(MiniSessions.write, session_name(), { force = true, verbose = false })
 	end,
 })
 vim.api.nvim_create_user_command("Session", function()
-	MiniSessions.read(session_file)
-end, { desc = "Resume local session" })
+	MiniSessions.read(session_name())
+end, { desc = "Resume cwd session" })
 vim.api.nvim_create_user_command("SessionClear", function()
-	local path = vim.fs.joinpath(vim.fn.getcwd(), session_file)
-	pcall(vim.fn.delete, path)
-	MiniSessions.detected[session_file] = nil
+	local name = session_name()
+	pcall(MiniSessions.delete, name, { force = true })
+	pcall(vim.fn.delete, vim.fs.joinpath(MiniSessions.config.directory, name))
+	MiniSessions.detected[name] = nil
 	vim.v.this_session = ""
 	session_save = false
-end, { desc = "Delete local session and skip save on quit" })
+end, { desc = "Delete cwd session and skip save on quit" })
 -- }}}
 
 -- statusline {{{

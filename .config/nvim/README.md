@@ -59,7 +59,7 @@ Enabled from the full `mini.nvim` library:
 
 Also: `vim-fugitive` (`:Git`), `diffview-plus.nvim` (`:DiffviewOpen`, `:DiffviewFileHistory`, …).
 
-Snippet expand/jump: `<C-k>` / `<C-l>` / `<C-h>`. Diff overlay: `<leader>go`. Sessions: per-cwd `Session.vim`; auto-resume on start if present; auto-save on quit; `:Session` / `:SessionClear` (clear also skips save this quit).
+Snippet expand/jump: `<C-k>` / `<C-l>` / `<C-h>`. Diff overlay: `<leader>go`. Sessions: per-cwd under `stdpath("data")/session`; auto-resume on start if present; auto-save on quit; `:Session` / `:SessionClear` (clear also skips save this quit).
 
 ### LSP / Mason
 
