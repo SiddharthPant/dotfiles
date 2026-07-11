@@ -160,6 +160,7 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/NeogitOrg/neogit",
+	"https://github.com/folke/trouble.nvim",
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
@@ -181,6 +182,7 @@ require("catppuccin").setup({
 		markview = true,
 		mason = true,
 		neogit = true,
+		trouble = true,
 		which_key = true,
 	},
 })
@@ -243,20 +245,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		if system_clipboard_copy and vim.v.event.operator == "y" and vim.v.event.regname ~= "_" then
 			osc52_copy(vim.v.event.regcontents, vim.v.event.regtype)
 		end
-	end,
-})
--- }}}
-
--- Quickfix {{{
-vim.api.nvim_create_autocmd("FileType", {
-	group = group,
-	pattern = "qf",
-	callback = function(args)
-		vim.keymap.set("n", "q", "<cmd>close<CR>", {
-			buffer = args.buf,
-			silent = true,
-			desc = "Close quickfix window",
-		})
 	end,
 })
 -- }}}
@@ -566,9 +554,14 @@ require("which-key").add({
 })
 -- }}}
 
+-- trouble {{{
+require("trouble").setup()
+-- }}}
+
 -- gitsigns {{{
 local gitsigns = require("gitsigns")
 gitsigns.setup({
+	trouble = true,
 	signs = {
 		add = { text = "│" },
 		change = { text = "│" },
@@ -585,6 +578,16 @@ gitsigns.setup({
 		map("n", "<leader>go", gitsigns.preview_hunk_inline, {
 			buffer = bufnr,
 			desc = "Preview Git hunk inline",
+		})
+		map("n", "<leader>gx", gitsigns.setqflist, {
+			buffer = bufnr,
+			desc = "Open buffer Git hunks in Trouble",
+		})
+		map("n", "<leader>gX", function()
+			gitsigns.setqflist("all")
+		end, {
+			buffer = bufnr,
+			desc = "Open all Git hunks in Trouble",
 		})
 	end,
 })
@@ -697,12 +700,12 @@ vim.diagnostic.config({
 		end,
 	},
 })
-map("n", "<leader>cx", function()
-	vim.diagnostic.setloclist({ open = true, title = "Diagnostics" })
-end, { desc = "Open location list with buffer diagnostics" })
-map("n", "<leader>cX", function()
-	vim.diagnostic.setqflist({ open = true, title = "Workspace diagnostics" })
-end, { desc = "Open quickfix list with all diagnostics" })
+map("n", "<leader>cx", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", {
+	desc = "Toggle buffer diagnostics in Trouble",
+})
+map("n", "<leader>cX", "<cmd>Trouble diagnostics toggle<CR>", {
+	desc = "Toggle workspace diagnostics in Trouble",
+})
 map("n", "<leader>td", function()
 	local enabled = vim.diagnostic.is_enabled()
 	vim.diagnostic.enable(not enabled)

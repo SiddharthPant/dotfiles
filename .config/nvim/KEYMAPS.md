@@ -66,6 +66,8 @@ buffers.
 |---|---|---|
 | Normal | `<leader>tg` | Toggle current-line Git blame; a notification reports whether it is enabled or disabled |
 | Normal | `<leader>go` | Preview the hunk under the cursor inline |
+| Normal | `<leader>gx` | Open changed hunks for the current buffer in Trouble |
+| Normal | `<leader>gX` | Open all changed Git hunks in Trouble |
 
 The inline hunk preview is cleared when the cursor moves, insert mode starts,
 or the buffer is left.
@@ -82,8 +84,8 @@ These mappings are global:
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `<leader>cf` | Format the current buffer asynchronously with conform.nvim |
-| Normal | `<leader>cx` | Open the location list with diagnostics for the current buffer |
-| Normal | `<leader>cX` | Open the quickfix list with diagnostics for the whole workspace |
+| Normal | `<leader>cx` | Toggle Trouble diagnostics for the current buffer |
+| Normal | `<leader>cX` | Toggle Trouble diagnostics for the whole workspace |
 | Normal | `<leader>td` | Toggle diagnostics globally and notify of the new state |
 
 ## LSP
@@ -102,12 +104,11 @@ The following mapping is global:
 |---|---|---|
 | Normal | `<Esc>` | Close open LSP floating previews and clear search highlighting |
 
-## Completion and special buffers
+## Completion
 
-| Buffer / mode | Keymap | Action |
+| Mode | Keymap | Action |
 |---|---|---|
 | Insert | `<CR>` | Accept the selected completion item; if none is selected, dismiss the popup and insert an autopairs-aware newline |
-| Quickfix, normal | `q` | Close the quickfix window |
 
 The completion `<CR>` mapping is global, but its behavior changes depending on
 whether the completion menu is visible and whether an item is selected.
