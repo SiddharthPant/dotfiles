@@ -33,11 +33,8 @@ Plugins via native `vim.pack`. UX from `mini.nvim`.
 
 | Area | Notes |
 |---|---|
-| Snippets | `<C-k>` expand, `<C-l>` / `<C-h>` jump |
-| Find | `<leader>fb` buffers, `<leader>fh` help, `<leader>fr` resume picker |
-| Git hunk preview | `<leader>go` |
+| Keymaps | [KEYMAPS.md](KEYMAPS.md) |
 | Sessions | auto on start/quit; `:Session` / `:SessionClear` |
-| Git | `<leader>gg` Neogit, `<leader>gd` Diffview, `<leader>tg` line blame |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |
 | Linting | Checkmake for Makefiles; dotenv-linter for `.env*` |
