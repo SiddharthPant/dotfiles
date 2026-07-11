@@ -18,7 +18,6 @@ Plugins via native `vim.pack`. UX from `mini.nvim`.
 - Mason ensures configured LSPs and formatter/linter binaries; `rustfmt` remains
   supplied by the Rust toolchain because it is not in Mason's registry.
 - Sessions are per-cwd under `stdpath("data")/session` (not in the project tree). `:SessionClear` also skips save on that quit.
-- Markdown colors for markview are overridden in the Theme fold (Nord’s default `@markup.heading.*` are all green).
 
 ## Remove a plugin
 

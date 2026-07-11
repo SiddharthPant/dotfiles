@@ -146,7 +146,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 
 -- plugin list {{{
 vim.pack.add({
-	"https://github.com/shaunsingh/nord.nvim",
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/stevearc/oil.nvim",
@@ -170,74 +170,24 @@ vim.pack.add({
 -- }}}
 
 -- Theme {{{
--- Prefer soft backgrounds over reverse for Diff* (fugitive / diffview / mini overlay).
-vim.g.nord_uniform_diff_background = true
--- Stronger markview heading/code tint backgrounds (default ~0.15 on dark).
-vim.g.markview_alpha = 0.28
-
-local function apply_highlights()
-	-- Nord palette accents used below.
-	local nord1, nord2, nord3 = "#3B4252", "#434C5E", "#4C566A"
-	local nord4 = "#D8DEE9"
-	local cyan, blue, deep = "#88C0D0", "#81A1C1", "#5E81AC" -- nord8 / nord9 / nord10
-	local green, yellow, red = "#A3BE8C", "#EBCB8B", "#BF616A" -- nord14/13/11
-	local purple, orange, teal = "#B48EAD", "#D08770", "#8FBCBB" -- nord15 / nord12 / nord7
-	-- Soft tinted backgrounds (nord polar night + accent).
-	local add_bg, change_bg, delete_bg = "#3B4A3F", "#4A463B", "#4A3B3F"
-
-	-- match nord's WinBar background so segments blend with the bar
-	local winbar_bg = nord1
-	vim.api.nvim_set_hl(0, "WinBar", { bg = winbar_bg, fg = nord4 }) -- nord4 fg for filler/uncolored text
-	vim.api.nvim_set_hl(0, "WinBarNC", { bg = winbar_bg, fg = nord3 }) -- nord3 dim for non-current window
-	vim.api.nvim_set_hl(0, "WinBarFile", { bg = winbar_bg, fg = cyan, bold = true }) -- nord8 cyan filename
-	vim.api.nvim_set_hl(0, "WinBarMod", { bg = winbar_bg, fg = red, bold = true }) -- nord11 red [+]
-	vim.api.nvim_set_hl(0, "WinBarFT", { bg = winbar_bg, fg = blue }) -- nord9 dim cyan filetype
-
-	-- Built-in diff (also drives diffview + mini.diff overlay via links).
-	vim.api.nvim_set_hl(0, "DiffAdd", { bg = add_bg })
-	vim.api.nvim_set_hl(0, "DiffChange", { bg = change_bg })
-	vim.api.nvim_set_hl(0, "DiffDelete", { fg = red, bg = delete_bg })
-	vim.api.nvim_set_hl(0, "DiffText", { fg = yellow, bg = nord2, bold = true })
-
-	-- Sign / status colors: mini.diff → Added/Changed/Removed; fugitive/diffview → diff*.
-	vim.api.nvim_set_hl(0, "Added", { fg = green })
-	vim.api.nvim_set_hl(0, "Changed", { fg = yellow })
-	vim.api.nvim_set_hl(0, "Removed", { fg = red })
-	vim.api.nvim_set_hl(0, "diffAdded", { fg = green })
-	vim.api.nvim_set_hl(0, "diffChanged", { fg = yellow })
-	vim.api.nvim_set_hl(0, "diffRemoved", { fg = red })
-
-	-- Markdown: nord links all @markup.heading.* to green Title; give each level an accent
-	-- so treesitter + markview palettes (derived from these) look colorful.
-	-- Skip nord11 red for headings — too loud; use frost/aurora accents instead.
-	local headings = { cyan, green, deep, purple, teal, yellow }
-	for i, fg in ipairs(headings) do
-		vim.api.nvim_set_hl(0, ("@markup.heading.%d.markdown"):format(i), { fg = fg, bold = true })
-		vim.api.nvim_set_hl(0, ("markdownH%d"):format(i), { fg = fg, bold = true })
-	end
-	vim.api.nvim_set_hl(0, "@markup.heading", { fg = cyan, bold = true })
-	vim.api.nvim_set_hl(0, "@markup.strong", { fg = nord4, bold = true })
-	vim.api.nvim_set_hl(0, "@markup.italic", { fg = nord4, italic = true })
-	vim.api.nvim_set_hl(0, "@markup.strikethrough", { fg = nord3, strikethrough = true })
-	vim.api.nvim_set_hl(0, "@markup.link", { fg = cyan, underline = true })
-	vim.api.nvim_set_hl(0, "@markup.link.label", { fg = blue, underline = true })
-	vim.api.nvim_set_hl(0, "@markup.link.url", { fg = teal, underline = true })
-	vim.api.nvim_set_hl(0, "@markup.raw", { fg = teal })
-	vim.api.nvim_set_hl(0, "@markup.raw.block", { fg = nord4 })
-	vim.api.nvim_set_hl(0, "@markup.list", { fg = orange })
-	vim.api.nvim_set_hl(0, "@markup.quote", { fg = nord3, italic = true })
-
-	-- Rebuild markview palettes after our markup colors (it may have run earlier on ColorScheme).
-	pcall(function()
-		require("markview.highlights").setup()
-	end)
-end
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-	group = group,
-	callback = apply_highlights,
+require("catppuccin").setup({
+	flavour = "frappe",
+	integrations = {
+		diffview = true,
+		grug_far = true,
+		markview = true,
+		mason = true,
+		which_key = true,
+	},
+	custom_highlights = function(colors)
+		return {
+			WinBarFile = { fg = colors.sky, bold = true },
+			WinBarMod = { fg = colors.red, bold = true },
+			WinBarFT = { fg = colors.blue },
+		}
+	end,
 })
-vim.cmd.colorscheme("nord")
+vim.cmd.colorscheme("catppuccin-frappe")
 -- }}}
 
 -- UI chrome {{{
