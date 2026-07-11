@@ -159,7 +159,7 @@ vim.pack.add({
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/rafamadriz/friendly-snippets",
-	"https://github.com/tpope/vim-fugitive",
+	"https://github.com/NeogitOrg/neogit",
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
@@ -178,6 +178,7 @@ require("catppuccin").setup({
 		grug_far = true,
 		markview = true,
 		mason = true,
+		neogit = true,
 		which_key = true,
 	},
 })
@@ -522,6 +523,14 @@ require("mini.completion").setup()
 vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 -- }}}
 
+-- picker {{{
+local pick = require("mini.pick")
+pick.setup()
+map("n", "<leader>fb", pick.builtin.buffers, { desc = "Find buffer" })
+map("n", "<leader>fh", pick.builtin.help, { desc = "Find help" })
+map("n", "<leader>fr", pick.builtin.resume, { desc = "Resume picker" })
+-- }}}
+
 -- autopairs {{{
 local npairs = require("nvim-autopairs")
 
@@ -549,6 +558,7 @@ require("which-key").setup({})
 require("which-key").add({
 	{ "<leader>b", group = "buffer" },
 	{ "<leader>c", group = "code" },
+	{ "<leader>f", group = "find" },
 	{ "<leader>g", group = "git" },
 	{ "<leader>t", group = "toggle" },
 })
@@ -566,10 +576,22 @@ map("n", "<leader>go", function()
 end, { desc = "Toggle diff overlay" })
 -- }}}
 
+-- neogit {{{
+local neogit = require("neogit")
+neogit.setup({
+	integrations = {
+		diffview = true,
+		mini_pick = true,
+	},
+})
+map("n", "<leader>gg", neogit.open, { desc = "Open Neogit" })
+-- }}}
+
 -- diffview {{{
 require("diffview").setup({
 	enhanced_diff_hl = true,
 })
+map("n", "<leader>gd", "<cmd>DiffviewToggle<CR>", { desc = "Toggle Diffview" })
 -- }}}
 
 -- markview {{{

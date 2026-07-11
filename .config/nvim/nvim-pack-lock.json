@@ -44,6 +44,10 @@
       "rev": "fdc8b9701616863e44f7a7a0802cfe16bd866539",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
+    "neogit": {
+      "rev": "a0847c4bea5a5f92a36e3f3bf7da99d7d685d3ac",
+      "src": "https://github.com/NeogitOrg/neogit"
+    },
     "nvim-autopairs": {
       "rev": "7b9923abad60b903ece7c52940e1321d39eccc79",
       "src": "https://github.com/windwp/nvim-autopairs"
@@ -68,10 +72,6 @@
     "oil.nvim": {
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
-    },
-    "vim-fugitive": {
-      "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
-      "src": "https://github.com/tpope/vim-fugitive"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

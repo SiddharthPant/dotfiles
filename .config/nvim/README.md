@@ -6,7 +6,7 @@ Plugins via native `vim.pack`. UX from `mini.nvim`.
 ## Conventions
 
 - **Locality of Behaviour** — plugin setup, maps, and related autocmds live together in one fold.
-- **Marker folds** — navigate with `za` / `zR` / `zM`. Do not add leader maps for simple Ex commands (`:Mason`, `:Git`, `:Markview`, …).
+- **Marker folds** — navigate with `za` / `zR` / `zM`. Do not add leader maps for simple Ex commands (`:Mason`, `:Markview`, …).
 - Edit `init.lua` unless a dedicated file already exists (e.g. `.luarc.json`).
 
 ## Gotchas
@@ -34,9 +34,10 @@ Plugins via native `vim.pack`. UX from `mini.nvim`.
 | Area | Notes |
 |---|---|
 | Snippets | `<C-k>` expand, `<C-l>` / `<C-h>` jump |
+| Find | `<leader>fb` buffers, `<leader>fh` help, `<leader>fr` resume picker |
 | Diff overlay | `<leader>go` |
 | Sessions | auto on start/quit; `:Session` / `:SessionClear` |
-| Git | `:Git`, `:DiffviewOpen`, `:DiffviewFileHistory` |
+| Git | `<leader>gg` Neogit, `<leader>gd` Diffview toggle |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |
 | Linting | Checkmake for Makefiles; dotenv-linter for `.env*` |
