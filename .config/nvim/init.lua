@@ -180,13 +180,6 @@ require("catppuccin").setup({
 		mason = true,
 		which_key = true,
 	},
-	custom_highlights = function(colors)
-		return {
-			WinBarFile = { fg = colors.sky, bold = true },
-			WinBarMod = { fg = colors.red, bold = true },
-			WinBarFT = { fg = colors.blue },
-		}
-	end,
 })
 vim.cmd.colorscheme("catppuccin-frappe")
 -- }}}
