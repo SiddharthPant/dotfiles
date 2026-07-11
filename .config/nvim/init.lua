@@ -160,6 +160,7 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/NeogitOrg/neogit",
+	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
@@ -175,6 +176,7 @@ require("catppuccin").setup({
 	flavour = "frappe",
 	integrations = {
 		diffview = true,
+		gitsigns = true,
 		grug_far = true,
 		markview = true,
 		mason = true,
@@ -564,16 +566,28 @@ require("which-key").add({
 })
 -- }}}
 
--- diff {{{
-require("mini.diff").setup({
-	view = {
-		style = "sign",
-		signs = { add = "│", change = "│", delete = "▁" },
+-- gitsigns {{{
+local gitsigns = require("gitsigns")
+gitsigns.setup({
+	signs = {
+		add = { text = "│" },
+		change = { text = "│" },
+		delete = { text = "▁" },
 	},
+	on_attach = function(bufnr)
+		map("n", "<leader>tg", function()
+			local enabled = gitsigns.toggle_current_line_blame()
+			notify_toggle("Git blame", enabled)
+		end, {
+			buffer = bufnr,
+			desc = "Toggle current line blame",
+		})
+		map("n", "<leader>go", gitsigns.preview_hunk_inline, {
+			buffer = bufnr,
+			desc = "Preview Git hunk inline",
+		})
+	end,
 })
-map("n", "<leader>go", function()
-	MiniDiff.toggle_overlay()
-end, { desc = "Toggle diff overlay" })
 -- }}}
 
 -- neogit {{{
