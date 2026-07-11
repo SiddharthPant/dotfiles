@@ -51,6 +51,7 @@ vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
 
 -- Core editing {{{
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit Neovim" })
 
 map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
