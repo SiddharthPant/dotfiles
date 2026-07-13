@@ -306,6 +306,21 @@ snacks.setup({
 map("n", "<leader>e", function()
 	snacks.explorer()
 end, { desc = "Toggle file explorer" })
+map("n", "<leader>fb", function()
+	snacks.picker.buffers()
+end, { desc = "Find buffers" })
+map("n", "<leader>fh", function()
+	snacks.picker.help()
+end, { desc = "Find help" })
+map("n", "<leader>fr", function()
+	snacks.picker.resume()
+end, { desc = "Resume picker" })
+map("n", "<leader>fx", function()
+	snacks.picker.diagnostics_buffer()
+end, { desc = "Find buffer diagnostics" })
+map("n", "<leader>fX", function()
+	snacks.picker.diagnostics()
+end, { desc = "Find workspace diagnostics" })
 -- }}}
 
 -- treesitter {{{
@@ -549,11 +564,7 @@ vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
 -- }}}
 
 -- picker {{{
-local pick = require("mini.pick")
-pick.setup()
-map("n", "<leader>fb", pick.builtin.buffers, { desc = "Find buffer" })
-map("n", "<leader>fh", pick.builtin.help, { desc = "Find help" })
-map("n", "<leader>fr", pick.builtin.resume, { desc = "Resume picker" })
+require("mini.pick").setup()
 -- }}}
 
 -- autopairs {{{

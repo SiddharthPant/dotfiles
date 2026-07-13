@@ -54,9 +54,11 @@ OSC52.
 | Normal | `<leader>e` | Toggle the Snacks tree explorer (including hidden and Git-ignored files) |
 | Normal | `<leader><Space>` | Find files with fff.nvim |
 | Normal | `<leader>/` | Live grep with fff.nvim using fuzzy and plain search modes |
-| Normal | `<leader>fb` | Find buffers with mini.pick |
-| Normal | `<leader>fh` | Search Neovim help with mini.pick |
-| Normal | `<leader>fr` | Resume the previous mini.pick session |
+| Normal | `<leader>fb` | Find buffers with Snacks picker |
+| Normal | `<leader>fh` | Search Neovim help with Snacks picker |
+| Normal | `<leader>fr` | Resume the previous Snacks picker |
+| Normal | `<leader>fx` | Find diagnostics in the current buffer with Snacks picker |
+| Normal | `<leader>fX` | Find workspace diagnostics with Snacks picker |
 
 ## Git
 
