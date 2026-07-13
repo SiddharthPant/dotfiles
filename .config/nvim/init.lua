@@ -158,6 +158,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 -- plugin list {{{
 vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	{ src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("1.*") },
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/folke/snacks.nvim",
@@ -187,6 +188,7 @@ vim.pack.add({
 require("catppuccin").setup({
 	flavour = "frappe",
 	integrations = {
+		blink_cmp = true,
 		diffview = true,
 		gitsigns = true,
 		grug_far = true,
@@ -555,38 +557,39 @@ require("mini.snippets").setup({
 		stop = "<C-c>",
 	},
 })
-require("mini.snippets").start_lsp_server()
 -- }}}
 
--- completion {{{
-require("mini.completion").setup()
-vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
--- }}}
-
--- picker {{{
-require("mini.pick").setup()
+-- blink.cmp {{{
+local blink = require("blink.cmp")
+blink.setup({
+	keymap = {
+		preset = "enter",
+		["<C-k>"] = false, -- Preserve mini.snippets expansion.
+	},
+	snippets = { preset = "mini_snippets" },
+	completion = {
+		list = { selection = { preselect = false } },
+		documentation = { auto_show = true, auto_show_delay_ms = 250 },
+	},
+	cmdline = {
+		completion = {
+			menu = {
+				auto_show = function()
+					return vim.fn.getcmdtype() == ":"
+				end,
+			},
+		},
+	},
+	signature = { enabled = true },
+})
+vim.lsp.config("*", { capabilities = blink.get_lsp_capabilities() })
 -- }}}
 
 -- autopairs {{{
-local npairs = require("nvim-autopairs")
-
-npairs.setup({
+require("nvim-autopairs").setup({
 	check_ts = true,
-	map_cr = false,
 	disable_filetype = { "TelescopePrompt", "spectre_panel", "fff_input" },
 })
-
--- Confirm a selected completion item; otherwise dismiss the popup and run
--- nvim-autopairs' normal CR behavior.
-vim.keymap.set("i", "<CR>", function()
-	if vim.fn.pumvisible() ~= 0 then
-		if vim.fn.complete_info({ "selected" }).selected ~= -1 then
-			return npairs.esc("<C-y>")
-		end
-		return npairs.esc("<C-e>") .. npairs.autopairs_cr()
-	end
-	return npairs.autopairs_cr()
-end, { expr = true, replace_keycodes = false, desc = "autopairs CR" })
 -- }}}
 
 -- which-key {{{
@@ -644,7 +647,7 @@ local neogit = require("neogit")
 neogit.setup({
 	integrations = {
 		diffview = true,
-		mini_pick = true,
+		snacks = true,
 	},
 })
 map("n", "<leader>gg", neogit.open, { desc = "Open Neogit" })

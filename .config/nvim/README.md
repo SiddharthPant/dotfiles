@@ -1,7 +1,7 @@
 # Neovim
 
 Main config: `init.lua`; Askama snippets live in `lua/snippets/htmldjango.lua`.
-Plugins via native `vim.pack`. UX from `mini.nvim`.
+Plugins via native `vim.pack`. UX from `mini.nvim` and Snacks; completion from blink.cmp.
 
 ## Conventions
 
@@ -34,6 +34,7 @@ Plugins via native `vim.pack`. UX from `mini.nvim`.
 | Area | Notes |
 |---|---|
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
+| Completion | blink.cmp for LSP, paths, snippets, buffer words, and `:` commands |
 | Sessions | auto on start/quit; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |

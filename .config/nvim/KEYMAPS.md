@@ -111,7 +111,8 @@ The following mapping is global:
 
 | Mode | Keymap | Action |
 |---|---|---|
-| Insert | `<CR>` | Accept the selected completion item; if none is selected, dismiss the popup and insert an autopairs-aware newline |
+| Insert | `<CR>` | Accept the selected Blink completion item; if none is selected, insert an autopairs-aware newline |
 
-The completion `<CR>` mapping is global, but its behavior changes depending on
-whether the completion menu is visible and whether an item is selected.
+Blink completes from LSP, paths, mini.snippets, and buffer words. Its command-line
+completion menu opens automatically for `:` commands; `<Tab>` / `<S-Tab>` cycle
+items and `<C-y>` accepts the selection.
