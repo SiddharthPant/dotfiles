@@ -1,0 +1,15 @@
+name = "Dotfiles"
+description = "Neovim and Pi for the dotfiles repository"
+working_dir = "~/dotfiles"
+
+[[tabs]]
+name = "work"
+
+[[tabs.panes]]
+label = "Neovim"
+command = "nvim"
+
+[[tabs.panes]]
+label = "Pi"
+command = "pi --resume"
+split = "right"

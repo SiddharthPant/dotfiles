@@ -1,0 +1,19 @@
+name = "Pulsar"
+description = "Neovim, Pi, and a shell for Pulsar"
+working_dir = "~/projects/play/pulsar"
+
+[[tabs]]
+name = "work"
+
+[[tabs.panes]]
+label = "Neovim"
+command = "nvim"
+
+[[tabs.panes]]
+label = "Pi"
+command = "pi --resume"
+split = "right"
+
+[[tabs.panes]]
+label = "Terminal"
+split = "down"

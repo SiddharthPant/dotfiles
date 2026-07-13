@@ -34,6 +34,21 @@ not listed here; this file documents mappings defined explicitly in
 | Normal | `Q` | Start recording a macro; this is an alias for the usual `q` command |
 | Normal | `q` | Disabled to prevent accidental macro recording |
 
+## Neovim and Herdr panes
+
+These mappings move and resize seamlessly across Neovim splits and Herdr panes.
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Normal | `<C-h>` | Navigate left |
+| Normal | `<C-j>` | Navigate down |
+| Normal | `<C-k>` | Navigate up |
+| Normal | `<C-l>` | Navigate right |
+| Normal | `<M-h>` | Resize left |
+| Normal | `<M-j>` | Resize down |
+| Normal | `<M-k>` | Resize up |
+| Normal | `<M-l>` | Resize right |
+
 ## Buffers and clipboard
 
 | Mode | Keymap | Action |

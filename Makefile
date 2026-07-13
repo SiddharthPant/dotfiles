@@ -62,6 +62,9 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call ensure_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/herdr/config.toml,$(HOME)/.config/herdr/config.toml)
+	mkdir -p $HOME/.config/herdr/plugins/config/
+	$(call ensure_link,$(DOTFILES_DIR)/.config/herdr/plugins/config/cloudmanic.herdr-plus,$(HOME)/.config/herdr/plugins/config/cloudmanic.herdr-plus)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
@@ -79,6 +82,8 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/config.toml,$(HOME)/.config/herdr/config.toml)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/plugins/config/cloudmanic.herdr-plus,$(HOME)/.config/herdr/plugins/config/cloudmanic.herdr-plus)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)

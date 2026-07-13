@@ -35,6 +35,7 @@ Plugins via native `vim.pack`. UX from `mini.nvim` and Snacks; completion from b
 |---|---|
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
 | Completion | blink.cmp for LSP, paths, snippets, buffer words, and `:` commands |
+| Herdr panes | `<C-h/j/k/l>` navigates; `<M-h/j/k/l>` resizes across Neovim and Herdr |
 | Sessions | auto on start/quit; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |

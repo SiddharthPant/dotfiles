@@ -1,0 +1,6 @@
+name = "Home"
+description = "A shell in the home directory"
+working_dir = "~"
+
+[[tabs]]
+name = "terminal"

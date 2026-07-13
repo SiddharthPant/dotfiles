@@ -162,6 +162,7 @@ vim.pack.add({
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/folke/snacks.nvim",
+	{ src = "https://github.com/lmilojevicc/herdr-splits.nvim", version = "v0.5.0" },
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
@@ -187,6 +188,14 @@ vim.pack.add({
 -- Theme {{{
 require("catppuccin").setup({
 	flavour = "frappe",
+	custom_highlights = function(colors)
+		return {
+			NormalFloat = { fg = colors.text, bg = colors.base },
+			FloatBorder = { fg = colors.blue, bg = colors.base },
+			BlinkCmpMenu = { fg = colors.overlay2, bg = colors.base },
+			BlinkCmpMenuBorder = { fg = colors.blue, bg = colors.base },
+		}
+	end,
 	integrations = {
 		blink_cmp = true,
 		diffview = true,
@@ -323,6 +332,20 @@ end, { desc = "Find buffer diagnostics" })
 map("n", "<leader>fX", function()
 	snacks.picker.diagnostics()
 end, { desc = "Find workspace diagnostics" })
+-- }}}
+
+-- herdr-splits {{{
+local herdr_splits = require("herdr-splits")
+herdr_splits.setup()
+
+map("n", "<C-h>", herdr_splits.move_cursor_left, { desc = "Navigate pane left" })
+map("n", "<C-j>", herdr_splits.move_cursor_down, { desc = "Navigate pane down" })
+map("n", "<C-k>", herdr_splits.move_cursor_up, { desc = "Navigate pane up" })
+map("n", "<C-l>", herdr_splits.move_cursor_right, { desc = "Navigate pane right" })
+map("n", "<M-h>", herdr_splits.resize_left, { desc = "Resize pane left" })
+map("n", "<M-j>", herdr_splits.resize_down, { desc = "Resize pane down" })
+map("n", "<M-k>", herdr_splits.resize_up, { desc = "Resize pane up" })
+map("n", "<M-l>", herdr_splits.resize_right, { desc = "Resize pane right" })
 -- }}}
 
 -- treesitter {{{
