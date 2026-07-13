@@ -52,6 +52,7 @@ vim.o.splitright = true -- vertical splits go right
 
 vim.o.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
 vim.opt.diffopt:append("linematch:60") -- improve diff display
+vim.opt.sessionoptions:append("localoptions") -- preserve buffer-local options in sessions
 
 -- Set a useful terminal title so each pane is distinguishable (dir + file).
 -- Tested with ghostty/wezterm; overrides the shell's title while nvim is running.
@@ -147,6 +148,11 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		if spec.name == "fff.nvim" then
 			ensure_loaded()
 			require("fff.download").download_or_build_binary()
+		elseif spec.name == "LuaSnip" then
+			local result = vim.system({ "make", "install_jsregexp" }, { cwd = ev.data.path, text = true }):wait()
+			if result.code ~= 0 then
+				vim.notify("LuaSnip jsregexp build failed:\n" .. (result.stderr or ""), vim.log.levels.ERROR)
+			end
 		elseif spec.name == "nvim-treesitter" then
 			ensure_loaded()
 			vim.cmd.TSUpdate()
@@ -170,7 +176,10 @@ vim.pack.add({
 	"https://github.com/windwp/nvim-ts-autotag",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/which-key.nvim",
-	"https://github.com/nvim-mini/mini.nvim",
+	"https://github.com/nvim-tree/nvim-web-devicons",
+	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/rmagatti/auto-session",
+	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/NeogitOrg/neogit",
 	"https://github.com/folke/trouble.nvim",
@@ -531,67 +540,25 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 -- }}}
 
--- mini {{{
 -- icons {{{
-require("mini.icons").setup()
-MiniIcons.mock_nvim_web_devicons()
-MiniIcons.tweak_lsp_kind()
+require("nvim-web-devicons").setup({ default = true })
 -- }}}
 
 -- snippets {{{
--- friendly-snippets supplies HTML snippets; template constructs live in a
--- filetype module so Django-only tags do not leak into Askama files.
-local gen_loader = require("mini.snippets").gen_loader
-local from_lang = gen_loader.from_lang({
-	lang_patterns = {
-		html = { "html.json" },
-		blade = { "frameworks/blade/**/*.json" },
-		javascriptreact = {
-			"javascript/javascript.json",
-			"javascript/react.json",
-			"javascript/react-es7.json",
-		},
-		typescriptreact = {
-			"javascript/typescript.json",
-			"javascript/react-ts.json",
-			"javascript/react-es7.json",
-		},
-	},
-})
+local luasnip = require("luasnip")
+luasnip.setup({})
+require("luasnip.loaders.from_vscode").lazy_load()
 
-local askama_snippets = require("snippets.htmldjango")
-
-require("mini.snippets").setup({
-	snippets = {
-		function(context)
-			if context and vim.bo[context.buf_id].filetype == "htmldjango" then
-				-- Treesitter may report an injected language; use HTML snippets plus
-				-- the Askama set for this template filetype.
-				local html_context = vim.tbl_extend("force", {}, context, { lang = "html" })
-				return { from_lang(html_context), askama_snippets }
-			end
-			return from_lang(context)
-		end,
-	},
-	mappings = {
-		expand = "<C-k>",
-		jump_next = "<C-l>",
-		jump_prev = "<C-h>",
-		stop = "<C-c>",
-	},
-})
+-- Askama templates use HTML snippets alongside their template constructs.
+luasnip.filetype_extend("htmldjango", { "html" })
+luasnip.add_snippets("htmldjango", require("snippets.htmldjango"), { key = "askama" })
 -- }}}
 
 -- blink.cmp {{{
 local blink = require("blink.cmp")
 blink.setup({
-	keymap = {
-		preset = "enter",
-		["<C-k>"] = false, -- Preserve mini.snippets expansion.
-	},
-	snippets = { preset = "mini_snippets" },
+	snippets = { preset = "luasnip" },
 	completion = {
-		list = { selection = { preselect = false } },
 		documentation = { auto_show = true, auto_show_delay_ms = 250 },
 	},
 	cmdline = {
@@ -686,77 +653,36 @@ map("n", "<leader>gd", "<cmd>DiffviewToggle<CR>", { desc = "Toggle Diffview" })
 -- markview {{{
 require("markview").setup({
 	preview = {
-		icon_provider = "mini",
+		icon_provider = "devicons",
 	},
 })
 -- }}}
 
 -- sessions {{{
--- Per-cwd sessions under stdpath("data")/session (not in the project tree).
--- :SessionClear deletes it and skips save for this Neovim instance.
-local session_save = true
-require("mini.sessions").setup({
-	autowrite = false,
-	file = "",
-	verbose = { write = false, delete = false },
-})
-local function session_cwd()
-	return vim.fn.getcwd(-1, -1)
-end
-
-local function session_name()
-	local cwd = session_cwd()
-	local base = vim.fn.fnamemodify(cwd, ":t")
-	return ("%s-%s"):format(base == "" and "root" or base, vim.fn.sha256(cwd):sub(1, 12))
-end
-
-vim.api.nvim_create_autocmd("VimEnter", {
-	group = group,
-	nested = true,
-	desc = "Resume cwd session if present",
-	callback = function()
-		-- Don't clobber an explicit file open (`nvim foo.txt`).
-		if vim.fn.argc() > 0 then
-			return
-		end
-		local name = session_name()
-		if MiniSessions.detected[name] == nil then
-			return
-		end
-		MiniSessions.read(name)
-	end,
-})
-vim.api.nvim_create_autocmd("VimLeavePre", {
-	group = group,
-	desc = "Save cwd session on quit",
-	callback = function()
-		if not session_save then
-			return
-		end
-		local ok, err = pcall(MiniSessions.write, session_name())
-		if not ok then
-			vim.notify(("Failed to save session: %s"):format(err), vim.log.levels.ERROR)
-		end
-	end,
+local auto_session = require("auto-session")
+auto_session.setup({
+	legacy_cmds = false,
+	session_lens = { picker = "snacks" },
 })
 vim.api.nvim_create_user_command("Session", function()
-	MiniSessions.read(session_name())
+	auto_session.restore_session()
 end, { desc = "Resume cwd session" })
 vim.api.nvim_create_user_command("SessionClear", function()
-	local name = session_name()
-	if MiniSessions.detected[name] then
-		local ok, err = pcall(MiniSessions.delete, name, { force = true })
-		if not ok then
-			vim.notify(("Failed to delete session: %s"):format(err), vim.log.levels.ERROR)
-		end
+	auto_session.delete_session()
+	if require("auto-session.config").auto_save then
+		auto_session.disable_auto_save()
 	end
-	session_save = false
 end, { desc = "Delete cwd session and skip save on quit" })
 -- }}}
 
 -- statusline {{{
-require("mini.statusline").setup()
--- }}}
+require("lualine").setup({
+	options = {
+		theme = "catppuccin-nvim",
+		globalstatus = true,
+	},
+	extensions = { "oil", "quickfix", "trouble" },
+})
 -- }}}
 -- }}}
 

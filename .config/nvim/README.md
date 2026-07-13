@@ -1,7 +1,7 @@
 # Neovim
 
 Main config: `init.lua`; Askama snippets live in `lua/snippets/htmldjango.lua`.
-Plugins via native `vim.pack`. UX from `mini.nvim` and Snacks; completion from blink.cmp.
+Plugins via native `vim.pack`. UX from Snacks and focused community plugins; completion from blink.cmp.
 
 ## Conventions
 
@@ -11,13 +11,14 @@ Plugins via native `vim.pack`. UX from `mini.nvim` and Snacks; completion from b
 
 ## Gotchas
 
-- Register `PackChanged` hooks **before** `pack()` (fff binary, treesitter `TSUpdate`).
+- Register `PackChanged` hooks **before** `pack()` (fff binary, LuaSnip jsregexp, treesitter `TSUpdate`).
 - Askama `templates/*.html` → `htmldjango`.
-- Askama blocks use `<C-k>` snippets; standard autopairs provide the brace pairing
-  around template expressions and tags.
+- Askama and friendly-snippets are provided by LuaSnip through blink.cmp. Blink
+  uses its default keymap: `<C-y>` accepts completions, while `<Tab>` / `<S-Tab>`
+  expand and navigate snippets rather than completion items.
 - Mason ensures configured LSPs and formatter/linter binaries; `rustfmt` remains
   supplied by the Rust toolchain because it is not in Mason's registry.
-- Sessions are per-cwd under `stdpath("data")/session` (not in the project tree). `:SessionClear` also skips save on that quit.
+- AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in the project tree). `:SessionClear` also skips save on that quit.
 
 ## Remove a plugin
 
@@ -34,9 +35,10 @@ Plugins via native `vim.pack`. UX from `mini.nvim` and Snacks; completion from b
 | Area | Notes |
 |---|---|
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
-| Completion | blink.cmp for LSP, paths, snippets, buffer words, and `:` commands |
+| Completion | blink.cmp with LuaSnip for LSP, paths, snippets, buffer words, and `:` commands |
+| UI | Snacks, lualine, and nvim-web-devicons |
 | Herdr panes | `<C-h/j/k/l>` navigates; `<M-h/j/k/l>` resizes across Neovim and Herdr |
-| Sessions | auto on start/quit; `:Session` / `:SessionClear` |
+| Sessions | AutoSession restores/saves by cwd; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |
 | Linting | Checkmake for Makefiles; dotenv-linter for `.env*` |

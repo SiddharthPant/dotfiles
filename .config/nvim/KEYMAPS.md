@@ -124,10 +124,13 @@ The following mapping is global:
 
 ## Completion
 
-| Mode | Keymap | Action |
-|---|---|---|
-| Insert | `<CR>` | Accept the selected Blink completion item; if none is selected, insert an autopairs-aware newline |
+Blink uses its default keymap, so these plugin-provided mappings are not listed
+in the explicit keymap tables above. In insert mode, `<C-y>` accepts a completion;
+`<Up>` / `<Down>` and `<C-p>` / `<C-n>` select items. `<Tab>` expands a matching
+LuaSnip trigger or jumps forward through placeholders, while `<S-Tab>` jumps
+backward; otherwise both fall back to their normal behavior. They do not cycle
+completion items. `<CR>` remains an autopairs-aware newline.
 
-Blink completes from LSP, paths, mini.snippets, and buffer words. Its command-line
-completion menu opens automatically for `:` commands; `<Tab>` / `<S-Tab>` cycle
-items and `<C-y>` accepts the selection.
+Blink completes from LSP, paths, LuaSnip, and buffer words. For `:` command-line
+completion, the menu opens automatically, `<Tab>` / `<S-Tab>` cycle items, and
+`<C-y>` accepts the selection.

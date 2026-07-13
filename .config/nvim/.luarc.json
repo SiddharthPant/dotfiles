@@ -1,11 +1,5 @@
 {
-	"diagnostics.globals": [
-		"vim",
-		"MiniIcons",
-		"MiniSnippets",
-		"MiniSessions",
-		"MiniStatusline"
-	],
+	"diagnostics.globals": ["vim"],
 	"runtime.version": "LuaJIT",
 	"workspace.checkThirdParty": false,
 	"completion.callSnippet": "Replace",
