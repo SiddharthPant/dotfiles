@@ -51,6 +51,7 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
+| Normal | `<leader>e` | Toggle the Snacks tree explorer (including hidden and Git-ignored files) |
 | Normal | `<leader><Space>` | Find files with fff.nvim |
 | Normal | `<leader>/` | Live grep with fff.nvim using fuzzy and plain search modes |
 | Normal | `<leader>fb` | Find buffers with mini.pick |

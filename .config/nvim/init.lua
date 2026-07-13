@@ -1,5 +1,15 @@
 -- Bootstrap {{{
 vim.loader.enable()
+require("vim._core.ui2").enable({
+	enable = true,
+	msg = {
+		target = "cmd",
+		pager = { height = 0.5 },
+		dialog = { height = 0.5 },
+		cmd = { height = 0.5 },
+		msg = { height = 0.5, timeout = 4500 },
+	},
+})
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
@@ -150,6 +160,7 @@ vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
+	"https://github.com/folke/snacks.nvim",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
@@ -182,6 +193,7 @@ require("catppuccin").setup({
 		markview = true,
 		mason = true,
 		neogit = true,
+		snacks = true,
 		trouble = true,
 		which_key = true,
 	},
@@ -273,6 +285,29 @@ vim.api.nvim_create_autocmd("FileType", {
 -- }}}
 
 -- Plugins {{{
+-- snacks {{{
+local snacks = require("snacks")
+snacks.setup({
+	explorer = {
+		enabled = true,
+		replace_netrw = false, -- Oil remains the default handler for directory buffers.
+	},
+	indent = { enabled = true },
+	picker = {
+		enabled = true,
+		sources = {
+			explorer = {
+				hidden = true,
+				ignored = true,
+			},
+		},
+	},
+})
+map("n", "<leader>e", function()
+	snacks.explorer()
+end, { desc = "Toggle file explorer" })
+-- }}}
+
 -- treesitter {{{
 require("nvim-treesitter").install({
 	"bash",
