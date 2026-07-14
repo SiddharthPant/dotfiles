@@ -96,22 +96,6 @@ map("n", "q", "<Nop>", { desc = "Disable macro recording" })
 -- }}}
 -- }}}
 
--- Buffers {{{
-map("n", "<leader>bd", "<cmd>bn|bd #<CR>", { desc = "Delete buffer keep split" })
-local function close_other_buffers()
-	local cur = vim.api.nvim_get_current_buf()
-	local targets = vim.tbl_filter(function(b)
-		return b ~= cur and vim.bo[b].buflisted and not vim.bo[b].modified
-	end, vim.api.nvim_list_bufs())
-
-	for _, b in ipairs(targets) do
-		pcall(vim.api.nvim_buf_delete, b, {})
-	end
-	vim.notify(("Closed %d buffer(s), any unsaved will remain open"):format(#targets), vim.log.levels.INFO)
-end
-map("n", "<leader>bo", close_other_buffers, { desc = "Close other buffers" })
--- }}}
-
 -- Clipboard {{{
 local function notify_toggle(title, enabled)
 	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
@@ -323,6 +307,12 @@ snacks.setup({
 		},
 	},
 })
+map("n", "<leader>bd", function()
+	snacks.bufdelete()
+end, { desc = "Delete buffer keep split" })
+map("n", "<leader>bo", function()
+	snacks.bufdelete.other()
+end, { desc = "Close other buffers" })
 map("n", "<leader>e", function()
 	snacks.explorer()
 end, { desc = "Toggle file explorer" })
@@ -688,8 +678,29 @@ require("lualine").setup({
 
 -- Diagnostics {{{
 vim.diagnostic.config({
-	virtual_text = true,
+	update_in_insert = false,
 	severity_sort = true,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = " ",
+			[vim.diagnostic.severity.WARN] = " ",
+			[vim.diagnostic.severity.INFO] = " ",
+			[vim.diagnostic.severity.HINT] = " ",
+		},
+	},
+	underline = { severity = { min = vim.diagnostic.severity.WARN } },
+	virtual_text = {
+		spacing = 4,
+		source = "if_many",
+		prefix = "●",
+	},
+	virtual_lines = false,
+	float = {
+		border = "rounded",
+		source = "if_many",
+		header = "",
+		prefix = "",
+	},
 	jump = {
 		on_jump = function(diagnostic, bufnr)
 			if diagnostic then
@@ -704,11 +715,7 @@ map("n", "<leader>cx", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", {
 map("n", "<leader>cX", "<cmd>Trouble diagnostics toggle<CR>", {
 	desc = "Toggle workspace diagnostics in Trouble",
 })
-map("n", "<leader>td", function()
-	local enabled = vim.diagnostic.is_enabled()
-	vim.diagnostic.enable(not enabled)
-	notify_toggle("Diagnostics", not enabled)
-end, { desc = "Toggle diagnostics" })
+snacks.toggle.diagnostics():map("<leader>td")
 -- }}}
 
 -- LSP {{{
@@ -726,22 +733,14 @@ map("n", "<Esc>", function()
 end, { silent = true, desc = "Close LSP float and clear search highlight" })
 -- }}}
 
--- LspAttach {{{
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = group,
-	callback = function(ev)
-		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-		if not client then
-			return
-		end
-
-		if client:supports_method("textDocument/definition", ev.buf) then
-			map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
-		end
-		if client:supports_method("textDocument/declaration", ev.buf) then
-			map("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to declaration" })
-		end
-	end,
+-- LSP keymaps {{{
+snacks.keymap.set("n", "gd", vim.lsp.buf.definition, {
+	lsp = { method = "textDocument/definition" },
+	desc = "Go to definition",
+})
+snacks.keymap.set("n", "gD", vim.lsp.buf.declaration, {
+	lsp = { method = "textDocument/declaration" },
+	desc = "Go to declaration",
 })
 -- }}}
 
