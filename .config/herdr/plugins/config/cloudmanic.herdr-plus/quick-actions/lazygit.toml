@@ -1,0 +1,4 @@
+name = "LazyGit"
+description = "Open lazygit in current dir"
+type = "command"
+command = "lazygit"

@@ -1,0 +1,28 @@
+name = "Edit Config Files"
+description = "Select which config to edit"
+type = "select"
+command = "nvim {{.Value}}"
+
+[[options]]
+label = "config.fish"
+value = "~/.config/fish/config.fish"
+
+[[options]]
+label = "bashrc"
+value = "~/.bashrc"
+
+[[options]]
+label = "nvim config"
+value = "~/.config/nvim/init.lua"
+
+[[options]]
+label = "herdr config"
+value = "~/.config/herdr/config.toml"
+
+[[options]]
+label = "ghostty config"
+value = "~/.config/ghostty/config"
+
+[[options]]
+label = "mise config"
+value = "~/.config/mise/config.toml"

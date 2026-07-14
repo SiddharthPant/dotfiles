@@ -63,14 +63,3 @@ type = "plugin_action"
 command = "cloudmanic.herdr-plus.quick-actions"
 description = "herdr-plus: quick actions"
 
-[[keys.command]]
-key = "prefix+alt+g"
-type = "plugin_action"
-command = "herdr-lazygit.open-lazygit"
-description = "Toggle lazygit split"
-
-[[keys.command]]
-key = "prefix+alt+shift+g"
-type = "plugin_action"
-command = "herdr-lazygit.open-lazygit-tab"
-description = "Toggle lazygit tab"
