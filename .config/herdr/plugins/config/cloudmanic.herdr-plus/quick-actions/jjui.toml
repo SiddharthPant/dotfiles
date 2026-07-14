@@ -1,0 +1,4 @@
+name = "JJUI"
+description = "Open jjui in current dir"
+type = "command"
+command = "jjui </dev/tty"

@@ -26,3 +26,11 @@ value = "~/.config/ghostty/config"
 [[options]]
 label = "mise config"
 value = "~/.config/mise/config.toml"
+
+[[options]]
+label = "jj config"
+value = "~/.config/jj/config.toml"
+
+[[options]]
+label = "git config"
+value = "~/.gitconfig"
