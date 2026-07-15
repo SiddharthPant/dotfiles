@@ -51,6 +51,8 @@ install: $(PLATFORM)
 # target: macos - Setup symlinks for macOS
 macos: common
 	$(call ensure_link,$(DOTFILES_DIR)/zshrc/macos/.zshrc,$(HOME)/.zshrc)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/config.fish,$(HOME)/.config/fish/config.fish)
+	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/fish_plugins,$(HOME)/.config/fish/fish_plugins)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	@echo "macOS dotfiles linked"
 
@@ -90,6 +92,8 @@ common:
 clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/zshrc/macos/.zshrc,$(HOME)/.zshrc)
 	$(call remove_managed_link,$(DOTFILES_DIR)/zshrc/arch-i3/.zshrc,$(HOME)/.zshrc)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/fish/macos/config.fish,$(HOME)/.config/fish/config.fish)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.config/fish/macos/fish_plugins,$(HOME)/.config/fish/fish_plugins)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/fish/wsl/config.fish,$(HOME)/.config/fish/config.fish)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/wsl/config.toml,$(HOME)/.config/mise/config.toml)

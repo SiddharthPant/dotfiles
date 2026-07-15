@@ -157,11 +157,15 @@ vim.pack.add({
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 	"https://github.com/windwp/nvim-ts-autotag",
 	"https://github.com/windwp/nvim-autopairs",
+	{ src = "https://github.com/kylechui/nvim-surround", version = vim.version.range("4.*") },
 	"https://github.com/folke/which-key.nvim",
+	"https://github.com/folke/flash.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
 	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	"https://github.com/rafamadriz/friendly-snippets",
@@ -192,6 +196,7 @@ require("catppuccin").setup({
 	integrations = {
 		blink_cmp = true,
 		diffview = true,
+		flash = true,
 		gitsigns = true,
 		grug_far = true,
 		markview = true,
@@ -394,6 +399,37 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 })
+
+-- Selects + moves; also feeds surround's default `f` via `@call.outer` queries.
+require("nvim-treesitter-textobjects").setup({
+	select = { lookahead = true },
+	move = { set_jumps = true },
+})
+local ts_select = require("nvim-treesitter-textobjects.select")
+local ts_move = require("nvim-treesitter-textobjects.move")
+local function sel(capture)
+	return function()
+		ts_select.select_textobject(capture, "textobjects")
+	end
+end
+map({ "x", "o" }, "af", sel("@function.outer"), { desc = "Around function" })
+map({ "x", "o" }, "if", sel("@function.inner"), { desc = "Inner function" })
+map({ "x", "o" }, "ac", sel("@class.outer"), { desc = "Around class" })
+map({ "x", "o" }, "ic", sel("@class.inner"), { desc = "Inner class" })
+map({ "x", "o" }, "aa", sel("@parameter.outer"), { desc = "Around parameter" })
+map({ "x", "o" }, "ia", sel("@parameter.inner"), { desc = "Inner parameter" })
+map({ "n", "x", "o" }, "]f", function()
+	ts_move.goto_next_start("@function.outer", "textobjects")
+end, { desc = "Next function start" })
+map({ "n", "x", "o" }, "[f", function()
+	ts_move.goto_previous_start("@function.outer", "textobjects")
+end, { desc = "Prev function start" })
+map({ "n", "x", "o" }, "]c", function()
+	ts_move.goto_next_start("@class.outer", "textobjects")
+end, { desc = "Next class start" })
+map({ "n", "x", "o" }, "[c", function()
+	ts_move.goto_previous_start("@class.outer", "textobjects")
+end, { desc = "Prev class start" })
 -- }}}
 
 -- autotag {{{
@@ -583,6 +619,10 @@ require("nvim-autopairs").setup({
 })
 -- }}}
 
+-- nvim-surround {{{
+require("nvim-surround").setup({})
+-- }}}
+
 -- which-key {{{
 require("which-key").setup({})
 require("which-key").add({
@@ -592,6 +632,30 @@ require("which-key").add({
 	{ "<leader>g", group = "git" },
 	{ "<leader>t", group = "toggle" },
 })
+-- }}}
+
+-- flash {{{
+require("flash").setup({})
+-- Use lua function rhs (not :lua) so jumps stay dot-repeatable.
+map({ "n", "x", "o" }, "s", function()
+	require("flash").jump()
+end, { desc = "Flash" })
+map({ "n", "x", "o" }, "S", function()
+	require("flash").treesitter()
+end, { desc = "Flash Treesitter" })
+map("o", "r", function()
+	require("flash").remote()
+end, { desc = "Remote Flash" })
+map({ "o", "x" }, "R", function()
+	require("flash").treesitter_search()
+end, { desc = "Treesitter Search" })
+map("c", "<C-s>", function()
+	require("flash").toggle()
+end, { desc = "Toggle Flash Search" })
+-- }}}
+
+-- fidget {{{
+require("fidget").setup({})
 -- }}}
 
 -- trouble {{{

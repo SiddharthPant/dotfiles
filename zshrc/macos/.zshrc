@@ -34,17 +34,6 @@ source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
 
 # ===== Aliases =====
 alias timeout='gtimeout'
-alias gst='git status'
-alias gcmsg='git commit -m'
-alias gcam='git commit --all -m'
-alias ggp='git push'
-alias ggl='git pull'
-alias ga='git add'
-alias glog='git log --color=always | less -RF'
-alias gco='git checkout'
-alias gfa='git fetch --all'
-alias gd='git diff'
-alias gds='git diff --staged'
 alias la='ls -lahFG --color'
 alias drawio='/Applications/draw.io.app/Contents/MacOS/draw.io'
 
