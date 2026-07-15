@@ -546,9 +546,15 @@ luasnip.add_snippets("htmldjango", require("snippets.htmldjango"), { key = "aska
 
 -- blink.cmp {{{
 local blink = require("blink.cmp")
+local zen_mode = true
 blink.setup({
 	snippets = { preset = "luasnip" },
 	completion = {
+		menu = {
+			auto_show = function()
+				return not zen_mode
+			end,
+		},
 		documentation = { auto_show = true, auto_show_delay_ms = 250 },
 	},
 	cmdline = {
@@ -563,6 +569,11 @@ blink.setup({
 	signature = { enabled = true },
 })
 vim.lsp.config("*", { capabilities = blink.get_lsp_capabilities() })
+map("n", "<leader>tz", function()
+	zen_mode = not zen_mode
+	blink.hide()
+	notify_toggle("Zen mode", zen_mode)
+end, { desc = "Toggle zen mode completion" })
 -- }}}
 
 -- autopairs {{{
