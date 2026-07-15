@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.80.7",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
+  "defaultProvider": "cursor",
+  "defaultModel": "grok-4.5",
   "defaultThinkingLevel": "high",
   "packages": [
     "npm:pi-web-access",
@@ -12,5 +12,6 @@
     "npm:@ogulcancelik/pi-herdr"
   ],
   "hideThinkingBlock": false,
-  "showCacheMissNotices": true
+  "showCacheMissNotices": true,
+  "theme": "dark"
 }
