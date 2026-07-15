@@ -57,9 +57,9 @@
 
 ;;; ─── Theme + font ─────────────────────────────────────────────────────────
 ;; (load-theme 'modus-vivendi t)
-(use-package solarized-theme
+(use-package nord-theme
   :config
-  (load-theme 'solarized-dark t))
+  (load-theme 'nord t))
 
 (let ((font "Maple Mono NF"))
   (when (member font (font-family-list))
@@ -239,8 +239,74 @@
   :after (treemacs magit))
 
 ;;; ─── Markdown (docs / READMEs) ────────────────────────────────────────────
+;; Org-like inline preview comes from `markdown-hide-markup-mode', which is
+;; built into markdown-mode (the analog of `org-hide-emphasis-markers'). It
+;; hides *bold* / _italic_ / `code` markers, link URLs, list dashes, header
+;; #s, etc. so the buffer reads like the rendered document. Toggle per-buffer
+;; with `C-c C-x m'. For a separate fully-rendered HTML preview, use the
+;; built-in `markdown-view-mode' (`C-c C-c p').
+(defvar sid/markdown-header-font
+  (cl-find-if (lambda (f) (member f (font-family-list)))
+              '("NewYork" "Georgia" "Charter" "Iowan Old Style"))
+  "Proportional font used for Markdown headings, or nil to leave defaults.")
+
 (use-package markdown-mode
-  :mode ("\\.md\\'" . markdown-mode))
+  :mode ("\\.md\\'" . markdown-mode)
+  :custom
+  (markdown-fontify-code-block-default-mode t)
+  (markdown-hide-markup t)               ; org-like inline preview
+  (markdown-list-item-bullets '("•" "◦" "▸" "▪"))
+  :hook
+  (markdown-mode . visual-line-mode)
+  (markdown-mode . markdown-hide-markup-mode)
+  :bind (:map markdown-mode-map
+              ("C-c C-c a" . markdown-align-tables)   ; re-align pipe tables
+              ("C-c C-x m" . markdown-toggle-markup-hiding)
+              ;; Live-rendered preview in a browser tab via `go-grip'
+              ;; (GitHub-style HTML with auto-reload on save).
+              ("C-c C-c p" . (lambda ()
+                               (interactive)
+                               (async-shell-command
+                                (format "go-grip %S"
+                                        (shell-quote-argument
+                                         (buffer-file-name)))))))
+  :config
+  ;; Heading faces: variable font + scaled height per level. Faces are
+  ;; buffer-global, so we set them once after the library loads.
+  (when sid/markdown-header-font
+    (dolist (lvl '((1 . 1.6) (2 . 1.4) (3 . 1.25) (4 . 1.15)
+                   (5 . 1.05) (6 . 1.0)))
+      (let ((face (intern (format "markdown-header-face-%d" (car lvl)))))
+        (set-face-attribute face nil
+                            :family sid/markdown-header-font
+                            :height (cdr lvl)
+                            :weight 'bold))))
+  ;; Use the same family for the catch-all header face too.
+  (when sid/markdown-header-font
+    (set-face-attribute 'markdown-header-face nil
+                        :family sid/markdown-header-font :weight 'bold))
+  ;; Inline emphasis: make bold/italic visually distinct from body text.
+  (set-face-attribute 'markdown-bold-face nil :weight 'bold)
+  (set-face-attribute 'markdown-italic-face nil :slant 'italic)
+  ;; Inline code: monospace + a subtle bordered pill so it pops out of prose.
+  (set-face-attribute 'markdown-inline-code-face nil
+                      :inherit 'fixed-pitch
+                      :box '(:line-width -1 :color "grey40"))
+  ;; Fenced code blocks + the ```lang label stay monospaced.
+  (set-face-attribute 'markdown-pre-face nil :inherit 'fixed-pitch)
+  (set-face-attribute 'markdown-language-keyword-face nil
+                      :inherit 'fixed-pitch :height 0.85)
+  (set-face-attribute 'markdown-link-face nil :weight 'bold)
+  (set-face-attribute 'markdown-url-face nil :inherit 'shadow)
+  (set-face-attribute 'markdown-reference-face nil :inherit 'shadow)
+  (set-face-attribute 'markdown-blockquote-face nil
+                      :inherit 'shadow :slant 'italic)
+  (set-face-attribute 'markdown-hr-face nil :inherit 'shadow)
+  (set-face-attribute 'markdown-header-delimiter-face nil :inherit 'shadow)
+  (set-face-attribute 'markdown-header-rule-face nil :inherit 'shadow)
+  (set-face-attribute 'markdown-list-face nil :inherit 'fixed-pitch)
+  (set-face-attribute 'markdown-footnote-marker-face nil :inherit 'fixed-pitch)
+  (set-face-attribute 'markdown-table-face nil :inherit 'fixed-pitch))
 
 ;;; ─── Org ──────────────────────────────────────────────────────────────────
 ;; :type built-in keeps Emacs' bundled org AND registers it, so when org-roam
