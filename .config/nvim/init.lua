@@ -647,6 +647,17 @@ map("n", "<leader>gg", neogit.open, { desc = "Open Neogit" })
 -- diffview {{{
 require("diffview").setup({
 	enhanced_diff_hl = true,
+	keymaps = {
+		view = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close Diffview" } },
+		},
+		file_panel = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close Diffview" } },
+		},
+		file_history_panel = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close Diffview" } },
+		},
+	},
 })
 map("n", "<leader>gd", "<cmd>DiffviewToggle<CR>", { desc = "Toggle Diffview" })
 -- }}}
