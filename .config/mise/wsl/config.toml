@@ -1,0 +1,20 @@
+[settings]
+minimum_release_age_excludes = ["claude-code", "codex", "opencode", "pnpm", "herdr"]
+
+[tools]
+ast-grep = "latest"
+"cargo:cargo-binstall" = "latest"
+claude-code = "latest"
+codex = "latest"
+go = "latest"
+"go:github.com/chrishrb/go-grip" = "latest"
+herdr = "latest"
+jjui = "latest"
+lazygit = "latest"
+node = "26"
+opencode = "latest"
+pi = "latest"
+pnpm = "latest"
+rust = "latest"
+usage = "latest"
+uv = "latest"

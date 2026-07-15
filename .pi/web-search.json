@@ -1,0 +1,5 @@
+{
+  "workflow": "auto-summary",
+  "searchModel": "accounts/fireworks/models/deepseek-v4-flash",
+  "summaryModel": "accounts/fireworks/models/deepseek-v4-flash"
+}

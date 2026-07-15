@@ -6,9 +6,10 @@ Personal configuration files for daily development tools.
 
 The repo uses `Makefile` as the source of truth for what gets linked into `$HOME`.
 
-- `make install`: auto-detect platform and link managed dotfiles
-- `make macos`: link macOS-specific shell config
-- `make arch`: link Arch Linux-specific shell config
+- `make install`: auto-detect macOS, Arch Linux, or WSL and link managed dotfiles
+- `make macos`: link macOS-specific Zsh and Mise configuration
+- `make arch`: link Arch Linux-specific Zsh configuration
+- `make wsl`: link WSL-specific Fish and Mise configuration
 - `make clean`: remove only repo-managed symlinks
 
 ## Managed Paths
@@ -24,8 +25,14 @@ These paths are currently managed by `Makefile`:
 - `.config/zed/` -> `~/.config/zed`
 - `.config/emacs/` -> `~/.config/emacs`
 - `.config/starship.toml` -> `~/.config/starship.toml`
-- `.config/mise/config.toml` -> `~/.config/mise/config.toml`
-- `.config/sqlfluff/.sqlfluff` -> `~/.config/sqlfluff/.sqlfluff`
+- `.config/gh/config.yml` -> `~/.config/gh/config.yml`
+- `.config/jj/config.toml` -> `~/.config/jj/config.toml`
+- `.config/sqlfluff/` -> `~/.config/sqlfluff/`
+- `.pi/agent/settings.json` -> `~/.pi/agent/settings.json`
+- `.pi/web-search.json` -> `~/.pi/web-search.json`
+- `.config/mise/macos/config.toml` -> `~/.config/mise/config.toml` on macOS
+- `.config/mise/wsl/config.toml` -> `~/.config/mise/config.toml` on WSL
+- `.config/fish/wsl/config.fish` -> `~/.config/fish/config.fish` on WSL
 - `zshrc/macos/.zshrc` -> `~/.zshrc` on macOS
 - `zshrc/arch-i3/.zshrc` -> `~/.zshrc` on Arch Linux
 
@@ -40,8 +47,13 @@ These paths are currently managed by `Makefile`:
 - `.config/zed/`: Zed editor configuration
 - `.config/emacs/`: Emacs configuration
 - `.config/starship.toml`: Starship prompt configuration
-- `.config/mise/config.toml`: Global mise tools
+- `.config/gh/config.yml`: GitHub CLI preferences (authentication stays outside the repo)
+- `.config/jj/config.toml`: Jujutsu user configuration
+- `.config/mise/{macos,wsl}/config.toml`: Platform-specific global Mise tools
+- `.config/fish/wsl/config.fish`: WSL Fish configuration
 - `.config/sqlfluff/.sqlfluff`: sqlfluff configuration
+- `.pi/agent/settings.json`: Pi preferences and package declarations
+- `.pi/web-search.json`: Pi web-search plugin preferences
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration
 
