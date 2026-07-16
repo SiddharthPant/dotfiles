@@ -28,6 +28,28 @@ define ensure_link
 	fi
 endef
 
+# Seed mutable application state without linking it back into the repository.
+define ensure_local_file
+	@src="$(1)"; dst="$(2)"; \
+	mkdir -p "$$(dirname "$$dst")"; \
+	if [ -L "$$dst" ] && [ "$$(readlink "$$dst")" = "$$src" ]; then \
+		tmp="$$(mktemp)"; \
+		cp "$$dst" "$$tmp"; \
+		rm "$$dst"; \
+		cp "$$tmp" "$$dst"; \
+		rm "$$tmp"; \
+		printf 'migrated %s to a local file\n' "$$dst"; \
+	elif [ -L "$$dst" ]; then \
+		printf 'error: %s is an unmanaged symlink\n' "$$dst" >&2; \
+		exit 1; \
+	elif [ -e "$$dst" ]; then \
+		printf 'ok %s (local)\n' "$$dst"; \
+	else \
+		cp "$$src" "$$dst"; \
+		printf 'created %s from %s\n' "$$dst" "$$src"; \
+	fi
+endef
+
 define remove_managed_link
 	@src="$(1)"; dst="$(2)"; \
 	if [ -L "$$dst" ] && [ "$$(readlink "$$dst")" = "$$src" ]; then \
@@ -84,7 +106,7 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.config/gh/config.yml,$(HOME)/.config/gh/config.yml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
-	$(call ensure_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
+	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/agent/themes,$(HOME)/.pi/agent/themes)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
 	@echo "Common dotfiles linked"

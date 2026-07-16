@@ -1,5 +1,4 @@
 {
-  "lastChangelogVersion": "0.80.7",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-token-speed",
