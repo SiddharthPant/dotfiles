@@ -514,6 +514,7 @@ conform.setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		go = { "goimports", "gofumpt" },
+		htmldjango = { "djlint" },
 		rust = { "rustfmt" },
 		python = { "ruff_format" },
 		sql = { "sqlfluff" },
@@ -895,6 +896,7 @@ require("mason").setup()
 require("mason-tool-installer").setup({
 	ensure_installed = {
 		"checkmake",
+		"djlint",
 		"dotenv-linter",
 		"gofumpt",
 		"goimports",
