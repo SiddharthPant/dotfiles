@@ -1,8 +1,5 @@
 {
   "lastChangelogVersion": "0.80.7",
-  "defaultProvider": "cursor",
-  "defaultModel": "grok-4.5",
-  "defaultThinkingLevel": "high",
   "packages": [
     "npm:pi-web-access",
     "npm:pi-token-speed",
