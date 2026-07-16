@@ -85,6 +85,7 @@ common:
 	$(call ensure_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
+	$(call ensure_link,$(DOTFILES_DIR)/.pi/agent/themes,$(HOME)/.pi/agent/themes)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
 	@echo "Common dotfiles linked"
 
@@ -112,5 +113,6 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/themes,$(HOME)/.pi/agent/themes)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
 	@echo "Dotfiles unlinked"

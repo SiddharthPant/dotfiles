@@ -1,5 +1,6 @@
 excels/
 themes/
+!.pi/agent/themes/
 .idea
 .tox
 /media
