@@ -7,6 +7,7 @@ set -g fish_greeting
 /bin/mise activate fish | source
 herdr completion fish | source
 fzf --fish | source
+jj util completion fish | source
 end
 
 eval "$(zoxide init fish)"
