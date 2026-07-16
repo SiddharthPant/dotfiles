@@ -32,7 +32,7 @@ end
 if status is-interactive
     set -g fish_greeting
 
-    zoxide init --cmd cd fish | source
+    zoxide init fish | source
 
     abbr --add --global a 'php artisan'
     abbr --add --global chrome '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
