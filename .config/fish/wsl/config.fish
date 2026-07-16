@@ -6,6 +6,7 @@ if status is-interactive
 set -g fish_greeting
 /bin/mise activate fish | source
 herdr completion fish | source
+fzf --fish | source
 end
 
 eval "$(zoxide init fish)"
