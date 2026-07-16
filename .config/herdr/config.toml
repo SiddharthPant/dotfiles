@@ -62,4 +62,3 @@ key = "prefix+down"
 type = "plugin_action"
 command = "cloudmanic.herdr-plus.quick-actions"
 description = "herdr-plus: quick actions"
-
