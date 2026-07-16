@@ -175,6 +175,7 @@ vim.pack.add({
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/b0o/SchemaStore.nvim",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -833,6 +834,17 @@ snacks.keymap.set("n", "gD", vim.lsp.buf.declaration, {
 -- Servers {{{
 -- nvim-lspconfig supplies default cmd/filetypes/root; only override here.
 -- Mason installs binaries; mason-lspconfig auto-enables installed servers.
+
+-- jsonls {{{
+vim.lsp.config("jsonls", {
+	settings = {
+		json = {
+			schemas = require("schemastore").json.schemas(),
+			validate = { enable = true },
+		},
+	},
+})
+-- }}}
 
 -- rust-analyzer {{{
 vim.lsp.config("rust_analyzer", {
