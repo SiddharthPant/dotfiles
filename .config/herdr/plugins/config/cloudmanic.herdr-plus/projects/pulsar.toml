@@ -11,7 +11,7 @@ command = "nvim"
 
 [[tabs.panes]]
 label = "Pi"
-command = "pi --resume"
+command = "pi"
 split = "right"
 
 [[tabs.panes]]
