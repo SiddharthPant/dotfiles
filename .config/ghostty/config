@@ -34,3 +34,10 @@ config-file = ?auto/theme.ghostty
 
 # Make pane separator more visible
 split-divider-color = #8c959f
+
+# Force zero border padding
+window-padding-x = 0
+window-padding-y = 0
+
+# Distribute remaining cell-grid pixels evenly
+window-padding-balance = true
