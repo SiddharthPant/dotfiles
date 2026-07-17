@@ -71,6 +71,8 @@ OSC52.
 | Normal | `<leader>/` | Live grep with fff.nvim using fuzzy and plain search modes |
 | Normal | `<leader>fb` | Find buffers with Snacks picker |
 | Normal | `<leader>fh` | Search Neovim help with Snacks picker |
+| Normal | `<leader>fs` | Find symbols in the current buffer with Snacks picker |
+| Normal | `<leader>fS` | Find symbols in the workspace with Snacks picker |
 | Normal | `<leader>fr` | Resume the previous Snacks picker |
 | Normal | `<leader>fx` | Find diagnostics in the current buffer with Snacks picker |
 | Normal | `<leader>fX` | Find workspace diagnostics with Snacks picker |
