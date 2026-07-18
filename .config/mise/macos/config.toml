@@ -1,6 +1,5 @@
 [tools]
 "cargo:cargo-expand" = "latest"
-jj = "latest"
 jjui = "latest"
 lua-language-server = "latest"
 "npm:ccstatusline" = "latest"
