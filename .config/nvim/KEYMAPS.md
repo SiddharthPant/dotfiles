@@ -128,14 +128,16 @@ The following mapping is global:
 
 | Mode | Keymap | Action |
 |---|---|---|
-| Normal | `<leader>tz` | Toggle zen mode (enabled by default), which suppresses automatic completion menus in editing buffers |
+| Normal | `<leader>tz` | Toggle zen mode (enabled by default), which limits automatic completion to snippets |
 
-Blink uses its default keymap preset, with `<C-Space>` explicitly configured to
-open completion manually even in zen mode. In insert mode, `<C-y>` accepts a
-completion, and `<Up>` / `<Down>` and `<C-p>` / `<C-n>` select items. `<Tab>`
-expands a matching native snippet or jumps forward through placeholders, while
-`<S-Tab>` jumps backward; otherwise both fall back to their normal behavior.
-They do not cycle completion items. `<CR>` remains an autopairs-aware newline.
+In zen mode, snippet matches open automatically while LSP, path, and buffer
+suggestions stay hidden. `<C-Space>` explicitly requests all sources. Blink
+otherwise uses its enter keymap preset without preselecting the first item.
+`<CR>` accepts an explicitly selected completion; otherwise it remains an
+autopairs-aware newline. `<Up>` / `<Down>` and `<C-p>` / `<C-n>` select items.
+`<Tab>` expands a matching native snippet or jumps forward through placeholders,
+while `<S-Tab>` jumps backward; otherwise both fall back to their normal
+behavior. They do not cycle completion items.
 
 Blink completes from LSP, paths, native snippets, and buffer words. For `:`
 command-line completion, the menu opens automatically without selecting an

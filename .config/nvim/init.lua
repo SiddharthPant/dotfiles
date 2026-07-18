@@ -116,6 +116,7 @@ end, { desc = "Toggle system clipboard copy" })
 -- Pack {{{
 -- install/update hooks {{{
 -- Must be registered before pack() so PackChanged events are seen.
+require("treesitter.askama").setup()
 vim.api.nvim_create_autocmd("PackChanged", {
 	group = group,
 	desc = "Post-install hooks for plugins that need a build step",
@@ -365,6 +366,7 @@ require("nvim-treesitter").install({
 	"gitcommit",
 	"go",
 	"html",
+	"askama",
 	"htmldjango",
 	"javascript",
 	"json",
@@ -385,10 +387,33 @@ require("nvim-treesitter").install({
 	"yaml",
 })
 
--- Askama templates live under templates/*.html (Jinja-like).
+local function ancestor_file_contains(path, filename, text)
+	local files = vim.fs.find(filename, {
+		path = vim.fs.dirname(path),
+		upward = true,
+		type = "file",
+		limit = math.huge,
+	})
+	for _, file in ipairs(files) do
+		local ok, lines = pcall(vim.fn.readfile, file)
+		if ok and table.concat(lines, "\n"):find(text, 1, true) then
+			return true
+		end
+	end
+	return false
+end
+
+-- Distinguish Askama and Django projects whose templates share the same paths.
 vim.filetype.add({
 	pattern = {
-		[".*/templates/.*%.html"] = "htmldjango",
+		[".*/templates/.*%.html"] = function(path)
+			if ancestor_file_contains(path, "Cargo.toml", "askama") then
+				return "askama"
+			end
+			if vim.fs.root(vim.fs.dirname(path), "manage.py") then
+				return "htmldjango"
+			end
+		end,
 	},
 })
 
@@ -516,6 +541,7 @@ conform.setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		go = { "goimports", "gofumpt" },
+		askama = { "djlint" },
 		htmldjango = { "djlint" },
 		rust = { "rustfmt" },
 		python = { "ruff_format" },
@@ -577,27 +603,34 @@ require("nvim-web-devicons").setup({ default = true })
 -- blink.cmp {{{
 local blink = require("blink.cmp")
 local zen_mode = true
+local completion_sources = { "lsp", "path", "snippets", "buffer" }
 blink.setup({
 	snippets = { preset = "default" },
 	keymap = {
-		preset = "default",
-		-- Zen mode only suppresses auto-show; completion remains available manually.
-		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+		preset = "enter",
+		-- Manually request every source, including the ones hidden by zen mode.
+		["<C-space>"] = {
+			function(cmp)
+				cmp.show({ providers = completion_sources })
+			end,
+			"show_documentation",
+			"hide_documentation",
+		},
 	},
 	completion = {
-		menu = {
-			auto_show = function()
-				return not zen_mode
-			end,
-		},
+		list = { selection = { preselect = false } },
+		menu = { auto_show = true },
 		documentation = { auto_show = true, auto_show_delay_ms = 250 },
 	},
 	sources = {
+		default = function()
+			return zen_mode and { "snippets" } or completion_sources
+		end,
 		providers = {
 			snippets = {
 				opts = {
-					-- Askama templates use HTML snippets alongside their own snippets.
-					extended_filetypes = { htmldjango = { "html" } },
+					-- Askama templates use generic HTML snippets alongside their own.
+					extended_filetypes = { askama = { "html" } },
 				},
 			},
 		},
@@ -748,8 +781,20 @@ require("markview").setup({
 
 -- sessions {{{
 local auto_session = require("auto-session")
+local function redetect_template_filetypes()
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		local path = vim.api.nvim_buf_get_name(bufnr)
+		if vim.api.nvim_buf_is_loaded(bufnr) and path:match("/templates/.*%.html$") then
+			local filetype = vim.filetype.match({ buf = bufnr })
+			if filetype and vim.bo[bufnr].filetype ~= filetype then
+				vim.bo[bufnr].filetype = filetype
+			end
+		end
+	end
+end
 auto_session.setup({
 	legacy_cmds = false,
+	post_restore_cmds = { redetect_template_filetypes },
 	session_lens = { picker = "snacks" },
 })
 vim.api.nvim_create_user_command("Session", function()

@@ -1,6 +1,6 @@
 # Neovim
 
-Main config: `init.lua`; Askama snippets live in `snippets/htmldjango.json`.
+Main config: `init.lua`; Askama snippets live in `snippets/askama.json`.
 Plugins via native `vim.pack`. UX from Snacks and focused community plugins; completion from blink.cmp.
 
 ## Conventions
@@ -12,13 +12,20 @@ Plugins via native `vim.pack`. UX from Snacks and focused community plugins; com
 ## Gotchas
 
 - Register `PackChanged` hooks **before** `pack()` (fff binary and treesitter `TSUpdate`).
-- Askama `templates/*.html` → `htmldjango`.
+- `templates/*.html` becomes `askama` when an ancestor `Cargo.toml` uses
+  Askama, `htmldjango` in Django projects, and plain `html` otherwise.
+- `askama` uses `lpnh/tree-sitter-askama`; `htmldjango` retains its dedicated
+  parser.
 - Blink's native snippet source loads Askama snippets from `snippets/` and
-  friendly-snippets automatically. `<C-Space>` opens completion manually, even
-  in zen mode; `<C-y>` accepts, while `<Tab>` / `<S-Tab>` navigate snippets.
+  explicitly adds friendly-snippets' generic HTML collection. Django snippets
+  remain exclusive to `htmldjango`. Zen mode only shows snippets automatically;
+  `<C-Space>` requests all completion sources. `<CR>` accepts an explicitly
+  selected item, while `<Tab>` / `<S-Tab>` navigate snippets.
 - Mason ensures configured LSPs and formatter/linter binaries; `rustfmt` remains
   supplied by the Rust toolchain because it is not in Mason's registry.
-- AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in the project tree). `:SessionClear` also skips save on that quit.
+- AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in
+  the project tree) and re-detects template filetypes after restoring stale
+  local options. `:SessionClear` also skips save on that quit.
 
 ## Remove a plugin
 

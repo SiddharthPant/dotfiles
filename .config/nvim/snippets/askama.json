@@ -1,6 +1,6 @@
 {
   "Askama expression": {
-    "prefix": "var",
+    "prefix": "expr",
     "body": "{{ ${1:expression} }}",
     "description": "Askama expression"
   },
