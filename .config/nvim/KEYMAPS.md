@@ -130,14 +130,13 @@ The following mapping is global:
 |---|---|---|
 | Normal | `<leader>tz` | Toggle zen mode (enabled by default), which suppresses automatic completion menus in editing buffers |
 
-Blink uses its default keymap, so its plugin-provided mappings are not listed in
-the explicit keymap table above. In insert mode, `<C-Space>` manually opens
-completion even in zen mode, `<C-y>` accepts a completion, and `<Up>` / `<Down>`
-and `<C-p>` / `<C-n>` select items. `<Tab>` expands a matching LuaSnip trigger or
-jumps forward through placeholders, while `<S-Tab>` jumps backward; otherwise
-both fall back to their normal behavior. They do not cycle completion items.
-`<CR>` remains an autopairs-aware newline.
+Blink uses its default keymap preset, with `<C-Space>` explicitly configured to
+open completion manually even in zen mode. In insert mode, `<C-y>` accepts a
+completion, and `<Up>` / `<Down>` and `<C-p>` / `<C-n>` select items. `<Tab>`
+expands a matching native snippet or jumps forward through placeholders, while
+`<S-Tab>` jumps backward; otherwise both fall back to their normal behavior.
+They do not cycle completion items. `<CR>` remains an autopairs-aware newline.
 
-Blink completes from LSP, paths, LuaSnip, and buffer words. For `:` command-line
-completion, the menu opens automatically, `<Tab>` / `<S-Tab>` cycle items, and
-`<C-y>` accepts the selection.
+Blink completes from LSP, paths, native snippets, and buffer words. For `:`
+command-line completion, the menu opens automatically without selecting an
+item; `<Tab>` / `<S-Tab>` cycle items, and `<C-y>` accepts the selection.

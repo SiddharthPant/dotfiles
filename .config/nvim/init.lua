@@ -134,11 +134,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		if spec.name == "fff.nvim" then
 			ensure_loaded()
 			require("fff.download").download_or_build_binary()
-		elseif spec.name == "LuaSnip" then
-			local result = vim.system({ "make", "install_jsregexp" }, { cwd = ev.data.path, text = true }):wait()
-			if result.code ~= 0 then
-				vim.notify("LuaSnip jsregexp build failed:\n" .. (result.stderr or ""), vim.log.levels.ERROR)
-			end
 		elseif spec.name == "nvim-treesitter" then
 			ensure_loaded()
 			vim.cmd.TSUpdate()
@@ -169,7 +164,6 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
-	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/NeogitOrg/neogit",
 	"https://github.com/folke/trouble.nvim",
@@ -580,21 +574,16 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 require("nvim-web-devicons").setup({ default = true })
 -- }}}
 
--- snippets {{{
-local luasnip = require("luasnip")
-luasnip.setup({})
-require("luasnip.loaders.from_vscode").lazy_load()
-
--- Askama templates use HTML snippets alongside their template constructs.
-luasnip.filetype_extend("htmldjango", { "html" })
-luasnip.add_snippets("htmldjango", require("snippets.htmldjango"), { key = "askama" })
--- }}}
-
 -- blink.cmp {{{
 local blink = require("blink.cmp")
 local zen_mode = true
 blink.setup({
-	snippets = { preset = "luasnip" },
+	snippets = { preset = "default" },
+	keymap = {
+		preset = "default",
+		-- Zen mode only suppresses auto-show; completion remains available manually.
+		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+	},
 	completion = {
 		menu = {
 			auto_show = function()
@@ -603,8 +592,21 @@ blink.setup({
 		},
 		documentation = { auto_show = true, auto_show_delay_ms = 250 },
 	},
+	sources = {
+		providers = {
+			snippets = {
+				opts = {
+					-- Askama templates use HTML snippets alongside their own snippets.
+					extended_filetypes = { htmldjango = { "html" } },
+				},
+			},
+		},
+	},
 	cmdline = {
 		completion = {
+			list = {
+				selection = { preselect = false, auto_insert = false },
+			},
 			menu = {
 				auto_show = function()
 					return vim.fn.getcmdtype() == ":"
