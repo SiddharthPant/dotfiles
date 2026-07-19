@@ -64,6 +64,7 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
+| Normal | `<leader>e` | Open the Snacks project tree explorer with hidden and ignored files shown |
 | Normal | `<C-p>` | Find project files with FzfLua, ordered by proximity to the current file when available |
 | Normal | `<leader><Space>` | Switch to the previously used alternate buffer |
 | Normal | `<leader>;` | Find open buffers with FzfLua |
@@ -78,6 +79,14 @@ OSC52.
 Opening a file automatically changes Neovim's working directory to the nearest
 Git, Mercurial, or Subversion root.
 
+## Git
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Normal | `<leader>gg` | Toggle Diffview Plus for the working tree |
+| Normal, buffer-local | `<leader>go` | Preview the Git hunk under the cursor inline |
+| Normal, Diffview-local | `q` | Close the current Diffview tab |
+
 ## Motion
 
 | Mode | Keymap | Action |
@@ -89,8 +98,6 @@ Git, Mercurial, or Subversion root.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `<leader>cf` | Format the current buffer asynchronously with conform.nvim |
-| Normal | `<leader>cx` | Toggle Trouble diagnostics for the current buffer |
-| Normal | `<leader>cX` | Toggle Trouble diagnostics for the whole workspace |
 | Normal | `<leader>td` | Toggle diagnostics globally and notify of the new state |
 
 ## LSP

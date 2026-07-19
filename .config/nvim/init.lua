@@ -38,6 +38,8 @@ vim.o.colorcolumn = "80" -- show a column at 80 position chars
 vim.o.showmatch = true -- highlights matching brackets
 vim.o.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•" -- make hidden characters readable
 vim.o.laststatus = 3 -- use a single global statusline
+-- Neovim's native statusline already reports buffer diagnostics; add the effective file encoding.
+vim.o.statusline = vim.o.statusline .. " %{&fileencoding ==# '' ? &encoding : &fileencoding}"
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
 vim.o.pumborder = "rounded"
@@ -56,6 +58,7 @@ vim.o.wildmode = "noselect:lastused,full" -- show completion without selecting, 
 vim.o.wildmenu = true
 vim.o.wildoptions = "fuzzy,pum"
 vim.o.wildignorecase = true
+vim.opt.wildignore:append({ ".git", "node_modules", "target", "vendor", "dist", "*.o", "*.swp" })
 vim.api.nvim_create_autocmd("CmdlineChanged", {
 	group = group,
 	pattern = ":",
@@ -64,6 +67,8 @@ vim.api.nvim_create_autocmd("CmdlineChanged", {
 	end,
 })
 vim.opt.diffopt:append("linematch:60") -- improve diff display
+vim.opt.diffopt:append("algorithm:histogram") -- align changes using surrounding code structure
+vim.opt.diffopt:append("indent-heuristic") -- shift hunk boundaries to more readable locations
 vim.opt.sessionoptions:append("localoptions") -- preserve buffer-local options in sessions
 
 -- Set a useful terminal title so each pane is distinguishable (dir + file).
@@ -150,7 +155,10 @@ vim.api.nvim_create_autocmd("PackChanged", {
 vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	"https://github.com/ibhagwan/fzf-lua",
+	"https://github.com/folke/snacks.nvim",
 	"https://github.com/notjedi/nvim-rooter.lua",
+	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://codeberg.org/andyg/leap.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/christoomey/vim-tmux-navigator",
@@ -163,7 +171,6 @@ vim.pack.add({
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
-	"https://github.com/folke/trouble.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/b0o/SchemaStore.nvim",
@@ -176,11 +183,13 @@ vim.pack.add({
 require("catppuccin").setup({
 	flavour = "frappe",
 	integrations = {
+		diffview = true,
 		fzf = true,
+		gitsigns = true,
 		grug_far = true,
 		markview = true,
 		mason = true,
-		trouble = true,
+		snacks = { enabled = true },
 		which_key = true,
 	},
 })
@@ -264,6 +273,16 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Plugins
 -- navigation
+require("snacks").setup({
+	explorer = {
+		enabled = true,
+		replace_netrw = false,
+	},
+})
+map("n", "<leader>e", function()
+	Snacks.explorer({ hidden = true, ignored = true })
+end, { desc = "File explorer" })
+
 local fzf = require("fzf-lua")
 fzf.setup({
 	fzf_colors = true,
@@ -320,6 +339,37 @@ map("n", "<leader>fX", fzf.diagnostics_workspace, { desc = "Find workspace diagn
 require("nvim-rooter").setup()
 
 map({ "n", "x", "o" }, "s", "<Plug>(leap)", { desc = "Leap" })
+
+-- git
+vim.api.nvim_create_autocmd("User", {
+	group = group,
+	pattern = "GitSignsUpdate",
+	desc = "Set Gitsigns buffer mappings after attachment",
+	callback = function(ev)
+		local bufnr = ev.data and ev.data.buffer
+		if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+			return
+		end
+		map("n", "<leader>go", require("gitsigns").preview_hunk_inline, {
+			buffer = bufnr,
+			desc = "Preview Git hunk inline",
+		})
+	end,
+})
+
+local close_diffview = "<cmd>DiffviewClose<cr>"
+require("diffview").setup({
+	use_icons = false,
+	keymaps = {
+		view = {
+			{ "n", "q", close_diffview, { desc = "Close Diffview" } },
+		},
+		file_panel = {
+			{ "n", "q", close_diffview, { desc = "Close Diffview" } },
+		},
+	},
+})
+map("n", "<leader>gg", "<cmd>DiffviewToggle<cr>", { desc = "Toggle Diffview" })
 
 local function listed_buffers()
 	return vim.tbl_filter(function(bufnr)
@@ -604,9 +654,6 @@ require("which-key").add({
 -- fidget
 require("fidget").setup({})
 
--- trouble
-require("trouble").setup()
-
 -- markview
 require("markview").setup({
 	preview = {
@@ -674,12 +721,6 @@ vim.diagnostic.config({
 			end
 		end,
 	},
-})
-map("n", "<leader>cx", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", {
-	desc = "Toggle buffer diagnostics in Trouble",
-})
-map("n", "<leader>cX", "<cmd>Trouble diagnostics toggle<CR>", {
-	desc = "Toggle workspace diagnostics in Trouble",
 })
 map("n", "<leader>td", function()
 	local enabled = not vim.diagnostic.is_enabled()
@@ -757,6 +798,11 @@ vim.lsp.config("rust_analyzer", {
 		["rust-analyzer"] = {
 			check = {
 				command = "clippy",
+			},
+			completion = {
+				postfix = {
+					enable = false,
+				},
 			},
 		},
 	},

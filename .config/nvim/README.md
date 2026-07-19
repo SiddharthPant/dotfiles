@@ -47,7 +47,8 @@ built-in command-line and LSP support.
 |---|---|
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
 | Completion | Manual native LSP completion with `<C-x><C-o>`; fuzzy built-in completion for `:` commands |
-| Navigation | FzfLua pickers, Leap motions, and automatic project-root cwd |
+| Navigation | FzfLua pickers, Snacks explorer, Leap motions, and automatic project-root cwd |
+| Git | Gitsigns inline hunk previews and Diffview Plus working-tree review |
 | Tmux panes | vim-tmux-navigator uses `<C-h/j/k/l>` and `<C-\>` across Neovim and tmux |
 | Sessions | AutoSession restores/saves by cwd; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
