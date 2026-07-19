@@ -1,26 +1,28 @@
 # Neovim
 
-Main config: `init.lua`; Askama snippets live in `snippets/askama.json`.
-Plugins via native `vim.pack`. UX from Snacks and focused community plugins; completion from blink.cmp.
+Main config: `init.lua`. Plugins use native `vim.pack`; completion uses Neovim's
+built-in command-line and LSP support.
 
 ## Conventions
 
-- **Locality of Behaviour** — plugin setup, maps, and related autocmds live together in one fold.
-- **Marker folds** — navigate with `za` / `zR` / `zM`. Do not add leader maps for simple Ex commands (`:Mason`, `:Markview`, …).
+- **Locality of behaviour** — keep plugin setup, maps, and related autocmds together.
+- Do not add leader maps for commands that are already easy to invoke (`:Mason`, `:Markview`, …).
 - Edit `init.lua` unless a dedicated file already exists (e.g. `.luarc.json`).
 
 ## Gotchas
 
-- Register `PackChanged` hooks **before** `pack()` (fff binary and treesitter `TSUpdate`).
+- Register `PackChanged` hooks **before** `pack()` so treesitter `TSUpdate` runs
+  after install and update.
+- `<leader><Space>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
+  project files first. FzfLua, `fd`, `fzf`, and `proximity-sort` are provided by
+  the Neovim plugin list, Homebrew, and Mise respectively.
 - `templates/*.html` becomes `askama` when an ancestor `Cargo.toml` uses
   Askama, `htmldjango` in Django projects, and plain `html` otherwise.
 - `askama` uses `lpnh/tree-sitter-askama`; `htmldjango` retains its dedicated
   parser.
-- Blink's native snippet source loads Askama snippets from `snippets/` and
-  explicitly adds friendly-snippets' generic HTML collection. Django snippets
-  remain exclusive to `htmldjango`. Zen mode only shows snippets automatically;
-  `<C-Space>` requests all completion sources. `<CR>` accepts an explicitly
-  selected item, while `<Tab>` / `<S-Tab>` navigate snippets.
+- Insert completion is manual, LSP-only, and does not preselect an item:
+  `<C-x><C-o>` opens it, `<C-n>` / `<C-p>` move through candidates, `<C-y>`
+  accepts, and `<C-e>` cancels.
 - Mason ensures configured LSPs and formatter/linter binaries; `rustfmt` remains
   supplied by the Rust toolchain because it is not in Mason's registry.
 - AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in
@@ -42,8 +44,8 @@ Plugins via native `vim.pack`. UX from Snacks and focused community plugins; com
 | Area | Notes |
 |---|---|
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
-| Completion | blink.cmp with native snippets for LSP, paths, snippets, buffer words, and `:` commands |
-| UI | Snacks, lualine, and nvim-web-devicons |
+| Completion | Manual native LSP completion with `<C-x><C-o>`; fuzzy built-in completion for `:` commands |
+| Navigation | FzfLua pickers, Leap motions, and automatic project-root cwd |
 | Herdr panes | `<C-h/j/k/l>` navigates; `<M-h/j/k/l>` resizes across Neovim and Herdr |
 | Sessions | AutoSession restores/saves by cwd; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
@@ -53,7 +55,6 @@ Plugins via native `vim.pack`. UX from Snacks and focused community plugins; com
 | Shell | BashLS uses Mason-installed ShellCheck; `env` files are excluded |
 | Rust | rust-analyzer with Clippy diagnostics; rustfmt formatting |
 | Tool install | `:Mason` — LSPs and non-Rust formatter/linter binaries |
-| fff binary missing | `:lua require("fff.download").download_or_build_binary()` |
 
 ## Check
 

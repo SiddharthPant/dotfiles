@@ -66,38 +66,24 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
-| Normal | `<leader>e` | Toggle the Snacks tree explorer (including hidden and Git-ignored files) |
-| Normal | `<leader><Space>` | Find files with fff.nvim |
-| Normal | `<leader>/` | Live grep with fff.nvim using fuzzy and plain search modes |
-| Normal | `<leader>fb` | Find buffers with Snacks picker |
-| Normal | `<leader>fh` | Search Neovim help with Snacks picker |
-| Normal | `<leader>fs` | Find symbols in the current buffer with Snacks picker |
-| Normal | `<leader>fS` | Find symbols in the workspace with Snacks picker |
-| Normal | `<leader>fr` | Resume the previous Snacks picker |
-| Normal | `<leader>fx` | Find diagnostics in the current buffer with Snacks picker |
-| Normal | `<leader>fX` | Find workspace diagnostics with Snacks picker |
+| Normal | `<leader><Space>` | Find project files with FzfLua, ordered by proximity to the current file when available |
+| Normal | `<leader>;` | Find open buffers with FzfLua |
+| Normal | `<leader>/` | Live grep with FzfLua |
+| Normal | `<leader>fh` | Search Neovim help with FzfLua |
+| Normal | `<leader>fs` | Find symbols in the current buffer with FzfLua |
+| Normal | `<leader>fS` | Find symbols in the workspace with FzfLua |
+| Normal | `<leader>fr` | Resume the previous FzfLua picker |
+| Normal | `<leader>fx` | Find diagnostics in the current buffer with FzfLua |
+| Normal | `<leader>fX` | Find workspace diagnostics with FzfLua |
 
-## Git
+Opening a file automatically changes Neovim's working directory to the nearest
+Git, Mercurial, or Subversion root.
 
-These Gitsigns mappings are buffer-local and are available in Git-attached
-buffers.
-
-| Mode | Keymap | Action |
-|---|---|---|
-| Normal | `<leader>tg` | Toggle current-line Git blame; a notification reports whether it is enabled or disabled |
-| Normal | `<leader>go` | Preview the hunk under the cursor inline |
-| Normal | `<leader>gx` | Open changed hunks for the current buffer in Trouble |
-| Normal | `<leader>gX` | Open all changed Git hunks in Trouble |
-
-The inline hunk preview is cleared when the cursor moves, insert mode starts,
-or the buffer is left.
-
-These mappings are global:
+## Motion
 
 | Mode | Keymap | Action |
 |---|---|---|
-| Normal | `<leader>gg` | Open Neogit |
-| Normal | `<leader>gd` | Toggle Diffview |
+| Normal, Visual, Operator-pending | `s` | Leap bidirectionally to a labeled target in the current window |
 
 ## Formatting and diagnostics
 
@@ -126,19 +112,10 @@ The following mapping is global:
 
 ## Completion
 
-| Mode | Keymap | Action |
-|---|---|---|
-| Normal | `<leader>tz` | Toggle zen mode (enabled by default), which limits automatic completion to snippets |
+Insert completion never opens automatically or preselects an item. Use
+Neovim's built-in `<C-x><C-o>` to request LSP completion, `<C-n>` / `<C-p>`
+to move through candidates, `<C-y>` to accept, and `<C-e>` to cancel.
 
-In zen mode, snippet matches open automatically while LSP, path, and buffer
-suggestions stay hidden. `<C-Space>` explicitly requests all sources. Blink
-otherwise uses its enter keymap preset without preselecting the first item.
-`<CR>` accepts an explicitly selected completion; otherwise it remains an
-autopairs-aware newline. `<Up>` / `<Down>` and `<C-p>` / `<C-n>` select items.
-`<Tab>` expands a matching native snippet or jumps forward through placeholders,
-while `<S-Tab>` jumps backward; otherwise both fall back to their normal
-behavior. They do not cycle completion items.
-
-Blink completes from LSP, paths, native snippets, and buffer words. For `:`
-command-line completion, the menu opens automatically without selecting an
-item; `<Tab>` / `<S-Tab>` cycle items, and `<C-y>` accepts the selection.
+Command-line completion also uses Neovim's defaults: `<Tab>` starts or moves
+forward through fuzzy completion, while `<S-Tab>` moves backward. `<C-n>` and
+`<C-p>` also move through an open menu.
