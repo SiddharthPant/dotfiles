@@ -48,7 +48,7 @@ built-in command-line and LSP support.
 | Keymaps | [KEYMAPS.md](KEYMAPS.md) |
 | Completion | Manual native LSP completion with `<C-x><C-o>`; fuzzy built-in completion for `:` commands |
 | Navigation | FzfLua pickers, Leap motions, and automatic project-root cwd |
-| Herdr panes | `<C-h/j/k/l>` navigates; `<M-h/j/k/l>` resizes across Neovim and Herdr |
+| Tmux panes | vim-tmux-navigator uses `<C-h/j/k/l>` and `<C-\>` across Neovim and tmux |
 | Sessions | AutoSession restores/saves by cwd; `:Session` / `:SessionClear` |
 | Markdown | `:Markview` |
 | SQL | Four-space indentation; SQLFluff formatting/linting defaults to PostgreSQL |

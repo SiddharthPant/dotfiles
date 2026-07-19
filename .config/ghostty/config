@@ -2,9 +2,6 @@
 font-family = Maple Mono NF
 font-family = Symbols Nerd Font Mono
 font-size = 13
-background-opacity = 0.95
-background-blur = 10
-
 
 # Cursor
 cursor-style = block

@@ -39,6 +39,7 @@ vim.o.showmatch = true -- highlights matching brackets
 vim.o.laststatus = 3 -- use a single global statusline
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
+vim.o.pumborder = "rounded"
 vim.o.completeopt = "menuone,noselect,popup" -- show completion without selecting an item
 vim.o.winborder = "rounded" -- rounded borders for floating windows
 
@@ -141,7 +142,7 @@ vim.pack.add({
 	"https://github.com/notjedi/nvim-rooter.lua",
 	"https://codeberg.org/andyg/leap.nvim",
 	"https://github.com/MagicDuck/grug-far.nvim",
-	{ src = "https://github.com/lmilojevicc/herdr-splits.nvim", version = "v0.5.0" },
+	"https://github.com/christoomey/vim-tmux-navigator",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
@@ -163,12 +164,6 @@ vim.pack.add({
 -- Theme
 require("catppuccin").setup({
 	flavour = "frappe",
-	custom_highlights = function(colors)
-		return {
-			NormalFloat = { fg = colors.text, bg = colors.base },
-			FloatBorder = { fg = colors.blue, bg = colors.base },
-		}
-	end,
 	integrations = {
 		fzf = true,
 		grug_far = true,
@@ -341,19 +336,6 @@ map("n", "<leader>bo", function()
 		end
 	end
 end, { desc = "Close other buffers" })
-
--- herdr-splits
-local herdr_splits = require("herdr-splits")
-herdr_splits.setup()
-
-map("n", "<C-h>", herdr_splits.move_cursor_left, { desc = "Navigate pane left" })
-map("n", "<C-j>", herdr_splits.move_cursor_down, { desc = "Navigate pane down" })
-map("n", "<C-k>", herdr_splits.move_cursor_up, { desc = "Navigate pane up" })
-map("n", "<C-l>", herdr_splits.move_cursor_right, { desc = "Navigate pane right" })
-map("n", "<M-h>", herdr_splits.resize_left, { desc = "Resize pane left" })
-map("n", "<M-j>", herdr_splits.resize_down, { desc = "Resize pane down" })
-map("n", "<M-k>", herdr_splits.resize_up, { desc = "Resize pane up" })
-map("n", "<M-l>", herdr_splits.resize_right, { desc = "Resize pane right" })
 
 -- treesitter
 require("nvim-treesitter").install({
