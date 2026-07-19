@@ -20,6 +20,8 @@ built-in command-line and LSP support.
   Askama, `htmldjango` in Django projects, and plain `html` otherwise.
 - `askama` uses `lpnh/tree-sitter-askama`; `htmldjango` retains its dedicated
   parser.
+- Askama templates are formatted with `askama_fmt`; Django templates continue
+  to use `djlint`.
 - Insert completion is manual, LSP-only, and does not preselect an item:
   `<C-x><C-o>` opens it, `<C-n>` / `<C-p>` move through candidates, `<C-y>`
   accepts, and `<C-e>` cancels.

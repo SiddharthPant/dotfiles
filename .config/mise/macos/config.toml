@@ -1,4 +1,5 @@
 [tools]
+"cargo:askama_fmt" = "latest"
 "cargo:cargo-expand" = "latest"
 "cargo:proximity-sort" = "latest"
 jjui = "latest"

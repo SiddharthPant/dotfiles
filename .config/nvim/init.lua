@@ -528,7 +528,7 @@ conform.setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		go = { "goimports", "gofumpt" },
-		askama = { "djlint" },
+		askama = { "askama_fmt" },
 		htmldjango = { "djlint" },
 		rust = { "rustfmt" },
 		python = { "ruff_format" },
@@ -546,6 +546,11 @@ conform.setup({
 		return { timeout_ms = vim.bo[bufnr].filetype == "sql" and 2000 or 500 }
 	end,
 	formatters = {
+		askama_fmt = {
+			command = "askama_fmt",
+			args = { "--stdin-filepath", "$FILENAME" },
+			stdin = true,
+		},
 		-- The shared PostgreSQL config lives outside individual projects.
 		sqlfluff = {
 			args = { "format", "-" },
