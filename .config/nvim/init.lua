@@ -51,10 +51,17 @@ vim.opt.iskeyword:append("-") -- include - in words
 vim.o.splitbelow = true -- horizontal splits go below
 vim.o.splitright = true -- vertical splits go right
 
-vim.o.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
+vim.o.wildmode = "noselect:lastused,full" -- show completion without selecting, then cycle through with Tab
 vim.o.wildmenu = true
 vim.o.wildoptions = "fuzzy,pum"
 vim.o.wildignorecase = true
+vim.api.nvim_create_autocmd("CmdlineChanged", {
+	group = group,
+	pattern = ":",
+	callback = function()
+		vim.fn.wildtrigger()
+	end,
+})
 vim.opt.diffopt:append("linematch:60") -- improve diff display
 vim.opt.sessionoptions:append("localoptions") -- preserve buffer-local options in sessions
 
