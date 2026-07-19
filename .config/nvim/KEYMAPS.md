@@ -19,6 +19,7 @@ not listed here; this file documents mappings defined explicitly in
 | Normal | `N` | Go to the previous search match and center it |
 | Normal | `<C-d>` | Scroll down half a page and center the cursor |
 | Normal | `<C-u>` | Scroll up half a page and center the cursor |
+| Normal | `<leader>th` | Toggle hidden-character display and notify of the new state |
 | Normal | `J` | Join lines while preserving the cursor's position |
 | Normal | `<A-j>` | Move the current line down and reindent it |
 | Normal | `<A-k>` | Move the current line up and reindent it |
@@ -51,7 +52,7 @@ These vim-tmux-navigator mappings move seamlessly across Neovim splits and tmux 
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `<leader>bd` | Delete the current buffer while keeping the split (`:bn` then delete the previous buffer) |
-| Normal | `<leader>bo` | Close all other listed, unmodified buffers; modified buffers are left open |
+| Normal | `<leader>bo` | Close all other listed, unmodified buffers and notify how many were closed or retained as modified |
 | Normal | `<leader>tc` | Toggle OSC52 system-clipboard copying for future yanks and notify of the new state |
 
 The clipboard toggle does not change the unnamed register. When enabled, a
@@ -63,7 +64,8 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
-| Normal | `<leader><Space>` | Find project files with FzfLua, ordered by proximity to the current file when available |
+| Normal | `<C-p>` | Find project files with FzfLua, ordered by proximity to the current file when available |
+| Normal | `<leader><Space>` | Switch to the previously used alternate buffer |
 | Normal | `<leader>;` | Find open buffers with FzfLua |
 | Normal | `<leader>/` | Live grep with FzfLua |
 | Normal | `<leader>fh` | Search Neovim help with FzfLua |

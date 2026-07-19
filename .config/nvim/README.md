@@ -13,7 +13,7 @@ built-in command-line and LSP support.
 
 - Register `PackChanged` hooks **before** `pack()` so treesitter `TSUpdate` runs
   after install and update.
-- `<leader><Space>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
+- `<C-p>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
   project files first. FzfLua, `fd`, `fzf`, and `proximity-sort` are provided by
   the Neovim plugin list, Homebrew, and Mise respectively.
 - `templates/*.html` becomes `askama` when an ancestor `Cargo.toml` uses
@@ -22,7 +22,7 @@ built-in command-line and LSP support.
   parser.
 - Askama templates are formatted with `askama_fmt`; Django templates continue
   to use `djlint`.
-- Insert completion is manual, LSP-only, and does not preselect an item:
+- Insert completion is manual, LSP-only, excludes snippets, and does not preselect an item:
   `<C-x><C-o>` opens it, `<C-n>` / `<C-p>` move through candidates, `<C-y>`
   accepts, and `<C-e>` cancels.
 - Mason ensures configured LSPs and formatter/linter binaries; `rustfmt` remains

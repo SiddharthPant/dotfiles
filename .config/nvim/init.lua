@@ -36,6 +36,7 @@ vim.o.smartcase = true -- case sensitive if uppercase in string
 vim.o.signcolumn = "yes" -- always show a sign column
 vim.o.colorcolumn = "80" -- show a column at 80 position chars
 vim.o.showmatch = true -- highlights matching brackets
+vim.o.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•" -- make hidden characters readable
 vim.o.laststatus = 3 -- use a single global statusline
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
@@ -108,6 +109,11 @@ map("n", "q", "<Nop>", { desc = "Disable macro recording" })
 local function notify_toggle(title, enabled)
 	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
 end
+
+map("n", "<leader>th", function()
+	vim.wo.list = not vim.wo.list
+	notify_toggle("Hidden characters", vim.wo.list)
+end, { desc = "Toggle hidden characters" })
 
 -- OSC52 copy without making the unnamed register depend on terminal paste.
 local osc52_copy = require("vim.ui.clipboard.osc52").copy("+")
@@ -276,7 +282,7 @@ fzf.setup({
 	fzf_opts = { ["--layout"] = "default" },
 })
 
-map("", "<leader><Space>", function()
+map("n", "<C-p>", function()
 	local opts = {
 		cmd = "fd --color=never --hidden --type f --type l --exclude .git",
 		fzf_opts = {
@@ -291,6 +297,7 @@ map("", "<leader><Space>", function()
 	end
 	fzf.files(opts)
 end, { desc = "Find project files" })
+map("n", "<leader><Space>", "<C-^>", { desc = "Switch to alternate buffer" })
 map("n", "<leader>;", function()
 	fzf.buffers({
 		fzf_opts = {
@@ -335,11 +342,23 @@ map("n", "<leader>bd", function()
 end, { desc = "Delete buffer keep split" })
 map("n", "<leader>bo", function()
 	local current = vim.api.nvim_get_current_buf()
+	local closed = 0
+	local modified = 0
 	for _, bufnr in ipairs(listed_buffers()) do
-		if bufnr ~= current and not vim.bo[bufnr].modified then
-			vim.api.nvim_buf_delete(bufnr, {})
+		if bufnr ~= current then
+			if vim.bo[bufnr].modified then
+				modified = modified + 1
+			else
+				vim.api.nvim_buf_delete(bufnr, {})
+				closed = closed + 1
+			end
 		end
 	end
+	local message = ("Closed %d other buffer%s"):format(closed, closed == 1 and "" or "s")
+	if modified > 0 then
+		message = ("%s; kept %d modified buffer%s"):format(message, modified, modified == 1 and "" or "s")
+	end
+	vim.notify(message, vim.log.levels.INFO)
 end, { desc = "Close other buffers" })
 
 -- treesitter
@@ -670,6 +689,13 @@ end, { desc = "Toggle diagnostics" })
 
 -- LSP
 -- Completion
+local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+lsp_capabilities.textDocument.completion.completionItem.snippetSupport = false
+lsp_capabilities.textDocument.completion.completionItemKind.valueSet = vim.tbl_filter(function(kind)
+	return kind ~= vim.lsp.protocol.CompletionItemKind.Snippet
+end, lsp_capabilities.textDocument.completion.completionItemKind.valueSet)
+vim.lsp.config("*", { capabilities = lsp_capabilities })
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = group,
 	desc = "Enable manual native LSP completion",
