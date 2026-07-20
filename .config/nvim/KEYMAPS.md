@@ -83,7 +83,7 @@ Git, Mercurial, or Subversion root.
 
 | Mode | Keymap | Action |
 |---|---|---|
-| Normal | `<leader>gg` | Toggle Diffview Plus for the working tree |
+| Normal | `<leader>gd` | Toggle Diffview Plus for the working tree |
 | Normal, buffer-local | `<leader>go` | Preview the Git hunk under the cursor inline |
 | Normal, Diffview-local | `q` | Close the current Diffview tab |
 

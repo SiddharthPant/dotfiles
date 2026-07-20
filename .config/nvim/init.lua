@@ -369,7 +369,7 @@ require("diffview").setup({
 		},
 	},
 })
-map("n", "<leader>gg", "<cmd>DiffviewToggle<cr>", { desc = "Toggle Diffview" })
+map("n", "<leader>gd", "<cmd>DiffviewToggle<cr>", { desc = "Toggle Diffview" })
 
 local function listed_buffers()
 	return vim.tbl_filter(function(bufnr)

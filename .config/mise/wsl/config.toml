@@ -1,8 +1,15 @@
 [settings]
-minimum_release_age_excludes = ["claude-code", "codex", "opencode", "pnpm", "herdr"]
+minimum_release_age_excludes = [
+  "claude-code",
+  "codex",
+  "opencode",
+  "pnpm",
+  "herdr",
+]
 
 [tools]
 ast-grep = "latest"
+"cargo:askama_fmt" = "latest"
 "cargo:cargo-binstall" = "latest"
 claude-code = "latest"
 codex = "latest"

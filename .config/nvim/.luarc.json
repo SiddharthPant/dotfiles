@@ -1,7 +1,10 @@
 {
-	"diagnostics.globals": ["vim"],
-	"runtime.version": "LuaJIT",
-	"workspace.checkThirdParty": false,
-	"completion.callSnippet": "Replace",
-	"format.enable": false
+  "diagnostics.globals": [
+    "vim",
+    "Snacks"
+  ],
+  "runtime.version": "LuaJIT",
+  "workspace.checkThirdParty": false,
+  "completion.callSnippet": "Replace",
+  "format.enable": false
 }
