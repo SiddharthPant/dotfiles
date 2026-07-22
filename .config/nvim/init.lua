@@ -79,6 +79,7 @@ vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
 -- Core editing
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit Neovim" })
+map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
 
 map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
@@ -301,7 +302,7 @@ fzf.setup({
 	fzf_opts = { ["--layout"] = "default" },
 })
 
-map("n", "<C-p>", function()
+map("n", "<leader>ff", function()
 	local opts = {
 		cmd = "fd --color=never --hidden --type f --type l --exclude .git",
 		fzf_opts = {
@@ -316,8 +317,7 @@ map("n", "<C-p>", function()
 	end
 	fzf.files(opts)
 end, { desc = "Find project files" })
-map("n", "<leader><Space>", "<C-^>", { desc = "Switch to alternate buffer" })
-map("n", "<leader>;", function()
+map("n", "<leader><Space>", function()
 	fzf.buffers({
 		fzf_opts = {
 			["--with-nth"] = "{-3..-2}",
