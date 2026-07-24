@@ -817,8 +817,14 @@ vim.lsp.config("jsonls", {
 vim.lsp.config("rust_analyzer", {
 	settings = {
 		["rust-analyzer"] = {
-			check = {
-				command = "clippy",
+			imports = {
+				granularity = {
+					enforce = true,
+					group = "item",
+				},
+				group = {
+					enable = false,
+				},
 			},
 			completion = {
 				postfix = {
