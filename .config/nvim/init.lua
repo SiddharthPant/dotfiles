@@ -279,6 +279,9 @@ require("snacks").setup({
 		enabled = true,
 		replace_netrw = false,
 	},
+	indent = {
+		enabled = true,
+	},
 })
 map("n", "<leader>e", function()
 	Snacks.explorer({ hidden = true, ignored = true })
@@ -474,12 +477,20 @@ vim.filetype.add({
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
-	desc = "Enable treesitter highlight + indent when a parser exists",
+	desc = "Enable treesitter highlighting when a parser exists",
 	callback = function(ev)
-		if not pcall(vim.treesitter.start, ev.buf) then
-			return
-		end
-		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		pcall(vim.treesitter.start, ev.buf)
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = "askama",
+	desc = "Use HTML indentation for Askama templates",
+	callback = function(ev)
+		vim.api.nvim_buf_call(ev.buf, function()
+			vim.cmd("runtime! indent/html.vim")
+		end)
 	end,
 })
 

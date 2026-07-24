@@ -20,6 +20,8 @@ built-in command-line and LSP support.
   Askama, `htmldjango` in Django projects, and plain `html` otherwise.
 - `askama` uses `lpnh/tree-sitter-askama`; `htmldjango` retains its dedicated
   parser.
+- Treesitter provides highlighting, while filetype indent scripts handle
+  editing-time indentation; Askama reuses Neovim's HTML indenter.
 - Askama templates are formatted with `askama_fmt`; Django templates continue
   to use `djlint`.
 - Insert completion is manual, LSP-only, excludes snippets, and does not preselect an item:
