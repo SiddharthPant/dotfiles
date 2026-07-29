@@ -815,6 +815,9 @@ vim.lsp.config("rust_analyzer", {
 					enable = false,
 				},
 			},
+			diagnostics = {
+				disabled = { "inactive-code" },
+			},
 		},
 	},
 })
