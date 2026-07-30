@@ -16,3 +16,4 @@ fish_add_path $HOME/.local/bin
 set -gx FFF_ENABLE_ROOT_SCAN 1
 set -gx FFF_FRECENCY_DB "$HOME/.cache/fff/frecency.db"
 set -gx FFF_HISTORY_DB "$HOME/.cache/fff/history.db"
+set -Ux MISE_PIN 1

@@ -672,6 +672,16 @@ require("markview").setup({
 	},
 })
 
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = group,
+	pattern = { "*.json", "*.jsonc" },
+	desc = "Disable concealment in JSON",
+	callback = function()
+		vim.wo.conceallevel = 0
+		vim.wo.concealcursor = ""
+	end,
+})
+
 -- sessions
 local auto_session = require("auto-session")
 local function redetect_template_filetypes()
