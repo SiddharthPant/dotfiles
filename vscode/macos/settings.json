@@ -1,0 +1,8 @@
+{
+  "chat.disableAIFeatures": true,
+  "workbench.startupEditor": "none",
+  "editor.fontFamily": "Maple Mono NF",
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  }
+}

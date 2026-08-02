@@ -1,8 +1,10 @@
-.PHONY: all help install clean macos arch wsl common
+.PHONY: all help install clean macos arch wsl common vscode-macos
 
 DOTFILES_DIR := $(CURDIR)
 UNAME_S := $(shell uname)
 PLATFORM := arch
+VSCODE_MACOS_DIR := $(DOTFILES_DIR)/vscode/macos
+VSCODE_MACOS_USER_DIR := $(HOME)/Library/Application Support/Code/User
 
 ifeq ($(UNAME_S),Darwin)
 PLATFORM := macos
@@ -71,12 +73,23 @@ help:
 install: $(PLATFORM)
 
 # target: macos - Setup symlinks for macOS
-macos: common
+macos: common vscode-macos
 	$(call ensure_link,$(DOTFILES_DIR)/zshrc/macos/.zshrc,$(HOME)/.zshrc)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/config.fish,$(HOME)/.config/fish/config.fish)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/fish_plugins,$(HOME)/.config/fish/fish_plugins)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	@echo "macOS dotfiles linked"
+
+# target: vscode-macos - Link VS Code configuration and install extensions
+vscode-macos:
+	$(call ensure_link,$(VSCODE_MACOS_DIR)/settings.json,$(VSCODE_MACOS_USER_DIR)/settings.json)
+	$(call ensure_link,$(VSCODE_MACOS_DIR)/keybindings.json,$(VSCODE_MACOS_USER_DIR)/keybindings.json)
+	@command -v code >/dev/null 2>&1 || { printf 'error: code is not available in PATH\n' >&2; exit 1; }
+	@while IFS= read -r extension; do \
+		case "$$extension" in ''|'#'*) continue ;; esac; \
+		code --install-extension "$$extension"; \
+	done < $(VSCODE_MACOS_DIR)/extensions.txt
+	@code --update-extensions
 
 # target: arch - Setup symlinks for Arch Linux
 arch: common
@@ -120,6 +133,8 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/fish/wsl/config.fish,$(HOME)/.config/fish/config.fish)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/wsl/config.toml,$(HOME)/.config/mise/config.toml)
+	$(call remove_managed_link,$(VSCODE_MACOS_DIR)/settings.json,$(VSCODE_MACOS_USER_DIR)/settings.json)
+	$(call remove_managed_link,$(VSCODE_MACOS_DIR)/keybindings.json,$(VSCODE_MACOS_USER_DIR)/keybindings.json)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
