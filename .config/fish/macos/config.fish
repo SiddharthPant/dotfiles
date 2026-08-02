@@ -34,6 +34,9 @@ if status is-interactive
 
     zoxide init fish | source
 
+    fzf_configure_bindings --history=
+    bind \cr history-pager
+
     abbr --add --global a 'php artisan'
     abbr --add --global chrome '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 end
