@@ -4,5 +4,7 @@
   "editor.fontFamily": "Maple Mono NF",
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
-  }
+  },
+  "workbench.activityBar.location": "top",
+  "workbench.sideBar.location": "right"
 }
