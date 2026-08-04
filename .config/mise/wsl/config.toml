@@ -1,27 +1,18 @@
 [settings]
 minimum_release_age_excludes = [
-  "claude-code",
-  "codex",
-  "opencode",
   "pnpm",
-  "herdr",
 ]
 
 [tools]
-ast-grep = "latest"
-"cargo:askama_fmt" = "latest"
-"cargo:cargo-binstall" = "latest"
-claude-code = "latest"
-codex = "latest"
-go = "latest"
-"go:github.com/chrishrb/go-grip" = "latest"
-herdr = "latest"
-jjui = "latest"
-lazygit = "latest"
+ast-grep = "0.45.0"
+"cargo:askama_fmt" = "0.4.0"
+"cargo:cargo-binstall" = "1.21.1"
+go = "1.26.5"
+"go:github.com/chrishrb/go-grip" = "0.9.2"
+jjui = "0.10.9"
+lazygit = "0.63.1"
 node = "26"
-opencode = "latest"
-pi = "latest"
-pnpm = "latest"
+pnpm = "11.18.0"
 rust = "1.97.1"
-usage = "latest"
-uv = "latest"
+usage = "4.1.0"
+uv = "0.12.1"

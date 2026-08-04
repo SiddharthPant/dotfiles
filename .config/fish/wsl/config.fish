@@ -5,7 +5,7 @@ if status is-interactive
 # Commands to run in interactive sessions can go here
 set -g fish_greeting
 /bin/mise activate fish | source
-herdr completion fish | source
+# herdr completion fish | source
 fzf --fish | source
 jj util completion fish | source
 end
