@@ -13,7 +13,6 @@ not listed here; this file documents mappings defined explicitly in
 |---|---|---|
 | Terminal | `<Esc><Esc>` | Leave terminal mode and return to normal mode |
 | Normal | `<leader>qq` | Quit all Neovim windows (`:qall`) |
-| Normal | `<Esc>` | Clear search highlighting |
 | Normal | `j` | Move down by display line (`gj`) when no count is given; use normal `j` with a count |
 | Normal | `k` | Move up by display line (`gk`) when no count is given; use normal `k` with a count |
 | Normal | `n` | Go to the next search match and center it |
@@ -65,12 +64,17 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
+| Normal | `<leader>e` | Open the Snacks project tree explorer with hidden and ignored files shown |
 | Normal | `<C-p>` | Find project files with FzfLua, ordered by proximity to the current file when available |
 | Normal | `<leader><Space>` | Switch to the previously used alternate buffer |
 | Normal | `<leader>;` | Find open buffers with FzfLua |
 | Normal | `<leader>/` | Live grep with FzfLua |
 | Normal | `<leader>fh` | Search Neovim help with FzfLua |
+| Normal | `<leader>fs` | Find symbols in the current buffer with FzfLua |
+| Normal | `<leader>fS` | Find symbols in the workspace with FzfLua |
 | Normal | `<leader>fr` | Resume the previous FzfLua picker |
+| Normal | `<leader>fx` | Find diagnostics in the current buffer with FzfLua |
+| Normal | `<leader>fX` | Find workspace diagnostics with FzfLua |
 
 Opening a file automatically changes Neovim's working directory to the nearest
 Git, Mercurial, or Subversion root.
@@ -89,11 +93,34 @@ Git, Mercurial, or Subversion root.
 |---|---|---|
 | Normal, Visual, Operator-pending | `s` | Leap bidirectionally to a labeled target in the current window |
 
+## Formatting and diagnostics
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Normal | `<leader>cf` | Format the current buffer asynchronously with conform.nvim |
+| Normal | `<leader>td` | Toggle diagnostics globally and notify of the new state |
+
+## LSP
+
+These mappings are buffer-local and are created when an attached LSP client
+supports the corresponding method.
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Normal | `gd` | Go to definition |
+| Normal | `gD` | Go to declaration |
+
+The following mapping is global:
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Normal | `<Esc>` | Close open LSP floating previews and clear search highlighting |
+
 ## Completion
 
-Insert completion uses Neovim's built-in keyword completion. Use `<C-n>` and
-`<C-p>` to open or move through candidates, `<C-y>` to accept, and `<C-e>` to
-cancel.
+Insert completion never opens automatically or preselects an item. Use
+Neovim's built-in `<C-x><C-o>` to request LSP completion, `<C-n>` / `<C-p>`
+to move through candidates, `<C-y>` to accept, and `<C-e>` to cancel.
 
 Command-line completion also uses Neovim's defaults: `<Tab>` starts or moves
 forward through fuzzy completion, while `<S-Tab>` moves backward. `<C-n>` and
