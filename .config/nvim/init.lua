@@ -225,6 +225,9 @@ fzf.setup({
 		file_icons = false,
 		git_icons = true,
 	},
+	grep = {
+		hidden = true,
+	},
 	buffers = {
 		file_icons = false,
 		git_icons = true,
@@ -295,7 +298,7 @@ require("diffview").setup({
 		},
 	},
 })
-map("n", "<leader>gd", "<cmd>DiffviewToggle<cr>", { desc = "Toggle Diffview" })
+map("n", "<leader>gg", "<cmd>DiffviewToggle<cr>", { desc = "Toggle Diffview" })
 
 local function listed_buffers()
 	return vim.tbl_filter(function(bufnr)
