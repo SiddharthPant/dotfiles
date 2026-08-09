@@ -11,5 +11,13 @@
     "*.md": "vscode.markdown.preview.editor"
   },
   "workbench.activityBar.location": "top",
-  "workbench.sideBar.location": "right"
+  "workbench.sideBar.location": "right",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.jj": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  }
 }
