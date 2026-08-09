@@ -91,9 +91,9 @@ Git, Mercurial, or Subversion root.
 
 ## Completion
 
-Insert completion uses Neovim's built-in keyword completion. Use `<C-n>` and
-`<C-p>` to open or move through candidates, `<C-y>` to accept, and `<C-e>` to
-cancel.
+Insert completion uses Neovim's built-in keyword completion and opens
+automatically while typing. Use `<C-n>` and `<C-p>` to move through candidates,
+`<C-y>` to accept, and `<C-e>` to cancel.
 
 Command-line completion also uses Neovim's defaults: `<Tab>` starts or moves
 forward through fuzzy completion, while `<S-Tab>` moves backward. `<C-n>` and

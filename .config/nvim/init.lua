@@ -43,7 +43,8 @@ vim.o.statusline = vim.o.statusline .. " %{&fileencoding ==# '' ? &encoding : &f
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
 vim.o.pumborder = "rounded"
-vim.o.completeopt = "menuone,noselect,popup" -- show completion without selecting an item
+vim.o.autocomplete = true -- show native keyword completion automatically while typing
+vim.o.completeopt = "menuone,noselect,popup,fuzzy" -- show completion without selecting an item
 vim.o.winborder = "rounded" -- rounded borders for floating windows
 
 vim.o.writebackup = false -- do not write to a backup file
