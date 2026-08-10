@@ -134,7 +134,28 @@ map("n", "<leader>tc", function()
 end, { desc = "Toggle system clipboard copy" })
 
 -- plugin list
+vim.g.compile_mode = {
+	default_command = "mise lint",
+	baleia_setup = true,
+	recompile_no_fail = true,
+	ask_to_interrupt = false,
+	use_circular_error_navigation = true,
+	environment = {
+		CARGO_TERM_COLOR = "always",
+	},
+	error_regexp_table = {
+		rust = {
+			regex = [[^\s*-->\s\+\(.\+\):\([0-9]\+\):\([0-9]\+\)$]],
+			filename = 1,
+			row = 2,
+			col = 3,
+		},
+	},
+}
 vim.pack.add({
+	{ src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/ej-shafran/compile-mode.nvim",
 	"https://github.com/ibhagwan/fzf-lua",
 	"https://github.com/notjedi/nvim-rooter.lua",
 	"https://github.com/lewis6991/gitsigns.nvim",

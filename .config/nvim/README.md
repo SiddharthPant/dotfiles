@@ -18,6 +18,10 @@ built-in insert-mode and command-line support.
   template syntax with HTML indentation.
 - AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in
   the project tree). `:SessionClear` also skips save on that quit.
+- `:Compile` defaults to `mise lint` and renders ANSI-colored output; use
+  `:Recompile` globally or `<C-r>` in the compilation buffer to run it again
+  after making changes. Recompiling interrupts an active run without prompting,
+  and error navigation wraps at either end.
 
 ## Remove a plugin
 

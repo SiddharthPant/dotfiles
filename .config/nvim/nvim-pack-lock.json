@@ -4,6 +4,15 @@
       "rev": "6cde3874a9283c2db55627acca5f28e4fa402320",
       "src": "https://github.com/rmagatti/auto-session"
     },
+    "baleia.nvim": {
+      "rev": "fb3aff021b2b64ef820d0230d2c22ebfaf71bb6a",
+      "src": "https://github.com/m00qek/baleia.nvim",
+      "version": "'v1.3.0'"
+    },
+    "compile-mode.nvim": {
+      "rev": "026b866dfb162313c3f1573f73daece6af0da3e3",
+      "src": "https://github.com/ej-shafran/compile-mode.nvim"
+    },
     "diffview-plus.nvim": {
       "rev": "424b724e7699730b818466532f0ca42930313273",
       "src": "https://github.com/dlyongemallo/diffview-plus.nvim"
@@ -35,6 +44,10 @@
     "oil.nvim": {
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "vim-tmux-navigator": {
       "rev": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432",
