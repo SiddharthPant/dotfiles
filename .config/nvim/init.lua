@@ -42,7 +42,6 @@ vim.o.laststatus = 3 -- use a single global statusline
 vim.o.statusline = vim.o.statusline .. " %{&fileencoding ==# '' ? &encoding : &fileencoding}"
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
-vim.o.pumborder = "rounded"
 vim.o.autocomplete = true -- show native keyword completion automatically while typing
 vim.o.completeopt = "menuone,noselect,popup,fuzzy" -- show completion without selecting an item
 vim.o.winborder = "rounded" -- rounded borders for floating windows
