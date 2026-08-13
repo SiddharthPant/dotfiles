@@ -18,6 +18,14 @@ local map = vim.keymap.set
 local group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
 -- Options
+vim.opt.termguicolors = true
+vim.opt.background = "dark"
+vim.cmd("colorscheme catppuccin")
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
 vim.o.cursorline = true -- highlight current line
@@ -34,7 +42,6 @@ vim.o.ignorecase = true -- case insensitive search
 vim.o.smartcase = true -- case sensitive if uppercase in string
 
 vim.o.signcolumn = "yes" -- always show a sign column
-vim.o.colorcolumn = "80" -- show a column at 80 position chars
 vim.o.showmatch = true -- highlights matching brackets
 vim.o.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•" -- make hidden characters readable
 vim.o.laststatus = 3 -- use a single global statusline
@@ -42,7 +49,7 @@ vim.o.laststatus = 3 -- use a single global statusline
 vim.o.statusline = vim.o.statusline .. " %{&fileencoding ==# '' ? &encoding : &fileencoding}"
 vim.o.pumheight = 10 -- popup menu height
 vim.o.pumblend = 10 -- popup menu transparency
-vim.o.autocomplete = true -- show native keyword completion automatically while typing
+-- vim.o.autocomplete = true -- show native keyword completion automatically while typing
 vim.o.completeopt = "menuone,noselect,popup,fuzzy" -- show completion without selecting an item
 vim.o.winborder = "rounded" -- rounded borders for floating windows
 

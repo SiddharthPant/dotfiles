@@ -3,6 +3,10 @@ font-family = Maple Mono NF
 font-family = Symbols Nerd Font Mono
 font-size = 13
 
+# Transparency
+background-opacity = 0.95
+background-blur = 3
+
 # Cursor
 cursor-style = block
 shell-integration-features = no-cursor,ssh-env,path
@@ -27,7 +31,7 @@ keybind = ctrl+7=goto_tab:7
 keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
 
-# config-file = ?auto/theme.ghostty
+config-file = ?auto/theme.ghostty
 
 # Make pane separator more visible
 split-divider-color = #8c959f
