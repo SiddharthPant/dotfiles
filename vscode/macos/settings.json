@@ -1,11 +1,11 @@
 {
   "chat.disableAIFeatures": true,
   "workbench.startupEditor": "none",
-  "editor.fontFamily": "Maple Mono NF",
   "editor.fontSize": 13,
+  "markdown.preview.fontSize": 15,
+  "terminal.integrated.fontSize": 12,
   "editor.fontLigatures": true,
   "editor.inlayHints.enabled": "off",
-  "terminal.integrated.fontSize": 12,
   "terminal.integrated.fontLigatures.enabled": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
