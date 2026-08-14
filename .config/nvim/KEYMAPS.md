@@ -20,6 +20,8 @@ not listed here; this file documents mappings defined explicitly in
 | Normal | `N` | Go to the previous search match and center it |
 | Normal | `<C-d>` | Scroll down half a page and center the cursor |
 | Normal | `<C-u>` | Scroll up half a page and center the cursor |
+| Normal | `<leader>zj` | Close the current fold, move to the next fold, and open it |
+| Normal | `<leader>zk` | Close the current fold, move to the previous fold, and open it |
 | Normal | `<leader>th` | Toggle hidden-character display and notify of the new state |
 | Normal | `J` | Join lines while preserving the cursor's position |
 | Normal | `<A-j>` | Move the current line down and reindent it |
@@ -65,10 +67,10 @@ OSC52.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal | `-` | Open the Oil file explorer in the parent directory |
-| Normal | `<C-p>` | Find project files with FzfLua, ordered by proximity to the current file when available |
-| Normal | `<leader><Space>` | Switch to the previously used alternate buffer |
-| Normal | `<leader>;` | Find open buffers with FzfLua |
+| Normal | `<leader><Space>` | Find project files with FzfLua, ordered by proximity to the current file when available |
+| Normal | `<leader><BS>` | Find open buffers with FzfLua |
 | Normal | `<leader>/` | Live grep with FzfLua |
+| Normal | `<leader>?` | Grep for the word under the cursor with FzfLua |
 | Normal | `<leader>fh` | Search Neovim help with FzfLua |
 | Normal | `<leader>fr` | Resume the previous FzfLua picker |
 

@@ -9,6 +9,7 @@ The repo uses `Makefile` as the source of truth for what gets linked into `$HOME
 - `make install`: auto-detect macOS, Arch Linux, or WSL and link managed dotfiles
 - `make macos`: link macOS-specific Zsh and Mise configuration
 - `make vscode-macos`: link macOS VS Code settings and install declared extensions
+- `make vim`: link Vim configuration, install vim-plug, and install declared plugins
 - `make arch`: link Arch Linux-specific Zsh configuration
 - `make wsl`: link WSL-specific Fish and Mise configuration
 - `make clean`: remove only repo-managed symlinks
@@ -20,6 +21,7 @@ These paths are currently managed by `Makefile`:
 - `.tmux.conf` -> `~/.tmux.conf`
 - `.gitconfig` -> `~/.gitconfig`
 - `.zshenv` -> `~/.zshenv`
+- `.vimrc` -> `~/.vimrc`
 - `.config/nvim/` -> `~/.config/nvim`
 - `.config/ghostty/` -> `~/.config/ghostty`
 - `.config/kitty/` -> `~/.config/kitty`
@@ -44,6 +46,7 @@ These paths are currently managed by `Makefile`:
 - `.tmux.conf`: tmux configuration
 - `.gitconfig`: Git configuration
 - `.zshenv`: non-interactive-safe Zsh environment and PATH setup
+- `.vimrc`: Vim 9.2 configuration managed with vim-plug
 - `.config/nvim/`: Neovim configuration
 - `.config/ghostty/`: Ghostty terminal configuration
 - `.config/kitty/`: Kitty terminal configuration
@@ -70,3 +73,10 @@ Neovim is a compact single-file config using native `vim.pack`.
 
 See `.config/nvim/README.md` for plugin install/remove notes.
 See `AGENTS.md` for the repo-wide edit map for automated changes.
+
+## Vim
+
+Vim 9.2 uses vim-plug for `vim-tmux-navigator`; run `make vim` to install both.
+Use `:RepoDiff` or `<leader>gg` to open the current JJ or Git working-copy diff
+in a disposable tab. Changed files start collapsed; use Vim's standard `z`
+commands to reveal a complete file entry, and press `q` to close the tab.

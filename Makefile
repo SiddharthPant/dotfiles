@@ -1,10 +1,12 @@
-.PHONY: all help install clean macos arch wsl common vscode-macos
+.PHONY: all help install clean macos arch wsl common vim vscode-macos
 
 DOTFILES_DIR := $(CURDIR)
 UNAME_S := $(shell uname)
 PLATFORM := arch
 VSCODE_MACOS_DIR := $(DOTFILES_DIR)/vscode/macos
 VSCODE_MACOS_USER_DIR := $(HOME)/Library/Application Support/Code/User
+VIM_PLUG := $(HOME)/.vim/autoload/plug.vim
+VIM_PLUG_URL := https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 ifeq ($(UNAME_S),Darwin)
 PLATFORM := macos
@@ -91,6 +93,18 @@ vscode-macos:
 	done < $(VSCODE_MACOS_DIR)/extensions.txt
 	@code --update-extensions
 
+# target: vim - Link Vim configuration and install declared plugins
+vim:
+	$(call ensure_link,$(DOTFILES_DIR)/.vimrc,$(HOME)/.vimrc)
+	@if [ ! -f "$(VIM_PLUG)" ]; then \
+		command -v curl >/dev/null 2>&1 || { printf 'error: curl is not available in PATH\n' >&2; exit 1; }; \
+		curl -fLo "$(VIM_PLUG)" --create-dirs "$(VIM_PLUG_URL)"; \
+	else \
+		printf 'ok %s\n' "$(VIM_PLUG)"; \
+	fi
+	@command -v vim >/dev/null 2>&1 || { printf 'error: vim is not available in PATH\n' >&2; exit 1; }
+	@vim -Nu "$(DOTFILES_DIR)/.vimrc" -n -es +'PlugInstall --sync' +qa
+
 # target: arch - Setup symlinks for Arch Linux
 arch: common
 	$(call ensure_link,$(DOTFILES_DIR)/zshrc/arch-i3/.zshrc,$(HOME)/.zshrc)
@@ -103,7 +117,7 @@ wsl: common
 	@echo "WSL dotfiles linked"
 
 # Common symlinks for all platforms
-common:
+common: vim
 	$(call ensure_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
 	$(call ensure_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call ensure_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
@@ -138,6 +152,7 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.vimrc,$(HOME)/.vimrc)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/config.toml,$(HOME)/.config/herdr/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/plugins/config/cloudmanic.herdr-plus,$(HOME)/.config/herdr/plugins/config/cloudmanic.herdr-plus)

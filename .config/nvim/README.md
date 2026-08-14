@@ -11,7 +11,7 @@ built-in insert-mode and command-line support.
 
 ## Gotchas
 
-- `<C-p>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
+- `<leader><Space>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
   project files first. FzfLua, `fd`, `fzf`, and `proximity-sort` are provided by
   the Neovim plugin list, Homebrew, and Mise respectively.
 - Neovim detects `templates/*.html` as `htmldjango` and uses its built-in

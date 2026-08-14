@@ -100,6 +100,8 @@ map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+map("n", "<leader>zj", "zcjzo", { desc = "Close fold and open next" })
+map("n", "<leader>zk", "zckzo", { desc = "Close fold and open previous" })
 map("n", "J", function()
 	local view = vim.fn.winsaveview()
 	vim.cmd.normal({ args = { vim.v.count1 .. "J" }, bang = true })
@@ -263,7 +265,7 @@ fzf.setup({
 	fzf_opts = { ["--layout"] = "default" },
 })
 
-map("n", "<leader>ff", function()
+map("n", "<leader><Space>", function()
 	local opts = {
 		cmd = "fd --color=never --hidden --type f --type l --exclude .git",
 		fzf_opts = {
@@ -278,7 +280,7 @@ map("n", "<leader>ff", function()
 	end
 	fzf.files(opts)
 end, { desc = "Find project files" })
-map("n", "<leader><Space>", function()
+map("n", "<leader><BS>", function()
 	fzf.buffers({
 		fzf_opts = {
 			["--with-nth"] = "{-3..-2}",
@@ -290,6 +292,7 @@ map("n", "<leader><Space>", function()
 	})
 end, { desc = "Find buffers" })
 map("n", "<leader>/", fzf.live_grep, { desc = "Live grep" })
+map("n", "<leader>?", fzf.grep_cword, { desc = "Grep word under cursor" })
 map("n", "<leader>fh", fzf.helptags, { desc = "Find help" })
 map("n", "<leader>fr", fzf.resume, { desc = "Resume picker" })
 
