@@ -379,17 +379,18 @@ def RepoDiffFold(): string
   return '='
 enddef
 
-def FindRepository(directory: string): list<string>
+def FindRepository(directory: string, vcs: string = ''): list<string>
   var current = directory->fnamemodify(':p')
   if current !=# '/'
     current = current->substitute('/\+$', '', '')
   endif
 
   while !empty(current)
-    if isdirectory(current .. '/.jj')
+    if (empty(vcs) || vcs ==# 'jj') && isdirectory(current .. '/.jj')
       return ['jj', current]
     endif
-    if isdirectory(current .. '/.git') || filereadable(current .. '/.git')
+    if (empty(vcs) || vcs ==# 'git')
+        && (isdirectory(current .. '/.git') || filereadable(current .. '/.git'))
       return ['git', current]
     endif
 
@@ -401,6 +402,27 @@ def FindRepository(directory: string): list<string>
   endwhile
 
   return []
+enddef
+
+def OpenDiff(command: list<string>, title: string)
+  var output = systemlist(command)
+  if v:shell_error != 0
+    Notify(empty(output) ? 'Could not read diff' : output->join("\n"))
+    return
+  endif
+  if empty(output)
+    Notify(title .. ' has no changes')
+    return
+  endif
+
+  tabnew
+  execute 'file ' .. fnameescape('[' .. title .. ']')
+  setlocal buftype=nofile bufhidden=wipe noswapfile
+  setline(1, output)
+  setlocal filetype=diff nomodifiable readonly
+  setlocal foldmethod=expr foldexpr=s:RepoDiffFold()
+  setlocal foldenable foldlevel=0 foldcolumn=1
+  nnoremap <silent> <buffer> q <Cmd>tabclose<CR>
 enddef
 
 def ShowRepoDiff(directory: string = '')
@@ -433,28 +455,105 @@ def ShowRepoDiff(directory: string = '')
     command->extend(['--', path])
   endif
 
-  var output = systemlist(command)
-  if v:shell_error != 0
-    Notify(empty(output) ? 'Could not read repository diff' : output->join("\n"))
-    return
-  endif
-  if empty(output)
-    Notify('Repository has no changes')
-    return
-  endif
-
-  tabnew
-  execute 'file ' .. fnameescape('[Repo Diff]')
-  setlocal buftype=nofile bufhidden=wipe noswapfile
-  setline(1, output)
-  setlocal filetype=diff nomodifiable readonly
-  setlocal foldmethod=expr foldexpr=s:RepoDiffFold()
-  setlocal foldenable foldlevel=0 foldcolumn=1
-  nnoremap <silent> <buffer> q <Cmd>tabclose<CR>
+  OpenDiff(command, 'Repo Diff')
 enddef
 
 command! -nargs=? -complete=dir RepoDiff ShowRepoDiff(<q-args>)
 nnoremap <silent> <leader>gg <Cmd>RepoDiff<CR>
+
+def VcsDiffUsage(vcs: string): string
+  var name = vcs ==# 'jj' ? 'JjDiff' : 'GitDiff'
+  return ':' .. name .. ' [from REV | show REV | between REV1 REV2] [directory]'
+enddef
+
+def ShowVcsDiff(vcs: string, arguments: list<string>)
+  var mode = empty(arguments) ? 'working' : arguments[0]
+  var operands = empty(arguments) ? [] : arguments[1 :]
+  var revision_count = mode ==# 'working'
+    ? 0
+    : mode ==# 'between' ? 2 : index(['from', 'show'], mode) >= 0 ? 1 : -1
+  if revision_count < 0
+      || len(operands) < revision_count
+      || len(operands) > revision_count + 1
+    Notify('Usage: ' .. VcsDiffUsage(vcs))
+    return
+  endif
+
+  var directory = len(operands) > revision_count ? operands[-1] : ''
+  var path = ''
+  if !empty(directory)
+    path = directory->expand()->fnamemodify(':p')
+    if !isdirectory(path)
+      Notify('Not a directory: ' .. directory)
+      return
+    endif
+  endif
+
+  var search_path = empty(path) ? getcwd() : path
+  var repository = FindRepository(search_path, vcs)
+  if empty(repository)
+    Notify('No ' .. vcs .. ' repository found for: ' .. search_path)
+    return
+  endif
+  if !executable(vcs)
+    Notify(vcs .. ' is not available')
+    return
+  endif
+
+  var command: list<string>
+  if vcs ==# 'jj'
+    command = ['jj', '--repository', repository[1], 'diff', '--git', '--color=never']
+    if mode ==# 'from'
+      command->extend(['--from', operands[0]])
+    elseif mode ==# 'show'
+      command->extend(['--revisions', operands[0]])
+    elseif mode ==# 'between'
+      command->extend(['--from', operands[0], '--to', operands[1]])
+    endif
+  elseif mode ==# 'show'
+    command = ['git', '-C', repository[1], 'show', '--format=', '--no-ext-diff', '--no-color', operands[0]]
+  else
+    command = ['git', '-C', repository[1], 'diff', '--no-ext-diff', '--no-color']
+    if mode ==# 'working'
+      command->add('HEAD')
+    else
+      command->add(operands[0])
+    endif
+    if mode ==# 'between'
+      command->add(operands[1])
+    endif
+  endif
+
+  if !empty(path)
+    command->extend(['--', path])
+  endif
+
+  var references = mode ==# 'working'
+    ? 'working copy'
+    : mode ==# 'between' ? operands[0] .. '..' .. operands[1] : operands[0]
+  var description = mode ==# 'working' ? references : mode .. ' ' .. references
+  OpenDiff(command, (vcs ==# 'jj' ? 'JJ' : 'Git') .. ' Diff: ' .. description)
+enddef
+
+def ShowJjDiff(...arguments: list<string>)
+  ShowVcsDiff('jj', arguments)
+enddef
+
+def ShowGitDiff(...arguments: list<string>)
+  ShowVcsDiff('git', arguments)
+enddef
+
+def VcsDiffComplete(arglead: string, cmdline: string, cursorpos: number): list<string>
+  var before_cursor = cmdline[: cursorpos - 1]
+  var words = before_cursor->split()
+  if len(words) == 1 || (len(words) == 2 && before_cursor !~# '\s$')
+    return ['from', 'show', 'between']->filter((_, mode) => mode->stridx(arglead) == 0)
+  endif
+  return []
+enddef
+
+command! -nargs=* -complete=customlist,VcsDiffComplete JjDiff ShowJjDiff(<f-args>)
+command! -nargs=* -complete=customlist,VcsDiffComplete GitDiff ShowGitDiff(<f-args>)
 
 def ProjectRoot(filename: string): string
   var directory = fnamemodify(filename, ':p:h')

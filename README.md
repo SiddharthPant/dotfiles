@@ -82,3 +82,8 @@ in a disposable tab. Pass an optional directory, such as `:RepoDiff .config/nvim
 to use the nearest repository containing that directory and limit the diff to
 that path. Changed files start collapsed; use Vim's standard `z` commands to
 reveal a complete file entry, and press `q` to close the tab.
+
+Use `:JjDiff` or `:GitDiff` for explicit revision comparisons. Both accept
+no arguments for current working-copy changes, `from REV [directory]` for a
+working-copy baseline, `show REV [directory]` for one revision's patch, or
+`between REV1 REV2 [directory]` to compare endpoints.
