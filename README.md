@@ -78,5 +78,7 @@ See `AGENTS.md` for the repo-wide edit map for automated changes.
 
 Vim 9.2 uses vim-plug for `vim-tmux-navigator`; run `make vim` to install both.
 Use `:RepoDiff` or `<leader>gg` to open the current JJ or Git working-copy diff
-in a disposable tab. Changed files start collapsed; use Vim's standard `z`
-commands to reveal a complete file entry, and press `q` to close the tab.
+in a disposable tab. Pass an optional directory, such as `:RepoDiff .config/nvim`,
+to use the nearest repository containing that directory and limit the diff to
+that path. Changed files start collapsed; use Vim's standard `z` commands to
+reveal a complete file entry, and press `q` to close the tab.

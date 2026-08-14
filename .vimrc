@@ -8,9 +8,9 @@ g:mapleader = ' '
 g:maplocalleader = ','
 g:vimrc_path = expand('<sfile>:p')
 
-legacy call plug#begin()
-legacy Plug 'christoomey/vim-tmux-navigator'
-legacy call plug#end()
+plug#begin()
+Plug 'christoomey/vim-tmux-navigator'
+plug#end()
 
 # Appearance
 set termguicolors
@@ -18,7 +18,7 @@ set background=dark
 if !empty(globpath(&runtimepath, 'colors/catppuccin.vim'))
   colorscheme catppuccin
 else
-  colorscheme retrobox
+  colorscheme slate
 endif
 highlight Normal guibg=NONE ctermbg=NONE
 highlight NormalNC guibg=NONE ctermbg=NONE
@@ -134,7 +134,12 @@ g:netrw_winsize = 25
 
 def Notify(message: string)
   if exists('*popup_notification')
-    popup_notification(message, {time: 1800})
+    popup_notification(message, {
+      col: &columns,
+      pos: 'topright',
+      posinvert: false,
+      time: 1800,
+    })
   else
     echomsg message
   endif
@@ -374,15 +379,58 @@ def RepoDiffFold(): string
   return '='
 enddef
 
-def ShowRepoDiff()
-  var command: list<string>
-  if executable('jj') && !empty(finddir('.jj', getcwd() .. ';'))
-    command = ['jj', 'diff', '--git', '--color=never']
-  elseif executable('git')
-    command = ['git', 'diff', '--no-ext-diff', '--no-color', 'HEAD']
-  else
-    Notify('Neither jj nor git is available')
+def FindRepository(directory: string): list<string>
+  var current = directory->fnamemodify(':p')
+  if current !=# '/'
+    current = current->substitute('/\+$', '', '')
+  endif
+
+  while !empty(current)
+    if isdirectory(current .. '/.jj')
+      return ['jj', current]
+    endif
+    if isdirectory(current .. '/.git') || filereadable(current .. '/.git')
+      return ['git', current]
+    endif
+
+    var parent = current->fnamemodify(':h')
+    if parent ==# current
+      break
+    endif
+    current = parent
+  endwhile
+
+  return []
+enddef
+
+def ShowRepoDiff(directory: string = '')
+  var path = ''
+  if !empty(directory)
+    path = directory->expand()->fnamemodify(':p')
+    if !isdirectory(path)
+      Notify('Not a directory: ' .. directory)
+      return
+    endif
+  endif
+
+  var repository = FindRepository(empty(path) ? getcwd() : path)
+  if empty(repository)
+    Notify('No JJ or Git repository found for: ' .. (empty(path) ? getcwd() : path))
     return
+  endif
+
+  var command: list<string>
+  if repository[0] ==# 'jj' && executable('jj')
+    command = ['jj', '--repository', repository[1], 'diff', '--git', '--color=never']
+  elseif repository[0] ==# 'git' && executable('git')
+    command = ['git', '-C', repository[1], 'diff', '--no-ext-diff', '--no-color', 'HEAD']
+  else
+    Notify(repository[0] .. ' is not available')
+    return
+  endif
+
+  if !empty(path)
+    command->extend(['--', path])
   endif
 
   var output = systemlist(command)
@@ -405,7 +453,7 @@ def ShowRepoDiff()
   nnoremap <silent> <buffer> q <Cmd>tabclose<CR>
 enddef
 
-command! RepoDiff ShowRepoDiff()
+command! -nargs=? -complete=dir RepoDiff ShowRepoDiff(<q-args>)
 nnoremap <silent> <leader>gg <Cmd>RepoDiff<CR>
 
 def ProjectRoot(filename: string): string
