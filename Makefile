@@ -126,7 +126,6 @@ common: vim
 	mkdir -p $(HOME)/.config/herdr/plugins/config/
 	$(call ensure_link,$(DOTFILES_DIR)/.config/herdr/plugins/config/cloudmanic.herdr-plus,$(HOME)/.config/herdr/plugins/config/cloudmanic.herdr-plus)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
-	$(call ensure_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/emacs,$(HOME)/.config/emacs)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
@@ -134,7 +133,6 @@ common: vim
 	$(call ensure_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
-	$(call ensure_link,$(DOTFILES_DIR)/.pi/agent/themes,$(HOME)/.pi/agent/themes)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
 	@echo "Common dotfiles linked"
 
@@ -157,7 +155,6 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/config.toml,$(HOME)/.config/herdr/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/herdr/plugins/config/cloudmanic.herdr-plus,$(HOME)/.config/herdr/plugins/config/cloudmanic.herdr-plus)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/ghostty,$(HOME)/.config/ghostty)
-	$(call remove_managed_link,$(DOTFILES_DIR)/.config/kitty,$(HOME)/.config/kitty)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/zed,$(HOME)/.config/zed)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/emacs,$(HOME)/.config/emacs)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/starship.toml,$(HOME)/.config/starship.toml)
@@ -165,6 +162,5 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
-	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/themes,$(HOME)/.pi/agent/themes)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
 	@echo "Dotfiles unlinked"

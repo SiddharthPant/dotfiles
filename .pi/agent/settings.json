@@ -8,6 +8,5 @@
     "npm:@ogulcancelik/pi-herdr"
   ],
   "hideThinkingBlock": false,
-  "showCacheMissNotices": true,
-  "theme": "catppuccin-frappe"
+  "showCacheMissNotices": true
 }
