@@ -1,12 +1,177 @@
 {
   "chat.disableAIFeatures": true,
+  "editor.smoothScrolling": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorBlinking": "solid",
   "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Dark Modern",
+  "workbench.colorCustomizations": {
+    "editor.background": "#101010",
+    "editor.foreground": "#c8c8c8",
+    "editorCursor.foreground": "#ffffff",
+    "editorLineNumber.foreground": "#404040",
+    "editorLineNumber.activeForeground": "#777777",
+    "editor.selectionBackground": "#303030",
+    "editor.inactiveSelectionBackground": "#24242480",
+    "editor.lineHighlightBackground": "#00000000",
+    "editorBracketMatch.background": "#00000000",
+    "editorBracketMatch.border": "#555555",
+    "sideBar.background": "#101010",
+    "panel.background": "#101010",
+    "editorGroupHeader.tabsBackground": "#101010",
+    "tab.activeBackground": "#101010",
+    "tab.inactiveBackground": "#101010",
+    "tab.border": "#00000000",
+    "activityBar.background": "#101010",
+    "statusBar.background": "#101010",
+    "titleBar.activeBackground": "#101010",
+    "focusBorder": "#00000000"
+  },
+  "editor.semanticHighlighting.enabled": false,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.tokenColorCustomizations": {
+    "comments": "#626262",
+    "strings": "#b3b39e",
+    "numbers": "#b3b39e",
+    "keywords": "#e0e0e0",
+    "types": "#cccccc",
+    "variables": "#c8c8c8",
+    "functions": "#c8c8c8",
+    "textMateRules": [
+      {
+        "name": "Monochrome HTML, JSON, and YAML",
+        "scope": [
+          "text.html.basic entity.name.tag",
+          "text.html.basic entity.other.attribute-name",
+          "text.html.basic constant",
+          "text.html.basic string",
+          "text.html.basic keyword",
+          "text.html.basic support",
+          "source.json support.type.property-name",
+          "source.json string",
+          "source.json constant",
+          "source.yaml entity",
+          "source.yaml string",
+          "source.yaml constant",
+          "source.yaml keyword",
+          "source.yaml storage",
+          "source.yaml support",
+          "source.yaml variable"
+        ],
+        "settings": {
+          "foreground": "#c8c8c8",
+          "fontStyle": ""
+        }
+      },
+      {
+        "scope": [
+          "keyword.operator",
+          "punctuation",
+          "meta.brace"
+        ],
+        "settings": {
+          "foreground": "#888888",
+          "fontStyle": ""
+        }
+      }
+    ]
+  },
   "editor.fontSize": 13,
   "markdown.preview.fontSize": 15,
   "terminal.integrated.fontSize": 12,
   "editor.fontLigatures": true,
   "editor.inlayHints.enabled": "off",
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
+  "[rust]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[yaml]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[toml]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[dockerfile]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[snippets]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[prompt]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[instructions]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[chatagent]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[skill]": {
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.tabCompletion": "off",
+  "editor.inlineSuggest.enabled": false,
+  "editor.wordBasedSuggestions": "off",
+  "editor.parameterHints.enabled": false,
   "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.suggest.enabled": false,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
   },

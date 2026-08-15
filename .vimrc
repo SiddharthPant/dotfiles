@@ -15,16 +15,10 @@ plug#end()
 # Appearance
 set termguicolors
 set background=dark
-if !empty(globpath(&runtimepath, 'colors/catppuccin.vim'))
-  colorscheme catppuccin
-else
-  colorscheme slate
-endif
-highlight Normal guibg=NONE ctermbg=NONE
-highlight NormalNC guibg=NONE ctermbg=NONE
-highlight NonText guibg=NONE ctermbg=NONE
-highlight EndOfBuffer guibg=NONE ctermbg=NONE
-highlight SignColumn guibg=NONE ctermbg=NONE
+colorscheme novum
+&t_SI = "\e[6 q" # Line cursor for Insert mode
+&t_EI = "\e[2 q" # Block cursor for Normal mode
+
 
 set number
 set relativenumber
@@ -73,7 +67,7 @@ set hlsearch
 set wrapscan
 
 # Native Vim 9.2 insert completion.
-set autocomplete
+# set autocomplete
 set autocompletedelay=100
 set complete=.^5,w^5,b^5,u^5
 set completeopt=menuone,noselect,popup,fuzzy

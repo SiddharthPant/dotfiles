@@ -1,10 +1,6 @@
 # Font
 font-size = 15
 
-# Transparency
-background-opacity = 0.95
-background-blur = 3
-
 # Cursor
 cursor-style = block
 shell-integration-features = no-cursor,ssh-env,path
@@ -13,10 +9,6 @@ working-directory = home
 window-inherit-working-directory = false
 tab-inherit-working-directory = false
 split-inherit-working-directory = true
-
-# Cursor trail shader
-# custom-shader-animation = true
-# custom-shader = shaders/cursor.glsl
 
 # Tab switching with Ctrl+number instead of Cmd+number
 keybind = ctrl+1=goto_tab:1
@@ -28,8 +20,6 @@ keybind = ctrl+6=goto_tab:6
 keybind = ctrl+7=goto_tab:7
 keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
-
-config-file = ?auto/theme.ghostty
 
 # Make pane separator more visible
 split-divider-color = #8c959f
