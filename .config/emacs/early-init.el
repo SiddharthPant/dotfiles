@@ -5,9 +5,6 @@
 
 (setq select-enable-clipboard nil)
 
-;; Disable package.el; We use straight.el for package management instead
-(setq package-enable-at-startup nil)
-
 ;; Kill the UI chrome before the first frame paints (avoids a visible flash).
 (setq inhibit-startup-message t
       frame-resize-pixelwise t
