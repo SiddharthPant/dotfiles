@@ -1,103 +1,92 @@
 vim9script
 
-scriptencoding utf-8
-set nocompatible
-set encoding=utf-8
+scriptencoding utf-8  # Decode this script itself as UTF-8.
+set nocompatible  # Disable legacy Vi-compatible behavior.
+set encoding=utf-8  # Use UTF-8 internally for text and buffers.
 
-g:mapleader = ' '
-g:maplocalleader = ','
-g:vimrc_path = expand('<sfile>:p')
+g:mapleader = ' '  # Use Space as the prefix for global custom mappings.
+g:maplocalleader = ','  # Use comma as the prefix for buffer-local custom mappings.
 
 plug#begin()
 Plug 'christoomey/vim-tmux-navigator'
 plug#end()
 
 # Appearance
-set termguicolors
-set background=dark
-colorscheme novum
-&t_SI = "\e[6 q" # Line cursor for Insert mode
-&t_EI = "\e[2 q" # Block cursor for Normal mode
+set termguicolors # Enable 24-bit terminal colors.
+set background=dark  # Tell color schemes to use their dark-background palette.
+colorscheme novum  # Load Vim's built-in novum color scheme.
+&t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
+&t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
 
-
-set number
-set relativenumber
-set cursorline
-set scrolloff=10
-set sidescrolloff=10
-set signcolumn=yes
-set showmatch
-set listchars=tab:^\ ,nbsp:¬,extends:»,precedes:«,trail:•
-set laststatus=3
-&statusline = '%f %m%=%y %{&fileencoding ==# "" ? &encoding : &fileencoding}'
+set number  # Show absolute line numbers.
+set relativenumber  # Show relative line numbers away from the cursor line.
+set cursorline  # Highlight the screen line containing the cursor.
+set scrolloff=10  # Keep ten screen lines visible above and below the cursor when possible.
+set sidescrolloff=10  # Keep ten columns visible to either side when scrolling horizontally.
+set signcolumn=yes  # Always reserve the sign column so text does not shift when signs appear.
+set showmatch  # Briefly highlight a matching bracket after inserting one.
+set listchars=tab:^\ ,nbsp:¬,extends:»,precedes:«,trail:•  # Define how tabs, non-breaking spaces, overflow, and trailing spaces look with 'list'.
+set laststatus=3  # Use one global status line instead of one per window.
+&statusline = '%f %m%=%y %{&fileencoding ==# "" ? &encoding : &fileencoding}'  # Show file name and modified state on the left, then type and encoding on the right.
 
 # Editing
-set backspace=indent,eol,start
-set autoindent
-set smartindent
-set shiftround
-set linebreak
-set breakindent
-set confirm
-set autoread
-set hidden
-set mouse=a
-set history=1000
+set backspace=indent,eol,start  # Editing: Allow Backspace over autoindent, line breaks, and the point where Insert mode started.
+set autoindent  # Copy the current line's indent when starting a new line.
+set smartindent  # Add extra C-like indentation heuristics.
+set shiftround  # Round indentation commands to a multiple of 'shiftwidth'.
+set linebreak  # Wrap long lines at convenient character boundaries without changing the file.
+set breakindent  # Preserve an appropriate visual indent on wrapped screen lines.
+set confirm  # Ask for confirmation instead of failing when an operation would discard changes.
+set autoread  # Reload files changed outside Vim when it is safe to do so.
+set hidden  # Allow modified buffers to remain open in the background when switching buffers.
+set mouse=a  # Enable mouse support in every mode.
+set history=10000  # Retain up to 10,000 command and search history entries.
 
-set timeout
-set timeoutlen=400
-set ttimeoutlen=10
-set updatetime=300
+set timeout  # Enable timeouts for mappings and terminal key codes.
+set timeoutlen=400  # Wait at most 400 ms for the rest of a mapped key sequence.
+set ttimeoutlen=10  # Wait at most 10 ms for the rest of a terminal key code.
+set updatetime=300  # Trigger swap writes and CursorHold events after 300 ms of inactivity.
 
-set tabstop=2
-set shiftwidth=2
-set softtabstop=-1
-set expandtab
-set smarttab
-set iskeyword+=-
+set tabstop=2  # Display a literal tab as two columns wide.
+set shiftwidth=2  # Indent and unindent by two columns.
+set softtabstop=-1  # Make Insert-mode Tab and Backspace use the 'shiftwidth' value.
+set expandtab  # Insert spaces instead of literal tab characters.
+set smarttab  # At the start of a line, make Tab and Backspace follow indentation widths.
+set iskeyword+=-  # Treat hyphens as part of words for motions, completion, and word searches.
 
-set splitbelow
-set splitright
+set splitbelow  # Open horizontal splits below the current window.
+set splitright  # Open vertical splits to the right of the current window.
 
-# Searching
-set ignorecase
-set smartcase
-set incsearch
-set hlsearch
-set wrapscan
+set ignorecase  # Searching: Ignore letter case in searches by default.
+set smartcase  # Make a search case-sensitive when its pattern contains an uppercase letter.
+set incsearch  # Update matches while the search pattern is being typed.
+set hlsearch  # Highlight all matches of the latest search.
+set wrapscan  # Continue searches from the opposite end after reaching the file boundary.
 
-# Native Vim 9.2 insert completion.
-# set autocomplete
-set autocompletedelay=100
-set complete=.^5,w^5,b^5,u^5
-set completeopt=menuone,noselect,popup,fuzzy
-set pumopt=border:round,height:10,width:15,opacity:90
-set shortmess+=c
+# set autocomplete  # Start insert completion automatically; left disabled for manual completion.
+set autocompletedelay=100  # Wait 100 ms before showing automatic insert completion.
+set complete=.^5,w^5,b^5,u^5  # Complete from the current buffer first, then windows, loaded buffers, and unloaded buffers.
+set completeopt=menu,noselect,popup,fuzzy  # Always show a fuzzy completion menu without preselecting an item; use popup details.
+set pumopt=height:15 # Give the insert-completion popup a rounded border and fixed size/opacity limits.
 
 inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-# Native Vim 9.2 command-line and search completion.
-set wildmenu
-set wildmode=noselect:lastused,full
-set wildoptions=fuzzy,pum
-set wildignorecase
-set wildchar=<Tab>
-set wildcharm=<C-@>
-set wildignore=.git,.jj,node_modules,target,vendor,dist,*.o,*.swp
+set wildmenu  # Display possible command-line completions.
+set wildmode=noselect:lastused,full  # Begin with no selection, prioritize recently used matches, then cycle all matches.
+set wildoptions=fuzzy,pum  # Use fuzzy matching and a popup menu for command-line completion.
+set wildignorecase  # Match command-line completion candidates without regard to case.
+set wildchar=<Tab>  # Use Tab to start and advance command-line completion.
+set wildcharm=<C-@>  # Let mappings invoke command-line completion with Ctrl-@.
+set wildignore=.git,.jj,node_modules,target,vendor,dist,*.o,*.swp  # Exclude VCS metadata, dependency/build directories, objects, and swap files.
 
 cnoremap <expr> <Up> wildmenumode() ? "\<C-E>\<Up>" : "\<Up>"
 cnoremap <expr> <Down> wildmenumode() ? "\<C-E>\<Down>" : "\<Down>"
 
-# Vim 9.2 diff alignment and inline highlighting.
-set diffopt+=linematch:60
-set diffopt+=algorithm:histogram
-
-# Set a useful terminal title so each pane is distinguishable.
-set title
-set titlestring=%{fnamemodify(getcwd(),':~')}\ -\ %t%(%m%)
+set diffopt+=algorithm:histogram,vertical # Open diff splits vertically
 
 # Persistent undo and server-friendly recovery files.
+# Visit each directory used for backup, swap, and undo files.
 for directory in ['~/.vim/backup', '~/.vim/swap', '~/.vim/undo']
   if !isdirectory(expand(directory))
     mkdir(expand(directory), 'p')
@@ -107,26 +96,29 @@ endfor
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
-set undofile
+set undofile  # Save undo history to disk so it survives closing a file.
 
-# Shipped Vim 9.2 runtime packages, not third-party plugins.
-g:hlyank_duration = 300
-if !exists('#hlyank#TextYankPost')
-  packadd hlyank
-endif
+# Enable Default Vim feature packages
+packadd! matchit # Make % jump over html tags etc.
+packadd! editorconfig # Make vim respect editorconfig
+packadd comment # Make gc comment a line
+packadd nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec default) or switching to Insert mode
 
-g:osc52_disable_paste = true
-if !exists('#VimOSC52Plugin#VimEnter')
-  packadd osc52
-endif
-set clipmethod+=osc52
+# Add and initialize Vim's optional hlyank package.
+g:hlyank_invisual = v:true
+g:hlput_enable = v:true
+packadd hlyank  
 
-# Built-in netrw remains the dependency-free explorer.
-g:netrw_banner = 0
-g:netrw_liststyle = 3
-g:netrw_winsize = 25
+# g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
+packadd osc52  # Add and initialize Vim's optional OSC 52 package.
+set clipmethod+=osc52  # Add OSC 52 escape sequences as a clipboard transport.
 
+g:netrw_banner = 0  # Built-in netrw remains the dependency-free explorer. Hide netrw's banner and command help.
+g:netrw_liststyle = 3  # Display netrw files in a tree view.
+
+# Show a short top-right popup notification, falling back to message history.
 def Notify(message: string)
+  # Older Vim builds may not provide popup notifications.
   if exists('*popup_notification')
     popup_notification(message, {
       col: &columns,
@@ -139,11 +131,6 @@ def Notify(message: string)
   endif
 enddef
 
-# Core editing
-nnoremap <silent> <leader>qq <Cmd>qall<CR>
-nnoremap <silent> <leader>rr <Cmd>execute 'source ' .. fnameescape(g:vimrc_path)<CR>
-nnoremap <silent> <Esc> <Cmd>nohlsearch<CR>
-tnoremap <Esc><Esc> <C-\><C-n>
 
 nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
 nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
@@ -154,7 +141,9 @@ nnoremap <C-u> <C-u>zz
 nnoremap <leader>zj zcjzo
 nnoremap <leader>zk zckzo
 
+# Join the requested number of lines without moving the cursor on screen.
 def JoinKeepCursor()
+  # Save and restore the complete window view around the native Join operation.
   var view = winsaveview()
   execute 'normal! ' .. v:count1 .. 'J'
   winrestview(view)
@@ -162,10 +151,6 @@ enddef
 
 nnoremap <silent> J <ScriptCmd>JoinKeepCursor()<CR>
 
-nnoremap <A-j> <Cmd>move .+1<CR>==
-nnoremap <A-k> <Cmd>move .-2<CR>==
-xnoremap <A-j> :move '>+1<CR>gv=gv
-xnoremap <A-k> :move '<-2<CR>gv=gv
 xnoremap < <gv
 xnoremap > >gv
 
@@ -173,19 +158,23 @@ xnoremap > >gv
 nnoremap Q q
 nnoremap q <Nop>
 
+# Toggle display of the invisible characters configured by 'listchars'.
 def ToggleHiddenCharacters()
   &l:list = !&l:list
   Notify('Hidden characters ' .. (&l:list ? 'enabled' : 'disabled'))
 enddef
 
-var system_clipboard_copy = false
+var system_clipboard_copy = false  # Track whether ordinary yanks should also be copied to the system clipboard.
 
+# Toggle automatic copying of future yanks to the system clipboard.
 def ToggleSystemClipboardCopy()
   system_clipboard_copy = !system_clipboard_copy
   Notify('System clipboard copy ' .. (system_clipboard_copy ? 'enabled' : 'disabled'))
 enddef
 
+# Copy a completed non-black-hole yank to the + register when the toggle is enabled.
 def CopyYankToSystemClipboard()
+  # Ignore deletes, changes, and deliberate writes to the black-hole register.
   if system_clipboard_copy && v:event.operator ==# 'y' && v:event.regname !=# '_'
     setreg('+', v:event.regcontents, v:event.regtype)
   endif
@@ -194,17 +183,21 @@ enddef
 nnoremap <silent> <leader>th <ScriptCmd>ToggleHiddenCharacters()<CR>
 nnoremap <silent> <leader>tc <ScriptCmd>ToggleSystemClipboardCopy()<CR>
 
+# Return metadata for every listed buffer.
 def ListedBuffers(): list<dict<any>>
   return getbufinfo({buflisted: 1})
 enddef
 
+# Delete the current buffer without closing its window or discarding changes.
 def DeleteCurrentBuffer()
   var current = bufnr()
+  # Refuse to delete a modified buffer.
   if &modified
     Notify('Buffer has unsaved changes')
     return
   endif
 
+  # Put another buffer in the window before deleting the current one.
   if ListedBuffers()->len() == 1
     enew
   else
@@ -213,11 +206,13 @@ def DeleteCurrentBuffer()
   execute 'bdelete ' .. current
 enddef
 
+# Delete every other unmodified listed buffer and report what was kept.
 def DeleteOtherBuffers()
   var current = bufnr()
   var closed = 0
   var modified = 0
 
+  # Preserve the current buffer and any other buffer containing unsaved changes.
   for buffer in ListedBuffers()
     if buffer.bufnr == current
       continue
@@ -287,7 +282,9 @@ def VisitGrepMatch(pattern: string)
   normal! zvzz
 enddef
 
+# Cache project files and fuzzy-filter them for :Find completion.
 def FuzzyFind(arglead: string, _cmdline: string, _cursorpos: number): list<string>
+  # Populate the cache once per command-line session, preferring fd over find.
   if allfiles == null_list
     var root = get(g:, 'fzfind_root', '.')
     if executable('fd')
@@ -299,6 +296,7 @@ def FuzzyFind(arglead: string, _cmdline: string, _cursorpos: number): list<strin
   return empty(arglead) ? allfiles : allfiles->matchfuzzy(arglead)
 enddef
 
+# Return listed buffers, fuzzy-filtered, with the alternate buffer promoted first.
 def FuzzyBuffer(arglead: string, _cmdline: string, _cursorpos: number): list<string>
   var buffers = execute('buffers', 'silent!')->split("\n")
   var alternate = buffers->indexof((_, value) => value =~ '^\s*\d\+\s\+#')
@@ -308,6 +306,7 @@ def FuzzyBuffer(arglead: string, _cmdline: string, _cursorpos: number): list<str
   return empty(arglead) ? buffers : buffers->matchfuzzy(arglead)
 enddef
 
+# Save the popup selection before Vim tears down a custom command line.
 def SelectCommandLineItem()
   selected_match = ''
   if getcmdline() !~ '^\s*\%(Grep\|Find\|Buffer\)\s'
@@ -319,10 +318,12 @@ def SelectCommandLineItem()
     return
   endif
 
+  # Use the highlighted item, or the first candidate when nothing is highlighted.
   selected_match = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
   setcmdline(info.cmdline_orig)
 enddef
 
+# Edit the selected :Find candidate, falling back to the first fuzzy match.
 def OpenSelectedFile(pattern: string)
   if empty(selected_match) && !empty(pattern)
     var matches = FuzzyFind(pattern, '', 0)
@@ -336,6 +337,7 @@ def OpenSelectedFile(pattern: string)
   endif
 enddef
 
+# Switch to the selected :Buffer candidate, falling back to the first fuzzy match.
 def OpenSelectedBuffer(pattern: string)
   if empty(selected_match) && !empty(pattern)
     var matches = FuzzyBuffer(pattern, '', 0)
@@ -347,6 +349,7 @@ def OpenSelectedBuffer(pattern: string)
   if empty(selected_match)
     return
   endif
+  # Extract the buffer number from the formatted :buffers line.
   var number = selected_match->matchstr('^\s*\zs\d\+')
   if !empty(number)
     execute 'buffer ' .. number
@@ -362,227 +365,10 @@ nnoremap <leader><BS> :Buffer <C-@>
 nnoremap <leader>/ :Grep <C-@>
 nnoremap <leader>? :Grep <C-R>=expand('<cword>')<CR><C-@>
 nnoremap <leader>fh :help <C-@>
-nnoremap <leader>e <Cmd>Lexplore<CR>
-nnoremap - <Cmd>Explore<CR>
 
-def RepoDiffFold(): string
-  var text = getline(v:lnum)
-  if text =~ '^diff --git '
-    return '>1'
-  endif
-  return '='
-enddef
-
-def FindRepository(directory: string, vcs: string = ''): list<string>
-  var current = directory->fnamemodify(':p')
-  if current !=# '/'
-    current = current->substitute('/\+$', '', '')
-  endif
-
-  while !empty(current)
-    if (empty(vcs) || vcs ==# 'jj') && isdirectory(current .. '/.jj')
-      return ['jj', current]
-    endif
-    if (empty(vcs) || vcs ==# 'git')
-        && (isdirectory(current .. '/.git') || filereadable(current .. '/.git'))
-      return ['git', current]
-    endif
-
-    var parent = current->fnamemodify(':h')
-    if parent ==# current
-      break
-    endif
-    current = parent
-  endwhile
-
-  return []
-enddef
-
-def OpenDiff(command: list<string>, title: string)
-  var output = systemlist(command)
-  if v:shell_error != 0
-    Notify(empty(output) ? 'Could not read diff' : output->join("\n"))
-    return
-  endif
-  if empty(output)
-    Notify(title .. ' has no changes')
-    return
-  endif
-
-  tabnew
-  execute 'file ' .. fnameescape('[' .. title .. ']')
-  setlocal buftype=nofile bufhidden=wipe noswapfile
-  setline(1, output)
-  setlocal filetype=diff nomodifiable readonly
-  setlocal foldmethod=expr foldexpr=s:RepoDiffFold()
-  setlocal foldenable foldlevel=0 foldcolumn=1
-  nnoremap <silent> <buffer> q <Cmd>tabclose<CR>
-enddef
-
-def ShowRepoDiff(directory: string = '')
-  var path = ''
-  if !empty(directory)
-    path = directory->expand()->fnamemodify(':p')
-    if !isdirectory(path)
-      Notify('Not a directory: ' .. directory)
-      return
-    endif
-  endif
-
-  var repository = FindRepository(empty(path) ? getcwd() : path)
-  if empty(repository)
-    Notify('No JJ or Git repository found for: ' .. (empty(path) ? getcwd() : path))
-    return
-  endif
-
-  var command: list<string>
-  if repository[0] ==# 'jj' && executable('jj')
-    command = ['jj', '--repository', repository[1], 'diff', '--git', '--color=never']
-  elseif repository[0] ==# 'git' && executable('git')
-    command = ['git', '-C', repository[1], 'diff', '--no-ext-diff', '--no-color', 'HEAD']
-  else
-    Notify(repository[0] .. ' is not available')
-    return
-  endif
-
-  if !empty(path)
-    command->extend(['--', path])
-  endif
-
-  OpenDiff(command, 'Repo Diff')
-enddef
-
-command! -nargs=? -complete=dir RepoDiff ShowRepoDiff(<q-args>)
-nnoremap <silent> <leader>gg <Cmd>RepoDiff<CR>
-
-def VcsDiffUsage(vcs: string): string
-  var name = vcs ==# 'jj' ? 'JjDiff' : 'GitDiff'
-  return ':' .. name .. ' [from REV | show REV | between REV1 REV2] [directory]'
-enddef
-
-def ShowVcsDiff(vcs: string, arguments: list<string>)
-  var mode = empty(arguments) ? 'working' : arguments[0]
-  var operands = empty(arguments) ? [] : arguments[1 :]
-  var revision_count = mode ==# 'working'
-    ? 0
-    : mode ==# 'between' ? 2 : index(['from', 'show'], mode) >= 0 ? 1 : -1
-  if revision_count < 0
-      || len(operands) < revision_count
-      || len(operands) > revision_count + 1
-    Notify('Usage: ' .. VcsDiffUsage(vcs))
-    return
-  endif
-
-  var directory = len(operands) > revision_count ? operands[-1] : ''
-  var path = ''
-  if !empty(directory)
-    path = directory->expand()->fnamemodify(':p')
-    if !isdirectory(path)
-      Notify('Not a directory: ' .. directory)
-      return
-    endif
-  endif
-
-  var search_path = empty(path) ? getcwd() : path
-  var repository = FindRepository(search_path, vcs)
-  if empty(repository)
-    Notify('No ' .. vcs .. ' repository found for: ' .. search_path)
-    return
-  endif
-  if !executable(vcs)
-    Notify(vcs .. ' is not available')
-    return
-  endif
-
-  var command: list<string>
-  if vcs ==# 'jj'
-    command = ['jj', '--repository', repository[1], 'diff', '--git', '--color=never']
-    if mode ==# 'from'
-      command->extend(['--from', operands[0]])
-    elseif mode ==# 'show'
-      command->extend(['--revisions', operands[0]])
-    elseif mode ==# 'between'
-      command->extend(['--from', operands[0], '--to', operands[1]])
-    endif
-  elseif mode ==# 'show'
-    command = ['git', '-C', repository[1], 'show', '--format=', '--no-ext-diff', '--no-color', operands[0]]
-  else
-    command = ['git', '-C', repository[1], 'diff', '--no-ext-diff', '--no-color']
-    if mode ==# 'working'
-      command->add('HEAD')
-    else
-      command->add(operands[0])
-    endif
-    if mode ==# 'between'
-      command->add(operands[1])
-    endif
-  endif
-
-  if !empty(path)
-    command->extend(['--', path])
-  endif
-
-  var references = mode ==# 'working'
-    ? 'working copy'
-    : mode ==# 'between' ? operands[0] .. '..' .. operands[1] : operands[0]
-  var description = mode ==# 'working' ? references : mode .. ' ' .. references
-  OpenDiff(command, (vcs ==# 'jj' ? 'JJ' : 'Git') .. ' Diff: ' .. description)
-enddef
-
-def ShowJjDiff(...arguments: list<string>)
-  ShowVcsDiff('jj', arguments)
-enddef
-
-def ShowGitDiff(...arguments: list<string>)
-  ShowVcsDiff('git', arguments)
-enddef
-
-def VcsDiffComplete(arglead: string, cmdline: string, cursorpos: number): list<string>
-  var before_cursor = cmdline[: cursorpos - 1]
-  var words = before_cursor->split()
-  if len(words) == 1 || (len(words) == 2 && before_cursor !~# '\s$')
-    return ['from', 'show', 'between']->filter((_, mode) => mode->stridx(arglead) == 0)
-  endif
-  return []
-enddef
-
-command! -nargs=* -complete=customlist,VcsDiffComplete JjDiff ShowJjDiff(<f-args>)
-command! -nargs=* -complete=customlist,VcsDiffComplete GitDiff ShowGitDiff(<f-args>)
-
-def ProjectRoot(filename: string): string
-  var directory = fnamemodify(filename, ':p:h')
-
-  while !empty(directory)
-    for marker in ['.git', '.hg', '.svn']
-      var candidate = directory .. '/' .. marker
-      if isdirectory(candidate) || filereadable(candidate)
-        return directory
-      endif
-    endfor
-
-    var parent = fnamemodify(directory, ':h')
-    if parent ==# directory
-      break
-    endif
-    directory = parent
-  endwhile
-
-  return ''
-enddef
-
-def SetProjectRoot()
-  var filename = expand('%:p')
-  if empty(filename) || &buftype !=# ''
-    return
-  endif
-
-  var root = ProjectRoot(filename)
-  if !empty(root) && getcwd() !=# root
-    execute 'silent cd ' .. fnameescape(root)
-  endif
-enddef
-
+# Restore the cursor to the last position saved for a reopened ordinary file.
 def RestoreCursorPosition()
+  # Diff and VCS/editing utility buffers should always use their deliberate initial position.
   if &diff || index(['gitcommit', 'gitrebase', 'xxd'], &filetype) != -1
     return
   endif
@@ -601,7 +387,6 @@ augroup UserConfig
   autocmd TextYankPost * CopyYankToSystemClipboard()
 
   autocmd BufReadPost * RestoreCursorPosition()
-  autocmd BufEnter * SetProjectRoot()
   autocmd FocusGained,BufEnter * checktime
 
   autocmd FileType help,qf nnoremap <buffer> q <Cmd>close<CR>

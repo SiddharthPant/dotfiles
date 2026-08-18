@@ -16,6 +16,7 @@
 
 [diff]
 	algorithm = histogram
+	tool = vimdiff
 
 [alias]
 	undo = reset --mixed HEAD^
@@ -39,3 +40,5 @@
   rebase = false
 [rerere]
 	enabled = true
+[difftool]
+	prompt = false
