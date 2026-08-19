@@ -39,6 +39,26 @@
     "functions": "#c8c8c8",
     "textMateRules": [
       {
+        "name": "Italic comments",
+        "scope": "comment",
+        "settings": {
+          "foreground": "#626262",
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "name": "Italic language keywords",
+        "scope": [
+          "keyword",
+          "storage.type",
+          "storage.modifier"
+        ],
+        "settings": {
+          "foreground": "#e0e0e0",
+          "fontStyle": "italic"
+        }
+      },
+      {
         "name": "Monochrome HTML, JSON, and YAML",
         "scope": [
           "text.html.basic entity.name.tag",
