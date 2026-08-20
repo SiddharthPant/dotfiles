@@ -117,6 +117,7 @@ set clipmethod+=osc52  # Add OSC 52 escape sequences as a clipboard transport.
 
 g:netrw_banner = 0  # Built-in netrw remains the dependency-free explorer. Hide netrw's banner and command help.
 g:netrw_liststyle = 3  # Display netrw files in a tree view.
+g:netrw_winsize = 25 # Narrow down the netrw window
 
 # Show a short top-right popup notification, falling back to message history.
 def Notify(message: string)

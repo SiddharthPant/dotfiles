@@ -8,6 +8,7 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 default-command = "log"
 editor = "vim"
 diff-editor = ["vim", "-c", "DirDiff $left $right"]
+diff-instructions = false
 
 [merge-tools.vimdiff]
 program = "vimdiff"
