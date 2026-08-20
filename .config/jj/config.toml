@@ -6,8 +6,9 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 
 [ui]
 default-command = "log"
-editor = "vim"
-diff-editor = ["vim", "-c", "DirDiff $left $right"]
+editor = "zed -w"
+# diff-editor = ["vim", "-c", "DirDiff $left $right"]
+diff-editor = ["zed", "--wait", "--diff", "$left", "$right"]
 diff-instructions = false
 
 [merge-tools.vimdiff]
