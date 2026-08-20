@@ -1,44 +1,28 @@
-[include]
-	path = /Users/sid/.config/git/themes.gitconfig
-
 [core]
 	excludesfile = /Users/sid/.config/git/ignore
-	pager = delta
-	editor = nvim
-
-[delta]
-	features = catppuccin-mocha
-	navigate = true
-	side-by-side = true
-
-[push]
-	autoSetupRemote = true
-
-[diff]
-	algorithm = histogram
-	tool = vimdiff
-
-[alias]
-	undo = reset --mixed HEAD^
-
-[interactive]
-	diffFilter = delta --color-only
-
-[merge]
-	conflictStyle = zdiff3
+	editor = vim
 
 [user]
 	email = 10671794+SiddharthPant@users.noreply.github.com
 	name = SiddharthPant
 
-[diff "lockb"]
-  textconv = bun
-  binary = true
-
 [pull]
   ff = only
   rebase = false
+
+[push]
+	autoSetupRemote = true
+
 [rerere]
 	enabled = true
+
+[diff]
+	algorithm = histogram
+	tool = vimdiff
+
 [difftool]
 	prompt = false
+
+[alias]
+	undo = reset --mixed HEAD^
+

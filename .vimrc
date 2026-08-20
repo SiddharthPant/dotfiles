@@ -9,6 +9,8 @@ g:maplocalleader = ','  # Use comma as the prefix for buffer-local custom mappin
 
 plug#begin()
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'will133/vim-dirdiff'
+Plug 'tpope/vim-fugitive'
 plug#end()
 
 # Appearance

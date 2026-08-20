@@ -6,4 +6,9 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 
 [ui]
 default-command = "log"
-diff-editor = ":builtin"
+editor = "vim"
+diff-editor = ["vim", "-c", "DirDiff $left $right"]
+
+[merge-tools.vimdiff]
+program = "vimdiff"
+merge-args = ["$left", "$right", "$base", "-o", "$output"]

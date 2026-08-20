@@ -22,10 +22,12 @@
   "buffer_font_family": "Maple Mono NF",
   "ui_font_size": 15,
   "buffer_font_size": 14,
+  "markdown_preview_font_size": 16,
   "agent_buffer_font_size": 9,
   "agent_ui_font_size": 11,
+  "cursor_blink": false,
   "terminal": {
-    "font_size": 10,
+    "font_size": 12,
   },
   "theme": "One Dark",
   "theme_overrides": {
@@ -204,6 +206,6 @@
     "metrics": false,
   },
   "file_types": {
-    "env": ["env", ".env.*"],
+    "Plain Text": [".env", ".env.*"],
   },
 }
