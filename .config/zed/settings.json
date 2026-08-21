@@ -7,6 +7,10 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "collaboration_panel": {
+    "button": false,
+  },
+  "diff_view_style": "split",
   "disable_ai": true,
   "show_edit_predictions": false,
   "show_completions_on_input": false,
@@ -194,6 +198,7 @@
   },
   "soft_wrap": "editor_width",
   "project_panel": {
+    "dock": "left",
     "hide_root": true,
     "diagnostic_badges": true,
     "scrollbar": {

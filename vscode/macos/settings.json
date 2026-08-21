@@ -96,6 +96,7 @@
       }
     ]
   },
+  "editor.fontFamily": "Maple Mono NF",
   "editor.fontSize": 13,
   "markdown.preview.fontSize": 15,
   "terminal.integrated.fontSize": 12,
@@ -204,5 +205,6 @@
     "**/.jj": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true
-  }
+  },
+  "security.workspace.trust.untrustedFiles": "open"
 }

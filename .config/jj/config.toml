@@ -17,5 +17,5 @@ program = "zed"
 edit-args = ["--add", "--wait", "--diff", "$left","$right"]
 edit-invocation-mode = "dir"
 
-diff-args = ["--add", "--wait", "--diff", "$left","$right"]
+diff-args = ["--diff", "$left","$right"]
 diff-invocation-mode = "dir"
