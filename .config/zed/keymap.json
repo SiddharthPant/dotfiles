@@ -7,18 +7,6 @@
 // from the command palette.
 [
   {
-    "context": "Workspace",
-    "bindings": {
-      // "shift shift": "file_finder::Toggle"
-    },
-  },
-  {
-    "context": "Editor && vim_mode == insert",
-    "bindings": {
-      // "j k": "vim::NormalBefore"
-    },
-  },
-  {
     "bindings": {
       "cmd-k p": "markdown::OpenFollowingPreview",
     },
@@ -26,19 +14,11 @@
   {
     "context": "Editor",
     "unbind": {
-      "cmd-backspace": "editor::DeleteToBeginningOfLine"
-    }
-  },
-  {
-    "context": "Editor",
+      "cmd-backspace": "editor::DeleteToBeginningOfLine",
+      "cmd-shift-k": "editor::DeleteLine"
+    },
     "bindings": {
       "cmd-backspace": "editor::DeleteLine"
-    }
-  },
-  {
-    "context": "Editor",
-    "unbind": {
-      "cmd-shift-k": "editor::DeleteLine"
     }
   }
 ]
