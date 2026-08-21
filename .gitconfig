@@ -1,9 +1,9 @@
 [core]
 	excludesfile = /Users/sid/.config/git/ignore
-	editor = zed --add --wait
+	editor = nvim
 
 [sequence]
-    editor = zed --add --wait
+    editor = nvim
 
 [user]
 	email = 10671794+SiddharthPant@users.noreply.github.com
@@ -20,15 +20,7 @@
 	enabled = true
 
 [diff]
-    algorithm = histogram
-	tool = zed
-
-[difftool "zed"]
-    cmd = zed --add --wait --diff \"$LOCAL\" \"$REMOTE\"
-
-[merge]
-    tool = vscode
+  algorithm = histogram
 
 [alias]
 	undo = reset --mixed HEAD^
-	zdiff = difftool --dir-diff --no-symlinks

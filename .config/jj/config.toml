@@ -6,16 +6,4 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 
 [ui]
 default-command = "log"
-editor = ["zed", "--add", "--wait"]
-diff-editor = "zed"
-diff-formatter = "zed"
-diff-instructions = false
-merge-editor = "vscode"
-
-[merge-tools.zed]
-program = "zed"
-edit-args = ["--add", "--wait", "--diff", "$left","$right"]
-edit-invocation-mode = "dir"
-
-diff-args = ["--diff", "$left","$right"]
-diff-invocation-mode = "dir"
+editor = "nvim"
