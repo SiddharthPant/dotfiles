@@ -73,6 +73,10 @@ vim.opt.diffopt:append("linematch:60") -- improve diff display
 vim.opt.diffopt:append("algorithm:histogram") -- align changes using surrounding code structure
 vim.opt.diffopt:append("indent-heuristic") -- shift hunk boundaries to more readable locations
 
+-- netrw
+vim.g.netrw_liststyle = 3 -- set layout to tree view style
+vim.g.netrw_winsize = 25 -- set the width percent of explorer window
+
 -- Set a useful terminal title so each pane is distinguishable (dir + file).
 -- Tested with ghostty/wezterm; overrides the shell's title while nvim is running.
 vim.o.title = true
@@ -80,7 +84,6 @@ vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
 
 -- Core editing
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit Neovim" })
 map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
 map("n", "<Esc>", function()
 	vim.cmd.nohlsearch()
@@ -103,11 +106,6 @@ map("n", "J", function()
 	vim.cmd.normal({ args = { vim.v.count1 .. "J" }, bang = true })
 	vim.fn.winrestview(view)
 end, { desc = "Join lines and keep cursor position" })
-
-map("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
-map("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
-map("x", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-map("x", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 map("x", "<", "<gv", { desc = "Indent left and reselect" })
 map("x", ">", ">gv", { desc = "Indent right and reselect" })
@@ -165,31 +163,11 @@ vim.pack.add({
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/dlyongemallo/diffview-plus.nvim",
 	"https://codeberg.org/andyg/leap.nvim",
-	"https://github.com/MagicDuck/grug-far.nvim",
 	"https://github.com/christoomey/vim-tmux-navigator",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
-})
-
--- UI chrome
--- File winbar
--- Show file, modified state, and filetype for normal file buffers.
-local winbar_str = "%#WinBarFile#%f%* %#WinBarMod#%m%*%=%#WinBarFT#%{&filetype}%*"
-
-local function is_normal_file(buf)
-	local bt = vim.bo[buf].buftype
-	local fname = vim.api.nvim_buf_get_name(buf)
-	return bt == "" and fname ~= ""
-end
-
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-	group = group,
-	desc = "Show winbar for normal file buffers",
-	callback = function()
-		vim.wo.winbar = is_normal_file(0) and winbar_str or nil
-	end,
 })
 
 -- General autocmds
@@ -226,15 +204,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		if system_clipboard_copy and vim.v.event.operator == "y" and vim.v.event.regname ~= "_" then
 			osc52_copy(vim.v.event.regcontents, vim.v.event.regtype)
 		end
-	end,
-})
-
--- Gitcommit spell
-vim.api.nvim_create_autocmd("FileType", {
-	group = group,
-	pattern = "gitcommit",
-	callback = function()
-		vim.opt_local.spell = true
 	end,
 })
 
@@ -315,6 +284,7 @@ vim.api.nvim_create_autocmd("User", {
 
 local close_diffview = "<cmd>DiffviewClose<cr>"
 require("diffview").setup({
+  preferred_adapter = "jj",
 	use_icons = false,
 	keymaps = {
 		view = {
@@ -369,26 +339,12 @@ end, { desc = "Close other buffers" })
 
 -- oil
 local oil = require("oil")
--- Declare a global function to retrieve the current directory
-function _G.get_oil_winbar()
-	local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-	local dir = require("oil").get_current_dir(bufnr)
-	if dir then
-		return vim.fn.fnamemodify(dir, ":~")
-	else
-		-- If there is no current directory (e.g. over ssh), just show the buffer name
-		return vim.api.nvim_buf_get_name(0)
-	end
-end
-
 local detail = false
 oil.setup({
+  default_file_explorer = false,
 	delete_to_trash = true,
 	view_options = {
 		show_hidden = true,
-	},
-	win_options = {
-		winbar = "%!v:lua.get_oil_winbar()",
 	},
 	keymaps = {
 		["gd"] = {
@@ -401,28 +357,6 @@ oil.setup({
 				end
 			end,
 			desc = "Toggle file detail view",
-		},
-		-- Replace Oil's default sort picker with Grug Far scoped to this directory.
-		["gs"] = {
-			callback = function()
-				-- get the current directory
-				local prefills = { paths = oil.get_current_dir() }
-
-				local grug_far = require("grug-far")
-				-- instance check
-				if not grug_far.has_instance("explorer") then
-					grug_far.open({
-						instanceName = "explorer",
-						prefills = prefills,
-						staticTitle = "Find and Replace from Explorer",
-					})
-				else
-					grug_far.get_instance("explorer"):open()
-					-- updating the prefills without clearing the search and other fields
-					grug_far.get_instance("explorer"):update_input_values(prefills, false)
-				end
-			end,
-			desc = "oil: Search in directory",
 		},
 	},
 })
