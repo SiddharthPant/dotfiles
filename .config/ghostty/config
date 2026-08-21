@@ -1,5 +1,6 @@
 # Font
-font-size = 15
+font-family = Iosevka NFM
+font-size = 16
 
 # Cursor
 cursor-style = block
