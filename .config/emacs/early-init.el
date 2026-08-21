@@ -3,7 +3,7 @@
 ;; Crank the GC threshold during startup; init.el resets it to a sane value.
 (setq gc-cons-threshold most-positive-fixnum)
 
-(setq select-enable-clipboard nil)
+(setq select-enable-clipboard t)
 
 ;; Kill the UI chrome before the first frame paints (avoids a visible flash).
 (setq inhibit-startup-message t
@@ -15,6 +15,7 @@
                             (ns-transparent-titlebar . t)
                             (fullscreen . maximized)))
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 
 ;; Native-comp is great but noisy on first compile; keep warnings quiet.

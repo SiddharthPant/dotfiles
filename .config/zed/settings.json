@@ -18,15 +18,16 @@
   "snippet_sort_order": "none",
   "cli_default_open_behavior": "new_window",
   "always_treat_brackets_as_autoclosed": true,
-  "buffer_font_family": "Iosevka Nerd Font Mono",
+  "buffer_font_family": "Iosevka",
   "ui_font_size": 15,
-  "buffer_font_size": 15,
+  "buffer_font_size": 14,
   "markdown_preview_font_size": 16,
   "agent_buffer_font_size": 9,
   "agent_ui_font_size": 11,
   "cursor_blink": false,
   "terminal": {
-    "font_size": 12,
+    "font_size": 14,
+    "font_family": "Iosevka Term"
   },
   "soft_wrap": "editor_width",
   "project_panel": {

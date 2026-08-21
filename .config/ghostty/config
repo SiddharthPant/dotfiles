@@ -1,6 +1,6 @@
 # Font
-font-family = Iosevka NFM
-font-size = 16
+font-family = Iosevka Term
+font-size = 15
 
 # Cursor
 cursor-style = block

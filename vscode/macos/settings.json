@@ -5,7 +5,7 @@
   "editor.cursorBlinking": "solid",
   "workbench.startupEditor": "none",
   "workbench.colorTheme": "Dark Modern",
-  "editor.fontFamily": "Iosevka NFM",
+  "editor.fontFamily": "Iosevka",
   "editor.fontSize": 16,
   "markdown.preview.fontSize": 15,
   "terminal.integrated.fontSize": 12,
