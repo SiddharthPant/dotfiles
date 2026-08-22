@@ -11,7 +11,10 @@ plug#begin()
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'will133/vim-dirdiff'
 Plug 'tpope/vim-fugitive'
+Plug 'luochen1990/rainbow'
 plug#end()
+
+g:rainbow_active = 1
 
 # Appearance
 set termguicolors # Enable 24-bit terminal colors.

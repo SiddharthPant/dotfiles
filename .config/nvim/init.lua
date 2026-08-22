@@ -20,7 +20,6 @@ local group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 -- Options
 vim.opt.termguicolors = true
 vim.opt.background = "dark"
--- vim.cmd("colorscheme catppuccin")
 
 vim.o.number = true -- line number
 vim.o.relativenumber = true -- relative line numbers
@@ -155,6 +154,8 @@ vim.g.compile_mode = {
 	},
 }
 vim.pack.add({
+	"https://github.com/olivercederborg/poimandres.nvim",
+	"https://github.com/HiPhish/rainbow-delimiters.nvim",
 	{ src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/ej-shafran/compile-mode.nvim",
@@ -169,6 +170,19 @@ vim.pack.add({
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
 })
+
+require("poimandres").setup({
+	highlight_groups = {
+		RainbowDelimiterRed = { fg = "pink3" },
+		RainbowDelimiterYellow = { fg = "yellow" },
+		RainbowDelimiterBlue = { fg = "blue1" },
+		RainbowDelimiterOrange = { fg = "pink2" },
+		RainbowDelimiterGreen = { fg = "teal1" },
+		RainbowDelimiterViolet = { fg = "pink1" },
+		RainbowDelimiterCyan = { fg = "blue2" },
+	},
+})
+vim.cmd.colorscheme("poimandres")
 
 -- General autocmds
 -- Cursor restore
