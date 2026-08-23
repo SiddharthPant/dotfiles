@@ -1,0 +1,3 @@
+editorconfig.editorconfig
+pmndrs.pmndrs
+ms-vscode-remote.remote-wsl

@@ -1,0 +1,29 @@
+{
+  "chat.disableAIFeatures": true,
+  "editor.cursorBlinking": "solid",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.find.closeOnResult": true,
+  "editor.inlineSuggest.enabled": false,
+  "editor.linkedEditing": true,
+  "editor.quickSuggestions": {
+    "comments": "inline",
+    "other": "inline",
+    "strings": "inline"
+  },
+  "editor.smoothScrolling": true,
+  "editor.stickyTabStops": true,
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.wordBasedSuggestions": "off",
+  "extensions.ignoreRecommendations": true,
+  "files.exclude": {
+    "**/.jj": true
+  },
+  "security.workspace.trust.enabled": false,
+  "workbench.activityBar.location": "top",
+  "workbench.colorTheme": "poimandres",
+  "workbench.editor.wrapTabs": true,
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+  "workbench.startupEditor": "none"
+}
