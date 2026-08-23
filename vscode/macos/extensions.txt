@@ -1,7 +1,2 @@
 editorconfig.editorconfig
-hverlin.mise-vscode
-jkillian.custom-local-formatters
-ms-vscode.makefile-tools
-rust-lang.rust-analyzer
-tombi-toml.tombi
-weixu.wx-vsce-askama-templates
+pmndrs.pmndrs

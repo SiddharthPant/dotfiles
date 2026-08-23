@@ -7,11 +7,12 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "theme": "Catppuccin Mocha",
+  "theme": "poimandres",
   "collaboration_panel": {
     "button": false,
   },
   "diff_view_style": "split",
+  "colorize_brackets": true,
   "disable_ai": true,
   "show_completions_on_input": false,
   "show_completion_documentation": false,

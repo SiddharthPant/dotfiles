@@ -171,17 +171,7 @@ vim.pack.add({
 	"https://github.com/rmagatti/auto-session",
 })
 
-require("poimandres").setup({
-	highlight_groups = {
-		RainbowDelimiterRed = { fg = "pink3" },
-		RainbowDelimiterYellow = { fg = "yellow" },
-		RainbowDelimiterBlue = { fg = "blue1" },
-		RainbowDelimiterOrange = { fg = "pink2" },
-		RainbowDelimiterGreen = { fg = "teal1" },
-		RainbowDelimiterViolet = { fg = "pink1" },
-		RainbowDelimiterCyan = { fg = "blue2" },
-	},
-})
+require("poimandres").setup()
 vim.cmd.colorscheme("poimandres")
 
 -- General autocmds
