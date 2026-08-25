@@ -11,15 +11,20 @@ plug#begin()
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'will133/vim-dirdiff'
 Plug 'tpope/vim-fugitive'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'luochen1990/rainbow'
 plug#end()
 
+g:rainbow_conf = {
+  guifgs: ['#FF5555', '#F1FA8C', '#50FA7B', '#8BE9FD', '#BD93F9'],
+  ctermfgs: ['203', '228', '84', '117', '141'],
+}
 g:rainbow_active = 1
 
 # Appearance
 set termguicolors # Enable 24-bit terminal colors.
 set background=dark  # Tell color schemes to use their dark-background palette.
-colorscheme novum  # Load Vim's built-in novum color scheme.
+colorscheme dracula  # Load the Dracula color scheme.
 &t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
 &t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
 
