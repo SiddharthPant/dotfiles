@@ -17,7 +17,8 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
-(setq select-enable-clipboard t)
+(setq select-enable-clipboard nil)
+(setq select-enable-primary nil)
 
 (setq native-comp-async-report-warnings-errors 'silent)
 

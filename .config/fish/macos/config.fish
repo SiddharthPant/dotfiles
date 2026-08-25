@@ -27,7 +27,7 @@ if test -d "$HOME/Library/Application Support/Herd/config/php/84"
     set -gx HERD_PHP_84_INI_SCAN_DIR "$HOME/Library/Application Support/Herd/config/php/84/"
 end
 
-/opt/homebrew/bin/mise activate fish | source
+/Users/sid/.local/bin/mise activate fish | source
 
 if status is-interactive
     set -g fish_greeting

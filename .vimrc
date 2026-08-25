@@ -117,7 +117,7 @@ g:hlyank_invisual = v:true
 g:hlput_enable = v:true
 packadd hlyank  
 
-# g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
+g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
 packadd osc52  # Add and initialize Vim's optional OSC 52 package.
 set clipmethod+=osc52  # Add OSC 52 escape sequences as a clipboard transport.
 

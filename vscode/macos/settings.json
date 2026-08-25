@@ -7,6 +7,7 @@
   "editor.inlayHints.fontFamily": "Iosevka Light",
   "editor.inlayHints.fontSize": 10,
   "editor.smoothScrolling": true,
+  "editor.stickyTabStops": true,
   "files.exclude": {
     "**/.jj": true
   },
@@ -14,6 +15,7 @@
   "terminal.integrated.fontFamily": "Iosevka Term Medium",
   "terminal.integrated.fontSize": 14,
   "workbench.activityBar.location": "top",
+  "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
   },

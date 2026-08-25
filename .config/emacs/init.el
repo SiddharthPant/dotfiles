@@ -38,8 +38,10 @@
       undo-limit (* 20 1024 1024)
       undo-strong-limit (* 40 1024 1024))
 (setq-default indent-tabs-mode nil
+              cursor-type '(bar . 2)
               tab-width 4)
 
+(blink-cursor-mode -1)
 (column-number-mode 1)
 (show-paren-mode 1)
 (fido-vertical-mode 1)
@@ -76,6 +78,8 @@
          ("C-\"" . mc/skip-to-next-like-this)
          ("C-:" . mc/skip-to-previous-like-this)
          ("C-S-<mouse-1>" . mc/toggle-cursor-on-click)))
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
 
 (use-package rust-mode :ensure t)
 (use-package magit :ensure t)
@@ -85,3 +89,4 @@
 (setq gc-cons-threshold (* 32 1024 1024))
 
 ;;; init.el ends here
+(put 'downcase-region 'disabled nil)
