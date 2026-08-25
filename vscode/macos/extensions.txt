@@ -1,2 +1,5 @@
+dracula-theme.theme-dracula
 editorconfig.editorconfig
-pmndrs.pmndrs
+ms-azuretools.vscode-containers
+rust-lang.rust-analyzer
+tombi-toml.tombi

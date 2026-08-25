@@ -2,21 +2,18 @@
   "chat.disableAIFeatures": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
-  "editor.inlineSuggest.enabled": false,
-  "editor.quickSuggestions": {
-    "other": "inline",
-    "comments": "inline",
-    "strings": "inline"
-  },
+  "editor.fontFamily": "Iosevka Medium",
+  "editor.fontSize": 15,
+  "editor.inlayHints.fontFamily": "Iosevka Light",
+  "editor.inlayHints.fontSize": 10,
   "editor.smoothScrolling": true,
-  "editor.suggestOnTriggerCharacters": false,
-  "editor.wordBasedSuggestions": "off",
   "files.exclude": {
-    "**/.jj": true,
+    "**/.jj": true
   },
   "security.workspace.trust.enabled": false,
+  "terminal.integrated.fontFamily": "Iosevka Term Medium",
+  "terminal.integrated.fontSize": 14,
   "workbench.activityBar.location": "top",
-  "workbench.colorTheme": "poimandres",
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
   },
