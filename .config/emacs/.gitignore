@@ -9,7 +9,10 @@
 
 # Emacs session / state files
 /auto-save-list/
+/.emacs.desktop
+/.emacs.desktop.lock
 /history
+/places
 /recentf
 /projects
 /custom.el
