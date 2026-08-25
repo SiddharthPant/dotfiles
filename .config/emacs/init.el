@@ -18,7 +18,7 @@
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
   :config
-  (load-theme 'doom-dracula t)
+  (load-theme 'doom-meltbus t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -50,9 +50,9 @@
 (save-place-mode 1)
 (global-auto-revert-mode 1)
 
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
+;; (use-package rainbow-delimiters
+;;   :ensure t
+;;   :hook (prog-mode . rainbow-delimiters-mode))
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (keymap-global-set "C-c d" #'duplicate-dwim)

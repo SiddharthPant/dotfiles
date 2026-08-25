@@ -33,4 +33,4 @@ window-padding-y = 0
 # Distribute remaining cell-grid pixels evenly
 window-padding-balance = true
 
-theme = Dracula
+theme = Modus Vivendi

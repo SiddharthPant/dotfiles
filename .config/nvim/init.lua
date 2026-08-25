@@ -154,8 +154,6 @@ vim.g.compile_mode = {
 	},
 }
 vim.pack.add({
-	"https://github.com/Mofiqul/dracula.nvim",
-	"https://github.com/HiPhish/rainbow-delimiters.nvim",
 	{ src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/ej-shafran/compile-mode.nvim",
@@ -170,21 +168,6 @@ vim.pack.add({
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
 })
-
-require("dracula").setup({
-	overrides = function(colors)
-		return {
-			RainbowDelimiterRed = { fg = colors.red },
-			RainbowDelimiterYellow = { fg = colors.yellow },
-			RainbowDelimiterBlue = { fg = colors.bright_blue },
-			RainbowDelimiterOrange = { fg = colors.orange },
-			RainbowDelimiterGreen = { fg = colors.green },
-			RainbowDelimiterViolet = { fg = colors.purple },
-			RainbowDelimiterCyan = { fg = colors.cyan },
-		}
-	end,
-})
-vim.cmd.colorscheme("dracula")
 
 -- General autocmds
 -- Cursor restore
