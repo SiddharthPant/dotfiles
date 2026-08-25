@@ -26,14 +26,14 @@
   (doom-themes-org-config))
 (set-face-attribute 'default nil
 		    :family "Iosevka Term"
-		    :height 150)
+		    :height 160)
 ;; After loading theme and font make frame visible again
 (set-frame-parameter nil 'visibility t)
 
 (setq make-backup-files nil
       auto-save-default nil
       desktop-restore-frames nil
-      ;; display-line-numbers-type 'relative
+      pixel-scroll-precision-interpolate-page t
       ring-bell-function 'ignore
       undo-limit (* 20 1024 1024)
       undo-strong-limit (* 40 1024 1024))
@@ -49,10 +49,8 @@
 (desktop-save-mode 1)
 (save-place-mode 1)
 (global-auto-revert-mode 1)
-
-;; (use-package rainbow-delimiters
-;;   :ensure t
-;;   :hook (prog-mode . rainbow-delimiters-mode))
+(electric-pair-mode 1)
+(pixel-scroll-precision-mode 1)
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (keymap-global-set "C-c d" #'duplicate-dwim)
