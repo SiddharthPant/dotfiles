@@ -4,6 +4,8 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        org-end-of-line
+        org-self-insert-command
         undo-redo
         ))
 

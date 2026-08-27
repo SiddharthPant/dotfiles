@@ -24,3 +24,5 @@
 
 [alias]
 	undo = reset --mixed HEAD^
+[init]
+	defaultBranch = main

@@ -76,11 +76,14 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("C-\"" . mc/skip-to-next-like-this)
-         ("C-:" . mc/skip-to-previous-like-this)
+         ("C-|" . mc/skip-to-previous-like-this)
          ("C-S-<mouse-1>" . mc/toggle-cursor-on-click)))
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
-
+(use-package avy
+  :ensure t
+  :bind (("C-'" . avy-goto-char-2)
+         ("M-g g" . avy-goto-line)))
 (use-package rust-mode :ensure t)
 (use-package magit :ensure t)
 (use-package vc-jj :ensure t)
