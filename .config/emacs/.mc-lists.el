@@ -4,13 +4,18 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        electric-pair-delete-pair
+        indent-for-tab-command
+        mc/toggle-cursor-on-click
         org-end-of-line
         org-self-insert-command
+        toggle-input-method
         undo-redo
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        other-frame
         project-switch-project
         recompile
         ))

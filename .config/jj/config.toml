@@ -6,4 +6,5 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 
 [ui]
 default-command = "log"
-editor = "nvim"
+editor = "vim"
+diff-editor = ":builtin"

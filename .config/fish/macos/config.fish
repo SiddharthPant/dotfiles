@@ -1,5 +1,5 @@
 # Environment shared with the macOS Zsh setup.
-set -gx EDITOR nvim
+set -gx EDITOR vim
 set -gx VISUAL $EDITOR
 set -gx FZF_DEFAULT_COMMAND 'rg --files --ignore-vcs --hidden'
 

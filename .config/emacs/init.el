@@ -27,7 +27,8 @@
 
 (use-package rainbow-delimiters
   :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode)
+  :hook ((prog-mode . rainbow-delimiters-mode)
+         (conf-mode . rainbow-delimiters-mode))
   :config
   (dolist (face-color '((rainbow-delimiters-depth-1-face unspecified)
                         (rainbow-delimiters-depth-2-face "#a9a1e1")
@@ -43,8 +44,8 @@
                         :foreground (cadr face-color))))
 
 (set-face-attribute 'default nil
-		    :family "Iosevka Term"
-		    :height 160)
+                    :family "Iosevka Term"
+                    :height 160)
 ;; After loading theme and font make frame visible again
 (set-frame-parameter nil 'visibility t)
 
@@ -72,7 +73,9 @@
 (electric-pair-mode 1)
 (pixel-scroll-precision-mode 1)
 
+(add-to-list 'auto-mode-alist '("/\\.env\\(?:\\..*\\)?\\'" . conf-unix-mode))
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'conf-mode-hook #'display-line-numbers-mode)
 (keymap-global-set "C-c d" #'duplicate-dwim)
 (keymap-global-set "C-x C-b" #'ibuffer)
 (keymap-global-set "<f5>" #'recompile)
@@ -86,6 +89,7 @@
 (setq compilation-scroll-output 'first-error
       compilation-always-kill t)
 (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 (use-package multiple-cursors
   :ensure t
