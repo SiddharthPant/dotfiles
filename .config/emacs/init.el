@@ -24,6 +24,24 @@
   (doom-themes-visual-bell-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  (dolist (face-color '((rainbow-delimiters-depth-1-face unspecified)
+                        (rainbow-delimiters-depth-2-face "#a9a1e1")
+                        (rainbow-delimiters-depth-3-face "#7cab7c")
+                        (rainbow-delimiters-depth-4-face "#cdad00")
+                        (rainbow-delimiters-depth-5-face "#db7093")
+                        (rainbow-delimiters-depth-6-face "#87afff")
+                        (rainbow-delimiters-depth-7-face "#a9a1e1")
+                        (rainbow-delimiters-depth-8-face "#7cab7c")
+                        (rainbow-delimiters-depth-9-face "#cdad00")))
+    (set-face-attribute (car face-color) nil
+                        :inherit 'rainbow-delimiters-base-face
+                        :foreground (cadr face-color))))
+
 (set-face-attribute 'default nil
 		    :family "Iosevka Term"
 		    :height 160)
