@@ -6,16 +6,19 @@
       '(
         electric-pair-delete-pair
         indent-for-tab-command
-        mc/toggle-cursor-on-click
         org-end-of-line
         org-self-insert-command
-        toggle-input-method
-        undo-redo
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        avy-goto-char-2
+        avy-goto-line
+        ibuffer
+        mc/toggle-cursor-on-click
         other-frame
         project-switch-project
         recompile
+        toggle-input-method
+        undo-redo
         ))
