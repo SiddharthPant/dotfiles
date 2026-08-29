@@ -1,6 +1,6 @@
 # Font
-font-family = Iosevka Term Medium
-font-size = 15
+font-family = Iosevka Term
+font-size = 17
 
 # Cursor
 cursor-style = bar
@@ -34,3 +34,4 @@ window-padding-y = 0
 
 # Distribute remaining cell-grid pixels evenly
 window-padding-balance = true
+theme = Adwaita
