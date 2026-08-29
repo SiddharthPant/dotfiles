@@ -80,7 +80,14 @@ def build(name, theme_type, stock_entry, brackets, tokens, out_name):
     theme = {
         "name": name,
         "type": theme_type,
-        "semanticHighlighting": False,
+        # Semantic tokens stay on: unstyled types fall back through their
+        # default scope mappings into tokenColors below, and only languages
+        # whose grammars can't express a style need explicit entries here
+        # (Rust's TextMate grammar has no variable.parameter scope).
+        "semanticHighlighting": True,
+        "semanticTokenColors": {
+            "parameter": {"italic": True},
+        },
         "colors": colors,
         # Stock rules first, Meltbus appended after so scopes Meltbus covers
         # go monochrome while everything else keeps its stock 2026 color —

@@ -1,7 +1,12 @@
 {
   "name": "Meltbus Dark",
   "type": "dark",
-  "semanticHighlighting": false,
+  "semanticHighlighting": true,
+  "semanticTokenColors": {
+    "parameter": {
+      "italic": true
+    }
+  },
   "colors": {
     "checkbox.border": "#707070",
     "editor.background": "#121314",
