@@ -1,5 +1,5 @@
-dracula-theme.theme-dracula
 editorconfig.editorconfig
 ms-azuretools.vscode-containers
 rust-lang.rust-analyzer
+sid.doom-meltbus-theme
 tombi-toml.tombi

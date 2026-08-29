@@ -1,5 +1,6 @@
 excels/
 themes/
+!vscode/**/themes/
 .idea
 .tox
 /media

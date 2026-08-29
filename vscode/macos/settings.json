@@ -1,13 +1,33 @@
 {
+  "[rust]": {
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": false,
+      "strings": false
+    },
+    "editor.suggest.showSnippets": false,
+    "editor.suggest.showWords": false
+  },
   "chat.disableAIFeatures": true,
+  "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.fontFamily": "Iosevka Medium",
   "editor.fontSize": 15,
+  "editor.guides.bracketPairs": false,
+  "editor.inlayHints.enabled": "off",
   "editor.inlayHints.fontFamily": "Iosevka Light",
   "editor.inlayHints.fontSize": 10,
+  "editor.inlineSuggest.enabled": false,
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "other": "off",
+    "strings": "off"
+  },
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.wordBasedSuggestions": "off",
   "files.exclude": {
     "**/.jj": true
   },
@@ -15,6 +35,7 @@
   "terminal.integrated.fontFamily": "Iosevka Term Medium",
   "terminal.integrated.fontSize": 14,
   "workbench.activityBar.location": "top",
+  "workbench.colorTheme": "Doom Meltbus",
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"

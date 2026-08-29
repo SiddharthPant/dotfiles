@@ -1,0 +1,31 @@
+{
+  "name": "doom-meltbus-theme",
+  "displayName": "Doom Meltbus",
+  "description": "A dark, mostly monochromatic VS Code theme based on Doom Emacs' Doom Meltbus theme.",
+  "version": "0.0.2",
+  "publisher": "sid",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SiddharthPant/dotfiles.git",
+    "directory": "vscode/macos/doom-meltbus-theme"
+  },
+  "files": [
+    "themes/doom-meltbus-color-theme.json"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Doom Meltbus",
+        "uiTheme": "vs-dark",
+        "path": "./themes/doom-meltbus-color-theme.json"
+      }
+    ]
+  }
+}

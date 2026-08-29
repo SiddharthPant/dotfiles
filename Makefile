@@ -1,10 +1,13 @@
-.PHONY: all help install clean macos arch wsl common vim vscode-macos
+.PHONY: all help install clean macos arch wsl common vim vscode-macos vscode-meltbus-theme
 
 DOTFILES_DIR := $(CURDIR)
 UNAME_S := $(shell uname)
 PLATFORM := arch
 VSCODE_MACOS_DIR := $(DOTFILES_DIR)/vscode/macos
 VSCODE_MACOS_USER_DIR := $(HOME)/Library/Application Support/Code/User
+VSCODE_MELTBUS_THEME_DIR := $(VSCODE_MACOS_DIR)/doom-meltbus-theme
+VSCODE_MELTBUS_THEME_ID := sid.doom-meltbus-theme
+VSCODE_VSCE_VERSION := 3.9.2
 VIM_PLUG := $(HOME)/.vim/autoload/plug.vim
 VIM_PLUG_URL := https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
@@ -82,13 +85,25 @@ macos: common vscode-macos
 	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	@echo "macOS dotfiles linked"
 
+# target: vscode-meltbus-theme - Package and install the local Doom Meltbus theme
+vscode-meltbus-theme:
+	@command -v code >/dev/null 2>&1 || { printf 'error: code is not available in PATH\n' >&2; exit 1; }
+	@command -v npx >/dev/null 2>&1 || { printf 'error: npx is not available in PATH\n' >&2; exit 1; }
+	@theme_tmp="$$(mktemp -d)"; \
+		trap 'rm -rf "$$theme_tmp"' EXIT; \
+		(cd "$(VSCODE_MELTBUS_THEME_DIR)" && \
+			npx --yes @vscode/vsce@$(VSCODE_VSCE_VERSION) package \
+				--skip-license \
+				--out "$$theme_tmp/doom-meltbus-theme.vsix"); \
+		code --install-extension "$$theme_tmp/doom-meltbus-theme.vsix" --force
+
 # target: vscode-macos - Link VS Code configuration and install extensions
-vscode-macos:
+vscode-macos: vscode-meltbus-theme
 	$(call ensure_link,$(VSCODE_MACOS_DIR)/settings.json,$(VSCODE_MACOS_USER_DIR)/settings.json)
 	$(call ensure_link,$(VSCODE_MACOS_DIR)/keybindings.json,$(VSCODE_MACOS_USER_DIR)/keybindings.json)
 	@command -v code >/dev/null 2>&1 || { printf 'error: code is not available in PATH\n' >&2; exit 1; }
 	@while IFS= read -r extension; do \
-		case "$$extension" in ''|'#'*) continue ;; esac; \
+		case "$$extension" in ''|'#'*|$(VSCODE_MELTBUS_THEME_ID)) continue ;; esac; \
 		code --install-extension "$$extension"; \
 	done < $(VSCODE_MACOS_DIR)/extensions.txt
 	@code --update-extensions
