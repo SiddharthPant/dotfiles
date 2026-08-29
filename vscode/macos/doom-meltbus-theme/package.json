@@ -2,7 +2,7 @@
   "name": "doom-meltbus-theme",
   "displayName": "Meltbus",
   "description": "Mostly monochromatic VS Code themes based on Doom Emacs' Doom Meltbus theme, in dark and light variants.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "publisher": "sid",
   "license": "UNLICENSED",
   "repository": {

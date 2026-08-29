@@ -1352,7 +1352,7 @@
         "string.comment"
       ],
       "settings": {
-        "fontStyle": "",
+        "fontStyle": "italic",
         "foreground": "#979797"
       }
     },
@@ -1365,7 +1365,8 @@
         "string.unquoted.documentation"
       ],
       "settings": {
-        "foreground": "#757575"
+        "foreground": "#757575",
+        "fontStyle": "italic"
       }
     },
     {
@@ -1374,11 +1375,20 @@
         "constant",
         "entity.name.constant",
         "support",
-        "variable.language",
         "variable.other.constant",
         "variable.other.enummember"
       ],
       "settings": {
+        "foreground": "#757575"
+      }
+    },
+    {
+      "name": "Meltbus language variables",
+      "scope": [
+        "variable.language"
+      ],
+      "settings": {
+        "fontStyle": "italic",
         "foreground": "#757575"
       }
     },
@@ -1447,6 +1457,16 @@
       ],
       "settings": {
         "fontStyle": "",
+        "foreground": "#222222"
+      }
+    },
+    {
+      "name": "Meltbus parameters",
+      "scope": [
+        "variable.parameter"
+      ],
+      "settings": {
+        "fontStyle": "italic",
         "foreground": "#222222"
       }
     },
