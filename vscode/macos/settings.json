@@ -1,4 +1,13 @@
 {
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": false,
+      "strings": false
+    },
+    "editor.suggest.showSnippets": false,
+    "editor.suggest.showWords": false
+  },
   "[rust]": {
     "editor.quickSuggestions": {
       "comments": false,
@@ -12,12 +21,11 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
-  "editor.fontFamily": "Iosevka Medium",
-  "editor.fontSize": 15,
+  "editor.fontFamily": "Iosevka",
+  "editor.fontSize": 17,
+  "terminal.integrated.fontSize": 15,
   "editor.guides.bracketPairs": false,
   "editor.inlayHints.enabled": "off",
-  "editor.inlayHints.fontFamily": "Iosevka Light",
-  "editor.inlayHints.fontSize": 10,
   "editor.inlineSuggest.enabled": false,
   "editor.quickSuggestions": {
     "comments": "off",
@@ -28,17 +36,21 @@
   "editor.stickyTabStops": true,
   "editor.suggestOnTriggerCharacters": false,
   "editor.wordBasedSuggestions": "off",
+  "extensions.ignoreRecommendations": true,
   "files.exclude": {
     "**/.jj": true
   },
   "security.workspace.trust.enabled": false,
-  "terminal.integrated.fontFamily": "Iosevka Term Medium",
-  "terminal.integrated.fontSize": 14,
+  "telemetry.telemetryLevel": "off",
+  "window.autoDetectColorScheme": true,
   "workbench.activityBar.location": "top",
-  "workbench.colorTheme": "Doom Meltbus",
+  "workbench.experimental.modernUI": true,
+  "workbench.colorTheme": "Meltbus Light",
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
   },
+  "workbench.preferredDarkColorTheme": "Meltbus Dark",
+  "workbench.preferredLightColorTheme": "Meltbus Light",
   "workbench.startupEditor": "none"
 }
