@@ -1,0 +1,289 @@
+[
+  {
+    "name": "Meltbus default syntax",
+    "scope": [
+      "source",
+      "text.html.basic",
+      "text.html.askama",
+      "source.json",
+      "source.yaml"
+    ],
+    "settings": {
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus comments",
+    "scope": [
+      "comment",
+      "punctuation.definition.comment",
+      "string.comment"
+    ],
+    "settings": {
+      "fontStyle": "",
+      "foreground": "#686868"
+    }
+  },
+  {
+    "name": "Meltbus documentation",
+    "scope": [
+      "comment.block.documentation",
+      "comment.line.documentation",
+      "string.quoted.docstring",
+      "string.unquoted.documentation"
+    ],
+    "settings": {
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus built-ins and constants",
+    "scope": [
+      "constant",
+      "entity.name.constant",
+      "support",
+      "variable.language",
+      "variable.other.constant",
+      "variable.other.enummember"
+    ],
+    "settings": {
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus numbers",
+    "scope": [
+      "constant.numeric"
+    ],
+    "settings": {
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus strings and types",
+    "scope": [
+      "string",
+      "entity.name.class",
+      "entity.name.enum",
+      "entity.name.interface",
+      "entity.name.struct",
+      "entity.name.trait",
+      "entity.name.type",
+      "entity.other.inherited-class",
+      "storage.type",
+      "support.type"
+    ],
+    "settings": {
+      "fontStyle": "",
+      "foreground": "#acacac"
+    }
+  },
+  {
+    "name": "Meltbus functions",
+    "scope": [
+      "entity.name.function",
+      "meta.function-call variable.function",
+      "variable.function"
+    ],
+    "settings": {
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus function calls",
+    "scope": [
+      "meta.function-call entity.name.function"
+    ],
+    "settings": {
+      "fontStyle": "italic",
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus keywords and variables",
+    "scope": [
+      "keyword",
+      "storage.modifier",
+      "variable",
+      "meta.definition.variable",
+      "entity.name.tag",
+      "entity.other.attribute-name",
+      "meta.object-literal.key",
+      "meta.mapping.key",
+      "meta.property-name",
+      "support.type.property-name"
+    ],
+    "settings": {
+      "fontStyle": "",
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus operators",
+    "scope": [
+      "keyword.operator",
+      "punctuation.definition.template-expression"
+    ],
+    "settings": {
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus punctuation",
+    "scope": [
+      "punctuation",
+      "meta.brace",
+      "meta.delimiter"
+    ],
+    "settings": {
+      "foreground": "#acacac"
+    }
+  },
+  {
+    "name": "Meltbus preprocessors and escapes",
+    "scope": [
+      "meta.preprocessor",
+      "keyword.control.directive",
+      "constant.character.escape",
+      "constant.other.character-class.regexp",
+      "punctuation.definition.character-class.regexp"
+    ],
+    "settings": {
+      "fontStyle": "bold",
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus markup",
+    "scope": [
+      "markup.quote",
+      "markup.list",
+      "markup.raw",
+      "punctuation.definition.list.begin.markdown"
+    ],
+    "settings": {
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus headings",
+    "scope": [
+      "markup.heading",
+      "markup.heading entity.name"
+    ],
+    "settings": {
+      "fontStyle": "bold",
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus emphasis",
+    "scope": [
+      "markup.bold"
+    ],
+    "settings": {
+      "fontStyle": "bold",
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus italic emphasis",
+    "scope": [
+      "markup.italic"
+    ],
+    "settings": {
+      "fontStyle": "italic",
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus links",
+    "scope": [
+      "constant.other.reference.link",
+      "markup.underline.link",
+      "meta.link.inline",
+      "string.other.link"
+    ],
+    "settings": {
+      "foreground": "#87afff"
+    }
+  },
+  {
+    "name": "Meltbus invalid syntax",
+    "scope": [
+      "invalid",
+      "message.error"
+    ],
+    "settings": {
+      "foreground": "#f88080"
+    }
+  },
+  {
+    "name": "Meltbus inserted diff",
+    "scope": [
+      "markup.inserted",
+      "meta.diff.header.to-file",
+      "punctuation.definition.inserted"
+    ],
+    "settings": {
+      "foreground": "#7cab7c"
+    }
+  },
+  {
+    "name": "Meltbus deleted diff",
+    "scope": [
+      "markup.deleted",
+      "meta.diff.header.from-file",
+      "punctuation.definition.deleted"
+    ],
+    "settings": {
+      "foreground": "#fac7c7"
+    }
+  },
+  {
+    "name": "Meltbus changed diff",
+    "scope": [
+      "markup.changed",
+      "punctuation.definition.changed"
+    ],
+    "settings": {
+      "foreground": "#da8548"
+    }
+  },
+  {
+    "name": "Meltbus JSON keys",
+    "scope": [
+      "support.type.property-name.json"
+    ],
+    "settings": {
+      "foreground": "#dddddd"
+    }
+  },
+  {
+    "name": "Meltbus JSON strings",
+    "scope": [
+      "string.quoted.double.json"
+    ],
+    "settings": {
+      "foreground": "#acacac"
+    }
+  },
+  {
+    "name": "Meltbus JSON constants",
+    "scope": [
+      "constant.language.json"
+    ],
+    "settings": {
+      "foreground": "#8a8a8a"
+    }
+  },
+  {
+    "name": "Meltbus JSON numbers",
+    "scope": [
+      "constant.numeric.json"
+    ],
+    "settings": {
+      "foreground": "#dddddd"
+    }
+  }
+]
