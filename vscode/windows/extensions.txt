@@ -1,3 +1,7 @@
+davidlgoldberg.jumpy2
 editorconfig.editorconfig
-pmndrs.pmndrs
+mhutchie.git-graph
+ms-azuretools.vscode-containers
 ms-vscode-remote.remote-wsl
+rust-lang.rust-analyzer
+sid.doom-meltbus-theme

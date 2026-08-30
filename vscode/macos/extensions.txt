@@ -1,5 +1,6 @@
+davidlgoldberg.jumpy2
 editorconfig.editorconfig
+mhutchie.git-graph
 ms-azuretools.vscode-containers
 rust-lang.rust-analyzer
 sid.doom-meltbus-theme
-tombi-toml.tombi
