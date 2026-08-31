@@ -105,8 +105,11 @@
   :bind ("C-=" . er/expand-region))
 (use-package avy
   :ensure t
-  :bind (("C-'" . avy-goto-char-2)
+  :bind (("C-;" . avy-goto-char-2)
          ("M-g g" . avy-goto-line)))
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
 (use-package rust-mode :ensure t)
 (use-package magit :ensure t)
 (use-package vc-jj :ensure t)
