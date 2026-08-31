@@ -110,6 +110,12 @@
 (use-package ace-window
   :ensure t
   :bind ("M-o" . ace-window))
+
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+
 (use-package rust-mode :ensure t)
 (use-package magit :ensure t)
 (use-package vc-jj :ensure t)
