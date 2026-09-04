@@ -1,12 +1,9 @@
 # Font
-font-family = Iosevka Term
-font-size = 17
+font-size = 15
 
 # Cursor
-cursor-style = bar
-adjust-cursor-thickness = 2
 cursor-style-blink = false
-shell-integration-features = no-cursor,ssh-env,path
+shell-integration-features = ssh-env,path
 bell-features = title
 
 working-directory = home
@@ -26,7 +23,7 @@ keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
 
 # Make pane separator more visible
-split-divider-color = #8c959f
+# split-divider-color = #8c959f
 
 # Force zero border padding
 window-padding-x = 0

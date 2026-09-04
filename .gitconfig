@@ -1,9 +1,9 @@
 [core]
 	excludesfile = /Users/sid/.config/git/ignore
-	editor = nvim
+	editor = code -w
 
 [sequence]
-    editor = nvim
+    editor = code -w
 
 [user]
 	email = 10671794+SiddharthPant@users.noreply.github.com

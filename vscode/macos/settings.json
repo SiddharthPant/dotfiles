@@ -17,42 +17,47 @@
     "editor.suggest.showSnippets": false,
     "editor.suggest.showWords": false
   },
-  "editor.rulers": [80, 100, 120],
   "chat.disableAIFeatures": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
-  "editor.fontFamily": "Iosevka",
-  "editor.fontSize": 15,
-  "editor.linkedEditing": true,
-  "terminal.integrated.fontSize": 13,
+  // "editor.fontFamily": "Iosevka",
+  "editor.fontSize": 14,
   "editor.guides.bracketPairs": false,
   "editor.inlayHints.enabled": "off",
   "editor.inlineSuggest.enabled": false,
+  "editor.linkedEditing": true,
   "editor.quickSuggestions": {
     "comments": "off",
     "other": "off",
     "strings": "off"
   },
+  "editor.rulers": [
+    80,
+    100,
+    120
+  ],
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
   "editor.suggestOnTriggerCharacters": false,
   "editor.wordBasedSuggestions": "off",
+  "editor.wordWrap": "on",
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
     "**/.jj": true
   },
   "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
+  "terminal.integrated.fontSize": 13,
   "window.autoDetectColorScheme": true,
   "workbench.activityBar.location": "top",
-  "workbench.experimental.modernUI": true,
   "workbench.colorTheme": "Meltbus Light",
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.editor"
   },
+  "workbench.experimental.modernUI": true,
   "workbench.preferredDarkColorTheme": "Meltbus Dark",
   "workbench.preferredLightColorTheme": "Meltbus Light",
   "workbench.startupEditor": "none"

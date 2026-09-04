@@ -1,5 +1,5 @@
 # Environment shared with the macOS Zsh setup.
-set -gx EDITOR vim
+set -gx EDITOR "code -w"
 set -gx VISUAL $EDITOR
 set -gx FZF_DEFAULT_COMMAND 'rg --files --ignore-vcs --hidden'
 
@@ -42,3 +42,6 @@ if status is-interactive
 end
 
 set -Ux MISE_PIN 1
+
+# opencode
+fish_add_path /Users/sid/.opencode/bin
