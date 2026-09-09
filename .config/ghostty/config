@@ -3,7 +3,7 @@ font-size = 15
 
 # Cursor
 cursor-style-blink = false
-shell-integration-features = ssh-env,path
+shell-integration-features = no-cursor,ssh-env,path
 bell-features = title
 
 working-directory = home
@@ -31,4 +31,4 @@ window-padding-y = 0
 
 # Distribute remaining cell-grid pixels evenly
 window-padding-balance = true
-theme = light: Adwaita, dark:Adwaita Dark
+theme = light: Catppuccin Latte, dark:Catppuccin Mocha
