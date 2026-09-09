@@ -1,6 +1,13 @@
 davidlgoldberg.jumpy2
 editorconfig.editorconfig
+fill-labs.dependi
+gruntfuggly.todo-tree
 mhutchie.git-graph
+monokai.theme-monokai-pro-vscode
 ms-azuretools.vscode-containers
+pkief.material-icon-theme
 rust-lang.rust-analyzer
-sid.doom-meltbus-theme
+tamasfe.even-better-toml
+usernamehw.errorlens
+vadimcn.vscode-lldb
+yzhang.markdown-all-in-one
