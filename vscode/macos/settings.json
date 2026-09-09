@@ -1,47 +1,14 @@
 {
-  "[jsonc]": {
-    "editor.quickSuggestions": {
-      "comments": false,
-      "other": false,
-      "strings": false
-    },
-    "editor.suggest.showSnippets": false,
-    "editor.suggest.showWords": false
-  },
-  "[rust]": {
-    "editor.quickSuggestions": {
-      "comments": false,
-      "other": false,
-      "strings": false
-    },
-    "editor.suggest.showSnippets": false,
-    "editor.suggest.showWords": false
-  },
   "chat.disableAIFeatures": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
-  // "editor.fontFamily": "Iosevka",
   "editor.fontSize": 14,
   "editor.guides.bracketPairs": false,
-  "editor.inlayHints.enabled": "off",
-  "editor.inlineSuggest.enabled": false,
   "editor.linkedEditing": true,
-  "editor.quickSuggestions": {
-    "comments": "off",
-    "other": "off",
-    "strings": "off"
-  },
-  "editor.rulers": [
-    80,
-    100,
-    120
-  ],
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
-  "editor.suggestOnTriggerCharacters": false,
-  "editor.wordBasedSuggestions": "off",
   "editor.wordWrap": "on",
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
@@ -49,16 +16,18 @@
   },
   "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
-  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontSize": 12,
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
+  "todo-tree.ripgrep.ripgrep": "/opt/homebrew/bin/rg",
   "window.autoDetectColorScheme": true,
   "workbench.activityBar.location": "top",
-  "workbench.colorTheme": "Meltbus Light",
+  "workbench.colorTheme": "Dark 2026",
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.editor"
   },
   "workbench.experimental.modernUI": true,
-  "workbench.preferredDarkColorTheme": "Meltbus Dark",
-  "workbench.preferredLightColorTheme": "Meltbus Light",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.preferredLightColorTheme": "Light 2026",
   "workbench.startupEditor": "none"
 }
