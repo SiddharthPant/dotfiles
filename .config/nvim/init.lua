@@ -1,13 +1,9 @@
 -- Bootstrap
 vim.loader.enable()
 require("vim._core.ui2").enable({
-	enable = true,
 	msg = {
-		target = "cmd",
 		pager = { height = 0.5 },
-		dialog = { height = 0.5 },
-		cmd = { height = 0.5 },
-		msg = { height = 0.5, timeout = 4500 },
+		msg = { timeout = 4500 },
 	},
 })
 
@@ -56,9 +52,7 @@ vim.o.splitkeep = "screen" -- keep text stable when splits change size
 
 vim.o.wildignorecase = true
 vim.opt.wildignore:append({ ".git", "node_modules", "target", "vendor", "dist", "*.o", "*.swp" })
-vim.opt.diffopt:append("linematch:60") -- improve diff display
-vim.opt.diffopt:append("algorithm:histogram") -- align changes using surrounding code structure
-vim.opt.diffopt:append("indent-heuristic") -- shift hunk boundaries to more readable locations
+vim.cmd("set diffopt+=algorithm:histogram")
 
 -- Bundled optional plugins
 for _, plugin in ipairs({
@@ -210,7 +204,6 @@ local treesitter_parsers = {
 require("nvim-treesitter").install(treesitter_parsers)
 require("nvim-treesitter-textobjects").setup({
 	select = { lookahead = true },
-	move = { set_jumps = true },
 })
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
@@ -259,37 +252,25 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Completion: Blink owns insert and command-line menus.
 require("lazydev").setup({})
 require("blink.cmp").setup({
-	keymap = {
-		preset = "enter",
-		["<C-y>"] = { "accept" },
+	cmdline = {
+		keymap = {
+			-- the default keymap will only show and select the next item
+			["<Tab>"] = { "show", "accept" },
+		},
+		completion = {
+			menu = { auto_show = true },
+		},
 	},
-	fuzzy = { implementation = "rust" },
+	signature = { enabled = true },
 	sources = {
-		default = { "lsp", "path", "snippets", "buffer" },
 		per_filetype = { lua = { inherit_defaults = true, "lazydev" } },
 		providers = {
 			lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
 		},
 	},
-	completion = {
-		list = { selection = { preselect = false, auto_insert = false } },
-		menu = { draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } } },
-	},
-	cmdline = {
-		keymap = {
-			preset = "none",
-			["<C-Space>"] = { "show" },
-			["<Tab>"] = { "select_next", "show" },
-			["<S-Tab>"] = { "select_prev", "show" },
-			["<C-n>"] = { "select_next", "show" },
-			["<C-p>"] = { "select_prev", "show" },
-			["<C-y>"] = { "accept" },
-			["<C-e>"] = { "cancel" },
-		},
-		completion = {
-			menu = { auto_show = true },
-			list = { selection = { preselect = false, auto_insert = false } },
-		},
+	keymap = {
+		["<C-u>"] = { "scroll_signature_up", "fallback" },
+		["<C-d>"] = { "scroll_signature_down", "fallback" },
 	},
 })
 
@@ -431,7 +412,6 @@ map("n", "<leader><Space>", function()
 		fzf_opts = {
 			["--scheme"] = "path",
 			["--tiebreak"] = "index",
-			["--layout"] = "default",
 		},
 	}
 	local base = vim.fn.fnamemodify(vim.fn.expand("%"), ":h:.:S")
@@ -461,15 +441,8 @@ require("nvim-rooter").setup()
 map({ "n", "x", "o" }, "s", "<Plug>(leap)", { desc = "Leap" })
 
 -- git
-vim.api.nvim_create_autocmd("User", {
-	group = group,
-	pattern = "GitSignsUpdate",
-	desc = "Set Gitsigns buffer mappings after attachment",
-	callback = function(ev)
-		local bufnr = ev.data and ev.data.buffer
-		if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-			return
-		end
+require("gitsigns").setup({
+	on_attach = function(bufnr)
 		map("n", "<leader>go", require("gitsigns").preview_hunk_inline, {
 			buffer = bufnr,
 			desc = "Preview Git hunk inline",
@@ -504,13 +477,22 @@ map("n", "<leader>bd", function()
 		vim.notify("Buffer has unsaved changes", vim.log.levels.WARN)
 		return
 	end
-	if #listed_buffers() == 1 then
-		vim.cmd.enew()
-	else
+	local buffers = listed_buffers()
+	local replacement
+	if #buffers > 1 or (#buffers == 1 and buffers[1] ~= current) then
 		vim.cmd.bnext()
+		replacement = vim.api.nvim_get_current_buf()
+	else
+		replacement = vim.api.nvim_create_buf(true, false)
+	end
+	-- Replace the buffer in every split/tab before deleting it to preserve windows.
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		if vim.api.nvim_win_get_buf(win) == current then
+			vim.api.nvim_win_set_buf(win, replacement)
+		end
 	end
 	vim.api.nvim_buf_delete(current, {})
-end, { desc = "Delete buffer keep split" })
+end, { desc = "Delete buffer keep splits" })
 map("n", "<leader>bo", function()
 	local current = vim.api.nvim_get_current_buf()
 	local closed = 0

@@ -3,16 +3,15 @@
 The leader is `<Space>` and the local leader is `,`.
 
 Mappings listed as **buffer-local** are created only for buffers where the
-relevant plugin or file type is active. Plugin-provided default mappings are
-not listed here; this file documents mappings defined explicitly in
-`.config/nvim/init.lua`.
+relevant plugin or file type is active. This file documents custom mappings in
+`.config/nvim/init.lua` plus selected plugin and built-in shortcuts.
 
 ## Core editing
 
 | Mode | Keymap | Action |
 |---|---|---|
 | Terminal | `<Esc><Esc>` | Leave terminal mode and return to normal mode |
-| Normal | `<leader>qq` | Quit all Neovim windows (`:qall`) |
+| Normal | `<leader>rr` | Restart Neovim (`:restart`) |
 | Normal | `j` | Move down by display line (`gj`) when no count is given; use normal `j` with a count |
 | Normal | `k` | Move up by display line (`gk`) when no count is given; use normal `k` with a count |
 | Normal | `n` | Go to the next search match and center it |
@@ -23,19 +22,8 @@ not listed here; this file documents mappings defined explicitly in
 | Normal | `<leader>zk` | Close the current fold, move to the previous fold, and open it |
 | Normal | `<leader>th` | Toggle hidden-character display and notify of the new state |
 | Normal | `J` | Join lines while preserving the cursor's position |
-| Normal | `<A-j>` | Move the current line down and reindent it |
-| Normal | `<A-k>` | Move the current line up and reindent it |
-| Visual | `<A-j>` | Move the selected lines down and reselect them |
-| Visual | `<A-k>` | Move the selected lines up and reselect them |
 | Visual | `<` | Indent left and keep the selection active |
 | Visual | `>` | Indent right and keep the selection active |
-
-### Macros
-
-| Mode | Keymap | Action |
-|---|---|---|
-| Normal | `Q` | Start recording a macro; this is an alias for the usual `q` command |
-| Normal | `q` | Disabled to prevent accidental macro recording |
 
 ## Neovim and tmux panes
 
@@ -53,7 +41,7 @@ These vim-tmux-navigator mappings move seamlessly across Neovim splits and tmux 
 
 | Mode | Keymap | Action |
 |---|---|---|
-| Normal | `<leader>bd` | Delete the current buffer while keeping the split (`:bn` then delete the previous buffer) |
+| Normal | `<leader>bd` | Delete the current unmodified buffer while preserving every split and tab displaying it |
 | Normal | `<leader>bo` | Close all other listed, unmodified buffers and notify how many were closed or retained as modified |
 | Normal | `<leader>tc` | Toggle OSC52 system-clipboard copying for future yanks and notify of the new state |
 
@@ -111,17 +99,19 @@ ahead when the cursor is not already inside a matching object.
 
 ## Completion
 
-Blink handles both insert and command-line completion, with no preselection or
-automatic insertion. In insert mode, `<C-Space>` opens suggestions or documentation,
-`<C-n>` / `<C-p>` select the next/previous item in the menu, `<Enter>` or `<C-y>` accepts,
-and `<C-e>` dismisses. Sources are LSP, paths, Friendly Snippets, and buffer words.
+Blink uses its default insert-mode and command-line keymap presets. In insert mode,
+preselection and automatic insertion are enabled. `<C-Space>` opens suggestions or
+documentation, `<C-n>` / `<C-p>` select the next/previous item, `<C-y>` accepts,
+and `<C-e>` cancels the preview. Sources are LSP, paths, Friendly Snippets, and buffer words.
 After accepting a snippet, `<Tab>` / `<S-Tab>` move forward/backward between
 placeholders using Blink's snippet mappings and Neovim's snippet engine.
-Enter inserts a normal newline when no completion item is selected.
+Enter is not mapped by Blink and inserts a normal newline.
 
-Command-line completion opens automatically. Explicit Blink mappings supply
-`<Tab>` / `<S-Tab>` and `<C-n>` / `<C-p>` for navigation, `<C-y>` to accept,
-and `<C-e>` to dismiss.
+In the command line, `<Tab>` / `<S-Tab>` open completion and insert/cycle matches
+(a sole match may be accepted immediately). `<C-n>` / `<C-p>` navigate,
+`<C-y>` accepts, and `<C-e>` cancels. The popup opens automatically as you type
+in the command line, with nothing preselected; the first `<Tab>` selects and
+inserts the first match.
 
 ## LSP
 

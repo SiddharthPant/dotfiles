@@ -15,8 +15,8 @@ and Mason-managed language servers. Conform handles format-on-save.
 - `<leader><Space>` uses `fd` and, when a file is open, `proximity-sort` to rank nearby
   project files first. FzfLua, `fd`, `fzf`, and `proximity-sort` are provided by
   the Neovim plugin list, Homebrew, and Mise respectively.
-- Neovim detects `templates/*.html` as `htmldjango` and uses its built-in
-  template syntax with HTML indentation. `.html` files beneath a `Cargo.toml`
+- HTML templates may be detected as `html` or `htmldjango`, depending on filetype
+  detection and their contents. `.html` files beneath a `Cargo.toml`
   use `askama_fmt` on save, whether detected as `html` or `htmldjango`.
   Outside Rust projects, plain HTML uses Prettier and `htmldjango` is not formatted.
 - AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in
@@ -68,8 +68,9 @@ Custom snippets can be added in VS Code JSON format under `snippets/`, with a
 
 Requires Neovim 0.12+, Git, curl, a C compiler, and tree-sitter-cli 0.26.1+.
 Mason's npm-based packages also require Node/npm. Rust formatting uses `rustfmt`
-from the project's Rust toolchain. Blink is pinned to a release and requires its
-Rust fuzzy matcher; it downloads the matching binary on first launch.
+from the project's Rust toolchain. Blink is pinned to a release and uses its
+default fuzzy matcher policy: download/use Rust when available, otherwise fall
+back to Blink's Lua matcher with a warning.
 
 Rust HTML formatting requires `askama_fmt` on PATH (managed by the macOS Mise
 config). It reads buffer contents via stdin and discovers the nearest
