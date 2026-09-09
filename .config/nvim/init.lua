@@ -174,6 +174,11 @@ vim.pack.add({
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+	"https://github.com/yannvanhalewyn/jujutsu.nvim",
+})
+
+require("jujutsu-nvim").setup({
+	diff_preset = "diffview",
 })
 
 require("catppuccin").setup({

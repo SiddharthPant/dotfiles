@@ -46,6 +46,10 @@
       "rev": "31d6fb2d618bca1482b9f274751ead5f03461408",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "jujutsu.nvim": {
+      "rev": "fc5a5757b99aace86a0b3f0775347b967990225b",
+      "src": "https://github.com/yannvanhalewyn/jujutsu.nvim"
+    },
     "lazydev.nvim": {
       "rev": "ff2cbcba459b637ec3fd165a2be59b7bbaeedf0d",
       "src": "https://github.com/folke/lazydev.nvim"
