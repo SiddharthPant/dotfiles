@@ -16,8 +16,9 @@ and Mason-managed language servers. Conform handles format-on-save.
   project files first. FzfLua, `fd`, `fzf`, and `proximity-sort` are provided by
   the Neovim plugin list, Homebrew, and Mise respectively.
 - Neovim detects `templates/*.html` as `htmldjango` and uses its built-in
-  template syntax with HTML indentation. These templates are excluded from
-  format-on-save; plain HTML parsers/formatters are not applied to them.
+  template syntax with HTML indentation. `.html` files beneath a `Cargo.toml`
+  use `askama_fmt` on save, whether detected as `html` or `htmldjango`.
+  Outside Rust projects, plain HTML uses Prettier and `htmldjango` is not formatted.
 - AutoSession stores per-cwd sessions under `stdpath("data")/sessions` (not in
   the project tree). `:SessionClear` also skips save on that quit.
 - `:Compile` defaults to `mise lint` and renders ANSI-colored output; use
@@ -43,8 +44,16 @@ and Mason-managed language servers. Conform handles format-on-save.
 | Completion | Blink: automatic LSP/path/snippet/buffer suggestions and command-line completion; no native completion fallback |
 | Highlighting | Tree-sitter parsers for Rust, Lua, web files, shell, TOML, YAML, Markdown, and Vim help; rainbow delimiters use Catppuccin colors |
 | LSP | Rust, Lua, TypeScript/JavaScript, HTML, CSS, JSON, shell, TOML, YAML; `:checkhealth vim.lsp` |
+| Diagnostics | Virtual diagnostic lines appear only beneath the current cursor line |
+| Inlay hints | Enabled by default; `<leader>ti` toggles hints for the current supported LSP buffer |
+| Text objects | Tree-sitter function/parameter/class selections, function motions, and argument swapping; see `KEYMAPS.md` |
+| Lua development | LazyDev manages LuaLS workspace libraries and adds Lua module completion through Blink |
 | Formatting | Conform on save; `:ConformInfo` shows the formatter selected for this buffer |
+| Undo history | Bundled `nvim.undotree`: `:Undotree` toggles the tree; moving through entries applies that undo state |
+| Bundled tools | `:DiffTool`, `:Cfilter` / `:Lfilter`, `:TOhtml`, and `:Justify` |
+| Search highlights | `nohlsearch` clears highlights on entering Insert mode or after `updatetime` of idle time |
 | Navigation | FzfLua pickers, Oil explorer, Leap motions, and automatic project-root cwd |
+| Splits | `splitkeep=screen` keeps text stable as splits open, close, or resize |
 | Git | Gitsigns inline hunk previews and Diffview Plus working-tree review |
 | Tmux panes | vim-tmux-navigator uses `<C-h/j/k/l>` and `<C-\>` across Neovim and tmux |
 | Sessions | AutoSession restores/saves by cwd; `:Session` / `:SessionClear` |
@@ -61,6 +70,11 @@ Requires Neovim 0.12+, Git, curl, a C compiler, and tree-sitter-cli 0.26.1+.
 Mason's npm-based packages also require Node/npm. Rust formatting uses `rustfmt`
 from the project's Rust toolchain. Blink is pinned to a release and requires its
 Rust fuzzy matcher; it downloads the matching binary on first launch.
+
+Rust HTML formatting requires `askama_fmt` on PATH (managed by the macOS Mise
+config). It reads buffer contents via stdin and discovers the nearest
+`askama_fmt.toml` using the file's path. Missing `askama_fmt` does not cause
+Rust templates to fall back to Prettier.
 
 On first launch, keep Neovim open while parsers and Mason tools install, then
 reopen buffers (or restart). `:Mason` shows installed tools. Language servers

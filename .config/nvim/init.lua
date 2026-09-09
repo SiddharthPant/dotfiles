@@ -52,12 +52,25 @@ vim.o.undofile = true -- do create an undo file
 vim.opt.iskeyword:append("-") -- include - in words
 vim.o.splitbelow = true -- horizontal splits go below
 vim.o.splitright = true -- vertical splits go right
+vim.o.splitkeep = "screen" -- keep text stable when splits change size
 
 vim.o.wildignorecase = true
 vim.opt.wildignore:append({ ".git", "node_modules", "target", "vendor", "dist", "*.o", "*.swp" })
 vim.opt.diffopt:append("linematch:60") -- improve diff display
 vim.opt.diffopt:append("algorithm:histogram") -- align changes using surrounding code structure
 vim.opt.diffopt:append("indent-heuristic") -- shift hunk boundaries to more readable locations
+
+-- Bundled optional plugins
+for _, plugin in ipairs({
+	"nvim.undotree", -- interactive undo history
+	"nvim.difftool", -- file and directory comparisons
+	"cfilter", -- filter quickfix and location lists
+	"nohlsearch", -- clear search highlights on idle or InsertEnter
+	"nvim.tohtml", -- export highlighted buffers as HTML
+	"justify", -- justify text
+}) do
+	vim.cmd.packadd({ plugin, bang = true }) -- load plugin scripts once during startup
+end
 
 -- netrw
 vim.g.netrw_liststyle = 3 -- set layout to tree view style
@@ -71,9 +84,6 @@ vim.o.titlestring = "%{fnamemodify(getcwd(),':~')} - %t%(%m%)"
 -- Core editing
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 map("n", "<leader>rr", "<cmd>restart<CR>", { desc = "Restart Neovim" })
-map("n", "<Esc>", function()
-	vim.cmd.nohlsearch()
-end, { silent = true, desc = "Clear search highlight" })
 
 map("n", "j", function()
 	return vim.v.count == 0 and "gj" or "j"
@@ -160,11 +170,13 @@ vim.pack.add({
 	"https://github.com/rmagatti/auto-session",
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 	"https://github.com/HiPhish/rainbow-delimiters.nvim",
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" },
 	"https://github.com/rafamadriz/friendly-snippets",
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -196,6 +208,10 @@ local treesitter_parsers = {
 	"markdown_inline",
 }
 require("nvim-treesitter").install(treesitter_parsers)
+require("nvim-treesitter-textobjects").setup({
+	select = { lookahead = true },
+	move = { set_jumps = true },
+})
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	callback = function(ev)
@@ -203,18 +219,58 @@ vim.api.nvim_create_autocmd("FileType", {
 		-- On first startup, downloads may still be running; reopen the buffer afterward.
 		if lang and vim.tbl_contains(treesitter_parsers, lang) and vim.treesitter.language.add(lang) then
 			vim.treesitter.start(ev.buf, lang)
+			if not vim.treesitter.query.get(lang, "textobjects") then
+				return
+			end
+			for key, capture in pairs({
+				af = "@function.outer",
+				["if"] = "@function.inner",
+				aa = "@parameter.outer",
+				ia = "@parameter.inner",
+				ac = "@class.outer",
+				ic = "@class.inner",
+			}) do
+				map({ "x", "o" }, key, function()
+					require("nvim-treesitter-textobjects.select").select_textobject(capture, "textobjects")
+				end, { buffer = ev.buf, desc = "Select " .. capture:sub(2) })
+			end
+			for key, method in pairs({
+				["<leader>a"] = "swap_next",
+				["<leader>A"] = "swap_previous",
+			}) do
+				map("n", key, function()
+					require("nvim-treesitter-textobjects.swap")[method]("@parameter.inner", "textobjects")
+				end, { buffer = ev.buf, desc = method:gsub("_", " ") .. " argument" })
+			end
+			for key, method in pairs({
+				["]f"] = "goto_next_start",
+				["[f"] = "goto_previous_start",
+				["]F"] = "goto_next_end",
+				["[F"] = "goto_previous_end",
+			}) do
+				map({ "n", "x", "o" }, key, function()
+					require("nvim-treesitter-textobjects.move")[method]("@function.outer", "textobjects")
+				end, { buffer = ev.buf, desc = method:gsub("_", " ") .. " function" })
+			end
 		end
 	end,
 })
 
 -- Completion: Blink owns insert and command-line menus.
+require("lazydev").setup({})
 require("blink.cmp").setup({
 	keymap = {
 		preset = "enter",
 		["<C-y>"] = { "accept" },
 	},
 	fuzzy = { implementation = "rust" },
-	sources = { default = { "lsp", "path", "snippets", "buffer" } },
+	sources = {
+		default = { "lsp", "path", "snippets", "buffer" },
+		per_filetype = { lua = { inherit_defaults = true, "lazydev" } },
+		providers = {
+			lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
+		},
+	},
 	completion = {
 		list = { selection = { preselect = false, auto_insert = false } },
 		menu = { draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } } },
@@ -242,14 +298,7 @@ require("mason").setup()
 vim.lsp.config("*", {
 	capabilities = require("blink.cmp").get_lsp_capabilities(),
 })
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
-		},
-	},
-})
+vim.diagnostic.config({ virtual_lines = { current_line = true } })
 local language_servers = { "rust_analyzer", "lua_ls", "ts_ls", "html", "cssls", "jsonls", "bashls", "taplo", "yamlls" }
 require("mason-lspconfig").setup({
 	ensure_installed = language_servers,
@@ -259,15 +308,37 @@ require("mason-tool-installer").setup({
 	ensure_installed = { "stylua", "prettier", "shfmt", "taplo" },
 	integrations = { ["mason-lspconfig"] = false },
 })
+vim.lsp.inlay_hint.enable(true)
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = group,
 	callback = function(ev)
 		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client and client:supports_method("textDocument/inlayHint") then
+			map("n", "<leader>ti", function()
+				local enabled = not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
+				vim.lsp.inlay_hint.enable(enabled, { bufnr = ev.buf })
+				notify_toggle("Inlay hints", enabled)
+			end, { buffer = ev.buf, desc = "Toggle inlay hints" })
+		end
 	end,
 })
 
 -- Formatting: Conform is the sole format-on-save handler.
+local function html_formatters(bufnr)
+	if vim.api.nvim_buf_get_name(bufnr):match("%.html$") and vim.fs.root(bufnr, "Cargo.toml") then
+		return { "askama_fmt" }
+	end
+	return vim.bo[bufnr].filetype == "html" and { "prettier" } or {}
+end
 require("conform").setup({
+	formatters = {
+		askama_fmt = {
+			command = "askama_fmt",
+			args = { "--stdin-filepath", "$FILENAME" },
+			stdin = true,
+		},
+	},
 	formatters_by_ft = {
 		rust = { "rustfmt" }, -- use the project's Rust toolchain
 		lua = { "stylua" },
@@ -275,7 +346,8 @@ require("conform").setup({
 		javascriptreact = { "prettier" },
 		typescript = { "prettier" },
 		typescriptreact = { "prettier" },
-		html = { "prettier" },
+		html = html_formatters,
+		htmldjango = html_formatters,
 		css = { "prettier" },
 		json = { "prettier" },
 		jsonc = { "prettier" },
@@ -286,7 +358,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 	},
 	format_on_save = function(bufnr)
-		if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "htmldjango" then
+		if vim.bo[bufnr].buftype ~= "" then
 			return
 		end
 		return { timeout_ms = 2000, lsp_format = "never" }

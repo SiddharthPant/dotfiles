@@ -13,7 +13,6 @@ not listed here; this file documents mappings defined explicitly in
 |---|---|---|
 | Terminal | `<Esc><Esc>` | Leave terminal mode and return to normal mode |
 | Normal | `<leader>qq` | Quit all Neovim windows (`:qall`) |
-| Normal | `<Esc>` | Clear search highlighting |
 | Normal | `j` | Move down by display line (`gj`) when no count is given; use normal `j` with a count |
 | Normal | `k` | Move up by display line (`gk`) when no count is given; use normal `k` with a count |
 | Normal | `n` | Go to the next search match and center it |
@@ -77,6 +76,9 @@ OSC52.
 Opening a file automatically changes Neovim's working directory to the nearest
 Git, Mercurial, or Subversion root.
 
+Search highlights clear automatically on entering Insert mode or after an idle
+period controlled by `updatetime`, via the bundled `nohlsearch` plugin.
+
 ## Git
 
 | Mode | Keymap | Action |
@@ -90,6 +92,22 @@ Git, Mercurial, or Subversion root.
 | Mode | Keymap | Action |
 |---|---|---|
 | Normal, Visual, Operator-pending | `s` | Leap bidirectionally to a labeled target in the current window |
+
+## Tree-sitter text objects
+
+Available buffer-locally for configured parsers with text-object queries:
+
+| Mode | Keymap | Action |
+|---|---|---|
+| Visual, Operator-pending | `af` / `if` | Around/inside a function |
+| Visual, Operator-pending | `aa` / `ia` | Around/inside an argument or parameter |
+| Visual, Operator-pending | `ac` / `ic` | Around/inside a class or struct, where supported |
+| Normal, Visual, Operator-pending | `]f` / `[f` | Next/previous function start |
+| Normal, Visual, Operator-pending | `]F` / `[F` | Next/previous function end |
+| Normal | `<leader>a` / `<leader>A` | Swap the current argument/parameter with the next/previous one |
+
+For example, `vaf` selects a function and `cif` changes its body. Selection looks
+ahead when the cursor is not already inside a matching object.
 
 ## Completion
 
@@ -110,3 +128,6 @@ and `<C-e>` to dismiss.
 `gd` goes to a definition in LSP-attached buffers. Neovim's standard LSP mappings
 remain available: `K` for hover, `grn` for rename, `grr` for references, `gra` for
 code actions, `gri` for implementations, and `[d` / `]d` for diagnostic navigation.
+Diagnostics appear as virtual lines beneath the current cursor line.
+Inlay hints are enabled by default. `<leader>ti` toggles them for the current
+buffer when its language server supports hints.
