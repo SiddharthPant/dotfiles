@@ -47,6 +47,7 @@ cargo-binstall = "1.22.0"
 "go:github.com/sqls-server/sqls" = "0.2.48"
 "cargo:cargo-llvm-lines" = "0.4.48"
 "cargo:diffedit3" = "0.6.1"
+rust = "1.98.1"
 
 [settings]
 auto_update = true
