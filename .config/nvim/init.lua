@@ -42,10 +42,7 @@ vim.o.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•" -- make hidd
 vim.o.laststatus = 3 -- use a single global statusline
 -- Add the effective file encoding to Neovim's native statusline.
 vim.o.statusline = vim.o.statusline .. " %{&fileencoding ==# '' ? &encoding : &fileencoding}"
-vim.o.pumheight = 10 -- popup menu height
-vim.o.pumblend = 10 -- popup menu transparency
--- vim.o.autocomplete = true -- show native keyword completion automatically while typing
-vim.o.completeopt = "menuone,noselect,popup,fuzzy" -- show completion without selecting an item
+vim.o.autocomplete = false -- Blink owns automatic completion
 vim.o.winborder = "rounded" -- rounded borders for floating windows
 
 vim.o.writebackup = false -- do not write to a backup file
@@ -56,18 +53,8 @@ vim.opt.iskeyword:append("-") -- include - in words
 vim.o.splitbelow = true -- horizontal splits go below
 vim.o.splitright = true -- vertical splits go right
 
-vim.o.wildmode = "noselect:lastused,full" -- show completion without selecting, then cycle through with Tab
-vim.o.wildmenu = true
-vim.o.wildoptions = "fuzzy,pum"
 vim.o.wildignorecase = true
 vim.opt.wildignore:append({ ".git", "node_modules", "target", "vendor", "dist", "*.o", "*.swp" })
-vim.api.nvim_create_autocmd("CmdlineChanged", {
-	group = group,
-	pattern = ":",
-	callback = function()
-		vim.fn.wildtrigger()
-	end,
-})
 vim.opt.diffopt:append("linematch:60") -- improve diff display
 vim.opt.diffopt:append("algorithm:histogram") -- align changes using surrounding code structure
 vim.opt.diffopt:append("indent-heuristic") -- shift hunk boundaries to more readable locations
@@ -109,12 +96,6 @@ end, { desc = "Join lines and keep cursor position" })
 map("x", "<", "<gv", { desc = "Indent left and reselect" })
 map("x", ">", ">gv", { desc = "Indent right and reselect" })
 
--- Macros
--- Map Q to start recording macros
-map("n", "Q", "q", { desc = "Record macro" })
--- Disable the original q key
-map("n", "q", "<Nop>", { desc = "Disable macro recording" })
-
 -- Clipboard
 local function notify_toggle(title, enabled)
 	vim.notify(("%s %s"):format(title, enabled and "enabled" or "disabled"), vim.log.levels.INFO)
@@ -153,6 +134,16 @@ vim.g.compile_mode = {
 		},
 	},
 }
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = group,
+	callback = function(ev)
+		if ev.data.spec.name == "nvim-treesitter" and ev.data.kind == "update" then
+			vim.schedule(function()
+				require("nvim-treesitter").update()
+			end)
+		end
+	end,
+})
 vim.pack.add({
 	{ src = "https://github.com/m00qek/baleia.nvim", version = "v1.3.0" },
 	"https://github.com/nvim-lua/plenary.nvim",
@@ -167,6 +158,139 @@ vim.pack.add({
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/rmagatti/auto-session",
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	"https://github.com/HiPhish/rainbow-delimiters.nvim",
+	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" },
+	"https://github.com/rafamadriz/friendly-snippets",
+	"https://github.com/stevearc/conform.nvim",
+	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/mason-org/mason.nvim",
+	"https://github.com/mason-org/mason-lspconfig.nvim",
+	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+})
+
+require("catppuccin").setup({
+	integrations = { rainbow_delimiters = true },
+})
+vim.cmd.colorscheme("catppuccin")
+
+-- Tree-sitter: parser installation and highlighting are separate.
+local treesitter_parsers = {
+	"rust",
+	"lua",
+	"luadoc",
+	"vim",
+	"vimdoc",
+	"query",
+	"javascript",
+	"typescript",
+	"tsx",
+	"html",
+	"css",
+	"json",
+	"toml",
+	"bash",
+	"yaml",
+	"markdown",
+	"markdown_inline",
+}
+require("nvim-treesitter").install(treesitter_parsers)
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	callback = function(ev)
+		local lang = vim.treesitter.language.get_lang(vim.bo[ev.buf].filetype)
+		-- On first startup, downloads may still be running; reopen the buffer afterward.
+		if lang and vim.tbl_contains(treesitter_parsers, lang) and vim.treesitter.language.add(lang) then
+			vim.treesitter.start(ev.buf, lang)
+		end
+	end,
+})
+
+-- Completion: Blink owns insert and command-line menus.
+require("blink.cmp").setup({
+	keymap = {
+		preset = "enter",
+		["<C-y>"] = { "accept" },
+	},
+	fuzzy = { implementation = "rust" },
+	sources = { default = { "lsp", "path", "snippets", "buffer" } },
+	completion = {
+		list = { selection = { preselect = false, auto_insert = false } },
+		menu = { draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } } },
+	},
+	cmdline = {
+		keymap = {
+			preset = "none",
+			["<C-Space>"] = { "show" },
+			["<Tab>"] = { "select_next", "show" },
+			["<S-Tab>"] = { "select_prev", "show" },
+			["<C-n>"] = { "select_next", "show" },
+			["<C-p>"] = { "select_prev", "show" },
+			["<C-y>"] = { "accept" },
+			["<C-e>"] = { "cancel" },
+		},
+		completion = {
+			menu = { auto_show = true },
+			list = { selection = { preselect = false, auto_insert = false } },
+		},
+	},
+})
+
+-- LSP: Mason installs tools; lspconfig supplies server defaults.
+require("mason").setup()
+vim.lsp.config("*", {
+	capabilities = require("blink.cmp").get_lsp_capabilities(),
+})
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			runtime = { version = "LuaJIT" },
+			workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+		},
+	},
+})
+local language_servers = { "rust_analyzer", "lua_ls", "ts_ls", "html", "cssls", "jsonls", "bashls", "taplo", "yamlls" }
+require("mason-lspconfig").setup({
+	ensure_installed = language_servers,
+	automatic_enable = language_servers,
+})
+require("mason-tool-installer").setup({
+	ensure_installed = { "stylua", "prettier", "shfmt", "taplo" },
+	integrations = { ["mason-lspconfig"] = false },
+})
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = group,
+	callback = function(ev)
+		map("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
+	end,
+})
+
+-- Formatting: Conform is the sole format-on-save handler.
+require("conform").setup({
+	formatters_by_ft = {
+		rust = { "rustfmt" }, -- use the project's Rust toolchain
+		lua = { "stylua" },
+		javascript = { "prettier" },
+		javascriptreact = { "prettier" },
+		typescript = { "prettier" },
+		typescriptreact = { "prettier" },
+		html = { "prettier" },
+		css = { "prettier" },
+		json = { "prettier" },
+		jsonc = { "prettier" },
+		yaml = { "prettier" },
+		markdown = { "prettier" },
+		toml = { "taplo" },
+		sh = { "shfmt" },
+		bash = { "shfmt" },
+	},
+	format_on_save = function(bufnr)
+		if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "htmldjango" then
+			return
+		end
+		return { timeout_ms = 2000, lsp_format = "never" }
+	end,
 })
 
 -- General autocmds
@@ -201,7 +325,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.hl.on_yank()
 		if system_clipboard_copy and vim.v.event.operator == "y" and vim.v.event.regname ~= "_" then
-			osc52_copy(vim.v.event.regcontents, vim.v.event.regtype)
+			osc52_copy(vim.v.event.regcontents)
 		end
 	end,
 })
@@ -283,7 +407,7 @@ vim.api.nvim_create_autocmd("User", {
 
 local close_diffview = "<cmd>DiffviewClose<cr>"
 require("diffview").setup({
-  preferred_adapter = "jj",
+	preferred_adapter = "jj",
 	use_icons = false,
 	keymaps = {
 		view = {
@@ -340,7 +464,7 @@ end, { desc = "Close other buffers" })
 local oil = require("oil")
 local detail = false
 oil.setup({
-  default_file_explorer = false,
+	default_file_explorer = false,
 	delete_to_trash = true,
 	view_options = {
 		show_hidden = true,

@@ -9,9 +9,22 @@
       "src": "https://github.com/m00qek/baleia.nvim",
       "version": "'v1.3.0'"
     },
+    "blink.cmp": {
+      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "'v1.10.2'"
+    },
+    "catppuccin": {
+      "rev": "edefef779ab08ce1a4a404713e3012b0d202bd35",
+      "src": "https://github.com/catppuccin/nvim"
+    },
     "compile-mode.nvim": {
       "rev": "026b866dfb162313c3f1573f73daece6af0da3e3",
       "src": "https://github.com/ej-shafran/compile-mode.nvim"
+    },
+    "conform.nvim": {
+      "rev": "016802de402556da54c36bd7359b441266b01cdd",
+      "src": "https://github.com/stevearc/conform.nvim"
     },
     "diffview-plus.nvim": {
       "rev": "424b724e7699730b818466532f0ca42930313273",
@@ -24,6 +37,10 @@
     "fidget.nvim": {
       "rev": "6f793b2bcd2d35e201c09520f698bb763220908a",
       "src": "https://github.com/j-hui/fidget.nvim"
+    },
+    "friendly-snippets": {
+      "rev": "30bfd475adadfd4f286f86168831348dfd8aecdc",
+      "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
       "rev": "532d463f5c83595192fe740572d8fd6902b2217a",
@@ -41,9 +58,34 @@
       "rev": "d7f8ee64155b7790188f17a993390f32577cfb81",
       "src": "https://codeberg.org/andyg/leap.nvim"
     },
+    "mason-lspconfig.nvim": {
+      "rev": "b5576cd62899a1a478d0e67ef3d378ee55dba82d",
+      "src": "https://github.com/mason-org/mason-lspconfig.nvim"
+    },
+    "mason-tool-installer.nvim": {
+      "rev": "443f1ef8b5e6bf47045cb2217b6f748a223cf7dc",
+      "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
+    },
+    "mason.nvim": {
+      "rev": "2a6940af80375532e5e9e7c1f2fc6319a1b7a69d",
+      "src": "https://github.com/mason-org/mason.nvim"
+    },
+    "nvim": {
+      "rev": "edefef779ab08ce1a4a404713e3012b0d202bd35",
+      "src": "https://github.com/catppuccin/nvim"
+    },
+    "nvim-lspconfig": {
+      "rev": "19576de1c1b6d1b5e231ea6ef9cba9a811c322bb",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
     "nvim-rooter.lua": {
       "rev": "7689d05e8ab95acb4b24785253d913c0aae18be9",
       "src": "https://github.com/notjedi/nvim-rooter.lua"
+    },
+    "nvim-treesitter": {
+      "rev": "5cb0114e6242625db56dd6440e945ed1ece10bc7",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter",
+      "version": "'main'"
     },
     "oil.nvim": {
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",

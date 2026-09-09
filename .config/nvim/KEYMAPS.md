@@ -93,10 +93,20 @@ Git, Mercurial, or Subversion root.
 
 ## Completion
 
-Insert completion uses Neovim's built-in keyword completion and opens
-automatically while typing. Use `<C-n>` and `<C-p>` to move through candidates,
-`<C-y>` to accept, and `<C-e>` to cancel.
+Blink handles both insert and command-line completion, with no preselection or
+automatic insertion. In insert mode, `<C-Space>` opens suggestions or documentation,
+`<C-n>` / `<C-p>` select the next/previous item in the menu, `<Enter>` or `<C-y>` accepts,
+and `<C-e>` dismisses. Sources are LSP, paths, Friendly Snippets, and buffer words.
+After accepting a snippet, `<Tab>` / `<S-Tab>` move forward/backward between
+placeholders using Blink's snippet mappings and Neovim's snippet engine.
+Enter inserts a normal newline when no completion item is selected.
 
-Command-line completion also uses Neovim's defaults: `<Tab>` starts or moves
-forward through fuzzy completion, while `<S-Tab>` moves backward. `<C-n>` and
-`<C-p>` also move through an open menu.
+Command-line completion opens automatically. Explicit Blink mappings supply
+`<Tab>` / `<S-Tab>` and `<C-n>` / `<C-p>` for navigation, `<C-y>` to accept,
+and `<C-e>` to dismiss.
+
+## LSP
+
+`gd` goes to a definition in LSP-attached buffers. Neovim's standard LSP mappings
+remain available: `K` for hover, `grn` for rename, `grr` for references, `gra` for
+code actions, `gri` for implementations, and `[d` / `]d` for diagnostic navigation.
