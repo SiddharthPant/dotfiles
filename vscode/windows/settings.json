@@ -1,29 +1,72 @@
 {
+  "[rust]": {
+    "editor.semanticHighlighting.enabled": true
+  },
   "chat.disableAIFeatures": true,
+  "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.guides.bracketPairs": false,
   "editor.inlineSuggest.enabled": false,
+  "editor.lineHeight": 1.7,
   "editor.linkedEditing": true,
   "editor.quickSuggestions": {
     "comments": "inline",
     "other": "inline",
     "strings": "inline"
   },
+  "editor.semanticTokenColorCustomizations": {
+    "rules": {
+      "comment": {
+        "italic": true
+      },
+      "lifetime:rust": {
+        "italic": true
+      },
+      "typeParameter": {
+        "italic": true
+      }
+    }
+  },
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
   "editor.suggestOnTriggerCharacters": false,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "storage.modifier.lifetime.rust"
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  },
   "editor.wordBasedSuggestions": "off",
+  "editor.wordWrap": "on",
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
     "**/.jj": true
   },
   "security.workspace.trust.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "terminal.integrated.fontSize": 12,
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
+  "window.autoDetectColorScheme": true,
   "workbench.activityBar.location": "top",
   "workbench.colorTheme": "poimandres",
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
   },
+  "workbench.experimental.modernUI": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.preferredLightColorTheme": "Light 2026",
   "workbench.startupEditor": "none"
 }

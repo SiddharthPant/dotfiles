@@ -1,16 +1,46 @@
 {
+  "[rust]": {
+    "editor.semanticHighlighting.enabled": true
+  },
   "chat.disableAIFeatures": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
-  "editor.fontFamily": "SF Mono",
-  "editor.fontSize": 15,
-  "editor.lineHeight": 1.7,
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
   "editor.guides.bracketPairs": false,
+  "editor.lineHeight": 1.7,
   "editor.linkedEditing": true,
+  "editor.semanticTokenColorCustomizations": {
+    "rules": {
+      "comment": {
+        "italic": true
+      },
+      "lifetime:rust": {
+        "italic": true
+      },
+      "typeParameter": {
+        "italic": true
+      }
+    }
+  },
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "storage.modifier.lifetime.rust"
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  },
   "editor.wordWrap": "on",
   "extensions.ignoreRecommendations": true,
   "files.exclude": {

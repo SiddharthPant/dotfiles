@@ -1,5 +1,5 @@
 # Font
-font-family = SF Mono
+font-family = JetBrainsMono Nerd Font
 font-size = 15
 
 # Cursor
@@ -32,4 +32,4 @@ window-padding-y = 0
 
 # Distribute remaining cell-grid pixels evenly
 window-padding-balance = true
-theme = light: Adwaita Light, dark:Adwaita Dark
+theme = light: Atom One Light, dark:Atom One Dark
