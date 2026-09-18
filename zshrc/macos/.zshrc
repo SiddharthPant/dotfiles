@@ -36,6 +36,7 @@ source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
 alias timeout='gtimeout'
 alias la='ls -lahFG --color'
 alias drawio='/Applications/draw.io.app/Contents/MacOS/draw.io'
+alias meld='/Applications/Meld.app/Contents/MacOS/Meld'
 
 PS1='%F{blue}%~ %(?.%F{green}.%F{red})%#%f '
 

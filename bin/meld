@@ -1,0 +1,4 @@
+#!/bin/sh
+# CLI wrapper for Meld.app (unofficial DMG build ships no `meld` on PATH).
+# Upstream does not support symlinking the bundle binary, hence this wrapper.
+exec /Applications/Meld.app/Contents/MacOS/Meld "$@"

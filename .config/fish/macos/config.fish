@@ -39,6 +39,7 @@ if status is-interactive
 
     abbr --add --global a 'php artisan'
     abbr --add --global chrome '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+    abbr --add --global meld '/Applications/Meld.app/Contents/MacOS/Meld'
 end
 
 set -Ux MISE_PIN 1

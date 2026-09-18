@@ -83,6 +83,7 @@ macos: common vscode-macos
 	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/config.fish,$(HOME)/.config/fish/config.fish)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/fish/macos/fish_plugins,$(HOME)/.config/fish/fish_plugins)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
+	$(call ensure_link,$(DOTFILES_DIR)/bin/meld,$(HOME)/.local/bin/meld)
 	@echo "macOS dotfiles linked"
 
 # target: vscode-meltbus-theme - Package and install the local Doom Meltbus theme
@@ -148,7 +149,7 @@ common: vim
 	$(call ensure_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
-	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
+	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
 	@echo "Common dotfiles linked"
 
 # target: clean - Remove all dotfile symlinks
@@ -160,6 +161,7 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/fish/wsl/config.fish,$(HOME)/.config/fish/config.fish)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/macos/config.toml,$(HOME)/.config/mise/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/mise/wsl/config.toml,$(HOME)/.config/mise/config.toml)
+	$(call remove_managed_link,$(DOTFILES_DIR)/bin/meld,$(HOME)/.local/bin/meld)
 	$(call remove_managed_link,$(VSCODE_MACOS_DIR)/settings.json,$(VSCODE_MACOS_USER_DIR)/settings.json)
 	$(call remove_managed_link,$(VSCODE_MACOS_DIR)/keybindings.json,$(VSCODE_MACOS_USER_DIR)/keybindings.json)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
@@ -177,5 +179,5 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
-	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/web-search.json)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
 	@echo "Dotfiles unlinked"
