@@ -1,5 +1,5 @@
 {
   "workflow": "auto-summary",
-  "searchModel": "accounts/fireworks/models/deepseek-v4-flash",
-  "summaryModel": "accounts/fireworks/models/deepseek-v4-flash"
+  "searchModel": "fireworks/accounts/fireworks/models/glm-5p3-flash",
+  "summaryModel": "fireworks/accounts/fireworks/models/glm-5p3-flash"
 }

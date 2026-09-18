@@ -11,7 +11,6 @@
   "editor.fontLigatures": true,
   "editor.fontSize": 14,
   "editor.guides.bracketPairs": false,
-  "editor.lineHeight": 1.7,
   "editor.linkedEditing": true,
   "editor.semanticTokenColorCustomizations": {
     "rules": {
@@ -61,5 +60,19 @@
   "workbench.experimental.modernUI": true,
   "workbench.iconTheme": "material-icon-theme",
   "workbench.preferredLightColorTheme": "Light 2026",
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "workbench.diffEditorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+  "git.autofetch": true,
+  "json.schemaDownload.trustedDomains": {
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
+  }
 }
