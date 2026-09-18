@@ -22,6 +22,19 @@
 [diff]
   algorithm = histogram
 
+[difftool]
+  prompt = false
+[difftool "vscode"]
+  cmd = code --wait --diff "$LOCAL" "$REMOTE"
+[difftool "zed"]
+  cmd = zed --wait --diff "$LOCAL" "$REMOTE"
+
+[merge]
+  tool = vscode
+  conflictstyle = zdiff3
+[mergetool "vscode"]
+  cmd = code --wait --merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
 [alias]
 	undo = reset --mixed HEAD^
 [init]

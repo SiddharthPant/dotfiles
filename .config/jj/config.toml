@@ -7,4 +7,7 @@ email = "10671794+SiddharthPant@users.noreply.github.com"
 [ui]
 default-command = "log"
 editor = "vim"
+# VS Code is a built-in merge editor. Diff editing (jj split/diffedit) stays on
+# the built-in TUI because `code --diff` cannot diff two directories.
 diff-editor = ":builtin"
+merge-editor = "vscode"
