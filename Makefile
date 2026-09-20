@@ -1,4 +1,4 @@
-.PHONY: all help install clean macos arch wsl common vim vscode-macos vscode-meltbus-theme
+.PHONY: all help install clean macos arch wsl windows common vim pi-config vscode-macos vscode-meltbus-theme
 
 DOTFILES_DIR := $(CURDIR)
 UNAME_S := $(shell uname)
@@ -8,19 +8,35 @@ VSCODE_MACOS_USER_DIR := $(HOME)/Library/Application Support/Code/User
 VSCODE_MELTBUS_THEME_DIR := $(DOTFILES_DIR)/vscode/extensions/doom-meltbus-theme
 VSCODE_MELTBUS_THEME_ID := sid.doom-meltbus-theme
 VSCODE_VSCE_VERSION := 3.9.2
+HOME ?= $(USERPROFILE)
 VIM_PLUG := $(HOME)/.vim/autoload/plug.vim
 VIM_PLUG_URL := https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-ifeq ($(UNAME_S),Darwin)
+ifeq ($(OS),Windows_NT)
+PLATFORM := windows
+else ifeq ($(UNAME_S),Darwin)
 PLATFORM := macos
 else ifneq ($(WSL_DISTRO_NAME),)
 PLATFORM := wsl
 endif
 
+# On Windows, run POSIX recipes through Git Bash and create real NTFS
+# symlinks via ln -s (requires Developer Mode or an elevated shell).
+ifeq ($(PLATFORM),windows)
+GIT_BASH := $(wildcard C:/Program\ Files/Git/bin/bash.exe)
+ifneq ($(GIT_BASH),)
+SHELL := $(GIT_BASH)
+endif
+export MSYS := winsymlinks:nativestrict
+POWERSHELL_PROFILE := $(shell pwsh.exe -NoProfile -Command '[Console]::Out.Write($$PROFILE.CurrentUserAllHosts)' 2>/dev/null)
+WT_SETTINGS := $(HOME)/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+endif
+
 define ensure_link
 	@src="$(1)"; dst="$(2)"; \
+	link_target="$$(cygpath -u "$$src" 2>/dev/null || readlink -f "$$src" 2>/dev/null)"; \
 	mkdir -p "$$(dirname "$$dst")"; \
-	if [ -L "$$dst" ] && [ "$$(readlink "$$dst")" = "$$src" ]; then \
+	if [ -L "$$dst" ] && { [ "$$(readlink "$$dst")" = "$$src" ] || [ "$$(readlink "$$dst")" = "$$link_target" ]; }; then \
 		printf 'ok %s\n' "$$dst"; \
 	elif [ -L "$$dst" ]; then \
 		rm "$$dst"; \
@@ -38,8 +54,9 @@ endef
 # Seed mutable application state without linking it back into the repository.
 define ensure_local_file
 	@src="$(1)"; dst="$(2)"; \
+	link_target="$$(cygpath -u "$$src" 2>/dev/null || readlink -f "$$src" 2>/dev/null)"; \
 	mkdir -p "$$(dirname "$$dst")"; \
-	if [ -L "$$dst" ] && [ "$$(readlink "$$dst")" = "$$src" ]; then \
+	if [ -L "$$dst" ] && { [ "$$(readlink "$$dst")" = "$$src" ] || [ "$$(readlink "$$dst")" = "$$link_target" ]; }; then \
 		tmp="$$(mktemp)"; \
 		cp "$$dst" "$$tmp"; \
 		rm "$$dst"; \
@@ -59,7 +76,8 @@ endef
 
 define remove_managed_link
 	@src="$(1)"; dst="$(2)"; \
-	if [ -L "$$dst" ] && [ "$$(readlink "$$dst")" = "$$src" ]; then \
+	link_target="$$(cygpath -u "$$src" 2>/dev/null || readlink -f "$$src" 2>/dev/null)"; \
+	if [ -L "$$dst" ] && { [ "$$(readlink "$$dst")" = "$$src" ] || [ "$$(readlink "$$dst")" = "$$link_target" ]; }; then \
 		rm "$$dst"; \
 		printf 'removed %s\n' "$$dst"; \
 	else \
@@ -121,6 +139,22 @@ vim:
 	@command -v vim >/dev/null 2>&1 || { printf 'error: vim is not available in PATH\n' >&2; exit 1; }
 	@vim -Nu "$(DOTFILES_DIR)/.vimrc" -n -es +'PlugInstall --sync' +qa
 
+# target: pi-config - Seed and link pi configuration
+pi-config:
+	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
+	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
+
+# target: windows - Setup symlinks for Windows (PowerShell, Windows Terminal, Neovim)
+windows: vim pi-config
+	$(call ensure_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
+ifneq ($(POWERSHELL_PROFILE),)
+	$(call ensure_link,$(DOTFILES_DIR)/powershell/Microsoft.PowerShell_profile.ps1,$(POWERSHELL_PROFILE))
+endif
+ifneq ($(wildcard $(WT_SETTINGS)),)
+	$(call ensure_link,$(DOTFILES_DIR)/windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json,$(WT_SETTINGS))
+endif
+	@echo "Windows dotfiles linked"
+
 # target: arch - Setup symlinks for Arch Linux
 arch: common
 	$(call ensure_link,$(DOTFILES_DIR)/zshrc/arch-i3/.zshrc,$(HOME)/.zshrc)
@@ -133,7 +167,7 @@ wsl: common
 	@echo "WSL dotfiles linked"
 
 # Common symlinks for all platforms
-common: vim
+common: vim pi-config
 	$(call ensure_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
 	$(call ensure_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call ensure_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
@@ -148,8 +182,6 @@ common: vim
 	$(call ensure_link,$(DOTFILES_DIR)/.config/gh/config.yml,$(HOME)/.config/gh/config.yml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call ensure_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
-	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
-	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
 	@echo "Common dotfiles linked"
 
 # target: clean - Remove all dotfile symlinks
@@ -178,6 +210,8 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/gh/config.yml,$(HOME)/.config/gh/config.yml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/jj/config.toml,$(HOME)/.config/jj/config.toml)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.config/sqlfluff,$(HOME)/.config/sqlfluff)
+	$(call remove_managed_link,$(DOTFILES_DIR)/powershell/Microsoft.PowerShell_profile.ps1,$(POWERSHELL_PROFILE))
+	$(call remove_managed_link,$(DOTFILES_DIR)/windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json,$(WT_SETTINGS))
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
 	@echo "Dotfiles unlinked"

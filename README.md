@@ -6,13 +6,16 @@ Personal configuration files for daily development tools.
 
 The repo uses `Makefile` as the source of truth for what gets linked into `$HOME`.
 
-- `make install`: auto-detect macOS, Arch Linux, or WSL and link managed dotfiles
+- `make install`: auto-detect macOS, Arch Linux, WSL, or Windows and link managed dotfiles
 - `make macos`: set up macOS-specific Zsh, Fish, Mise, and VS Code configuration
 - `make vscode-macos`: link macOS VS Code settings and install declared extensions
 - `make vim`: link Vim configuration, install vim-plug, and install declared plugins
 - `make arch`: link Arch Linux-specific Zsh configuration
 - `make wsl`: link WSL-specific Fish and Mise configuration
+- `make windows`: link Windows-specific PowerShell, Windows Terminal, and Neovim configuration
 - `make clean`: remove only repo-managed symlinks
+
+On Windows, recipes run through Git Bash (install [Git for Windows](https://git-scm.com/download/win) and GNU Make, e.g. `mise use -g make@4.4.1`), and `ln -s` creates real NTFS symlinks, which requires Developer Mode or an elevated shell.
 
 ## Managed Paths
 
@@ -43,6 +46,8 @@ These paths are currently managed by `Makefile`:
 - `.config/fish/wsl/config.fish` -> `~/.config/fish/config.fish` on WSL
 - `zshrc/macos/.zshrc` -> `~/.zshrc` on macOS
 - `zshrc/arch-i3/.zshrc` -> `~/.zshrc` on Arch Linux
+- `powershell/Microsoft.PowerShell_profile.ps1` -> `$PROFILE.CurrentUserAllHosts` on Windows
+- `windows_terminal/mnt/.../settings.json` -> Windows Terminal `settings.json` on Windows
 
 ## Layout
 
