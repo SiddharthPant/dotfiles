@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "setup-tool root manifest",
+  "description": "Maps tool names to their manifests for `setup-tool <tool>...` and `setup-tool --all`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifests"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "manifests": {
+      "description": "Tool name -> tool manifest path, relative to the repo root.",
+      "type": "object",
+      "propertyNames": {
+        "description": "Tool name used on the command line; ASCII letters and digits only.",
+        "pattern": "^[A-Za-z0-9]+$"
+      },
+      "additionalProperties": {
+        "description": "Tool manifest path, relative to the repo root, e.g. tools/pi/manifest.json.",
+        "type": "string"
+      }
+    }
+  }
+}

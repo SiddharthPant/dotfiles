@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "setup-tool tool manifest",
+  "description": "Files that setup-tool copies into $HOME for one tool.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["destinationRoot", "files"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "destinationRoot": {
+      "description": "Base folder for relative destinations. Expanded by pwsh on Windows and bash elsewhere, e.g. $HOME/.pi.",
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "destination"],
+        "properties": {
+          "platform": {
+            "description": "Where the file applies; also the source folder next to this manifest (without \"group:\"). common: everywhere; group:posix: macOS, Linux, and WSL; group:linux: Linux and WSL; macos, wsl, windows: only that system.",
+            "enum": ["common", "group:posix", "group:linux", "macos", "wsl", "windows"],
+            "default": "common"
+          },
+          "source": {
+            "description": "Path inside the platform folder, e.g. agent/settings.json; a folder when recursive is true.",
+            "type": "string"
+          },
+          "destination": {
+            "description": "Where to copy the file (or folder when recursive is true). Expanded by pwsh on Windows and bash elsewhere (e.g. $env:APPDATA/..., $HOME/...); an absolute result is used as is, otherwise it is relative to destinationRoot.",
+            "type": "string"
+          },
+          "recursive": {
+            "description": "Treat source and destination as folders and sync every file under source. setup-tool errors if source is a folder without this, or not a folder with it.",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

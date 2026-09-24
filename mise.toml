@@ -2,6 +2,10 @@
 # Unix tasks (`run`) link files with scripts/dotfiles.sh; Windows tasks (`run_windows`)
 # copy files with scripts/dotfiles.ps1.
 
+# Toolchain for the Rust helper binaries in crates/; set it up with `mise install`.
+[tools]
+rust = "1.98.1"
+
 [task_templates.platform]
 shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u -o pipefail -c{% endif %}'
 
@@ -143,6 +147,14 @@ Copy-Dotfile tools/pi/common/agent/extensions/exit.ts "$HOME\.pi\agent\extension
 Copy-Dotfile tools/pi/common/agent/extensions/webfetch.ts "$HOME\.pi\agent\extensions\webfetch.ts"
 Copy-Dotfile tools/pi/common/web-search.json "$HOME\.pi\agent\web-search.json"
 '''
+
+[tasks.lint]
+description = "Run clippy on the Rust helper crates with the workspace lints, failing on any warning"
+run = "cargo clippy --workspace --all-targets -- -D warnings"
+
+[tasks.setup-tool]
+description = "Copy tool files into $HOME by tool name, e.g. pi (-a/--all for every tool, -d/--diff to only show differences)"
+run = "cargo run -q -p setup-tool --"
 
 [tasks.claude-config]
 extends = "platform"

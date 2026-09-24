@@ -1,0 +1,6 @@
+{
+  "$schema": "./crates/setup-tool/schemas/root-manifest.schema.json",
+  "manifests": {
+    "pi": "tools/pi/manifest.json"
+  }
+}

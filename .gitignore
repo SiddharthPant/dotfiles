@@ -27,3 +27,6 @@ static/js/build
 .config/zed/embeddings/
 .config/zed/prompts/
 .config/zed/settings_backup.json
+
+# Rust build output for crates/
+/target/
