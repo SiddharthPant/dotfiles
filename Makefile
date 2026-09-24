@@ -1,4 +1,4 @@
-.PHONY: all help install clean macos arch wsl windows common vim pi-config vscode-macos vscode-meltbus-theme
+.PHONY: all help install clean macos arch wsl windows common vim pi-config claude-config vscode-macos vscode-meltbus-theme
 
 DOTFILES_DIR := $(CURDIR)
 UNAME_S := $(shell uname)
@@ -144,8 +144,12 @@ pi-config:
 	$(call ensure_local_file,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
 	$(call ensure_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
 
+# target: claude-config - Link Claude Code status line script
+claude-config:
+	$(call ensure_link,$(DOTFILES_DIR)/.claude/statusline.js,$(HOME)/.claude/statusline.js)
+
 # target: windows - Setup symlinks for Windows (PowerShell, Windows Terminal, Neovim)
-windows: vim pi-config
+windows: vim pi-config claude-config
 	$(call ensure_link,$(DOTFILES_DIR)/.config/nvim,$(HOME)/.config/nvim)
 ifneq ($(POWERSHELL_PROFILE),)
 	$(call ensure_link,$(DOTFILES_DIR)/powershell/Microsoft.PowerShell_profile.ps1,$(POWERSHELL_PROFILE))
@@ -167,7 +171,7 @@ wsl: common
 	@echo "WSL dotfiles linked"
 
 # Common symlinks for all platforms
-common: vim pi-config
+common: vim pi-config claude-config
 	$(call ensure_link,$(DOTFILES_DIR)/.gitconfig,$(HOME)/.gitconfig)
 	$(call ensure_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 	$(call ensure_link,$(DOTFILES_DIR)/.zshenv,$(HOME)/.zshenv)
@@ -214,4 +218,5 @@ clean:
 	$(call remove_managed_link,$(DOTFILES_DIR)/windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json,$(WT_SETTINGS))
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/agent/settings.json,$(HOME)/.pi/agent/settings.json)
 	$(call remove_managed_link,$(DOTFILES_DIR)/.pi/web-search.json,$(HOME)/.pi/agent/web-search.json)
+	$(call remove_managed_link,$(DOTFILES_DIR)/.claude/statusline.js,$(HOME)/.claude/statusline.js)
 	@echo "Dotfiles unlinked"

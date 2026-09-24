@@ -37,6 +37,7 @@ These paths are currently managed by `Makefile`:
 - `.config/sqlfluff/` -> `~/.config/sqlfluff/`
 - `.pi/agent/settings.json` seeds mutable `~/.pi/agent/settings.json` when missing
 - `.pi/web-search.json` -> `~/.pi/web-search.json`
+- `.claude/statusline.js` -> `~/.claude/statusline.js`
 - `.config/fish/macos/config.fish` -> `~/.config/fish/config.fish` on macOS
 - `.config/fish/macos/fish_plugins` -> `~/.config/fish/fish_plugins` on macOS
 - `.config/mise/macos/config.toml` -> `~/.config/mise/config.toml` on macOS
@@ -70,6 +71,7 @@ These paths are currently managed by `Makefile`:
 - `.config/sqlfluff/.sqlfluff`: sqlfluff configuration
 - `.pi/agent/settings.json`: Initial Pi preferences and package declarations; runtime state stays local
 - `.pi/web-search.json`: Pi web-search plugin preferences
+- `.claude/statusline.js`: Claude Code status line (Node); enable with `"statusLine": {"type": "command", "command": "node ~/.claude/statusline.js"}` in `~/.claude/settings.json`
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration
 
