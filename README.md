@@ -4,22 +4,22 @@ Personal configuration files for daily development tools.
 
 ## Setup
 
-The repo uses `Makefile` as the source of truth for what gets linked into `$HOME`.
+The repo uses [mise](https://mise.jdx.dev) tasks in `mise.toml` as the source of truth for what gets installed into `$HOME`. Run `mise trust` once in the repo, then `mise tasks` to list them.
 
-- `make install`: auto-detect macOS, Arch Linux, WSL, or Windows and link managed dotfiles
-- `make macos`: set up macOS-specific Zsh, Fish, Mise, and VS Code configuration
-- `make vscode-macos`: link macOS VS Code settings and install declared extensions
-- `make vim`: link Vim configuration, install vim-plug, and install declared plugins
-- `make arch`: link Arch Linux-specific Zsh configuration
-- `make wsl`: link WSL-specific Fish and Mise configuration
-- `make windows`: link Windows-specific PowerShell, Windows Terminal, and Neovim configuration
-- `make clean`: remove only repo-managed symlinks
+- `mise run install` (or just `mise run`): auto-detect macOS, Arch Linux, WSL, or Windows and link managed dotfiles
+- `mise run macos`: set up macOS-specific Zsh, Fish, Mise, and VS Code configuration
+- `mise run vscode-macos`: link macOS VS Code settings and install declared extensions
+- `mise run vim`: link Vim configuration, install vim-plug, and install declared plugins
+- `mise run arch`: link Arch Linux-specific Zsh configuration
+- `mise run wsl`: link WSL-specific Fish and Mise configuration
+- `mise run windows`: copy Windows-specific PowerShell and Windows Terminal configuration
+- `mise run clean`: remove only repo-managed symlinks (on Windows, copies that still match the repo)
 
-On Windows, recipes run through Git Bash (install [Git for Windows](https://git-scm.com/download/win) and GNU Make, e.g. `mise use -g make@4.4.1`), and `ln -s` creates real NTFS symlinks, which requires Developer Mode or an elevated shell.
+On macOS and Linux, tasks run in bash and symlink files (`scripts/dotfiles.sh`). On Windows, `run_windows` tasks run in PowerShell 7 (`pwsh`) and copy files instead (`scripts/dotfiles.ps1`): a missing file is copied, and a copy that differs from the repo is reported but never overwritten. The Windows install covers the PowerShell profile (`$PROFILE.CurrentUserCurrentHost`), Windows Terminal settings, pi, and the Claude Code status line; Vim and Neovim are not set up on Windows.
 
 ## Managed Paths
 
-These paths are currently managed by `Makefile`:
+These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; `.pi/` and `.claude/` files are copied on Windows):
 
 - `.tmux.conf` -> `~/.tmux.conf`
 - `.gitconfig` -> `~/.gitconfig`
@@ -47,8 +47,8 @@ These paths are currently managed by `Makefile`:
 - `.config/fish/wsl/config.fish` -> `~/.config/fish/config.fish` on WSL
 - `zshrc/macos/.zshrc` -> `~/.zshrc` on macOS
 - `zshrc/arch-i3/.zshrc` -> `~/.zshrc` on Arch Linux
-- `powershell/Microsoft.PowerShell_profile.ps1` -> `$PROFILE.CurrentUserAllHosts` on Windows
-- `windows_terminal/mnt/.../settings.json` -> Windows Terminal `settings.json` on Windows
+- `powershell/Microsoft.PowerShell_profile.ps1` copied to `$PROFILE.CurrentUserCurrentHost` on Windows
+- `windows_terminal/mnt/.../settings.json` copied to Windows Terminal `settings.json` on Windows
 
 ## Layout
 
@@ -87,7 +87,7 @@ See `AGENTS.md` for the repo-wide edit map for automated changes.
 
 ## Vim
 
-Vim 9.2 uses vim-plug for `vim-tmux-navigator`; run `make vim` to install both.
+Vim 9.2 uses vim-plug for `vim-tmux-navigator`; run `mise run vim` to install both.
 Use `:RepoDiff` or `<leader>gg` to open the current JJ or Git working-copy diff
 in a disposable tab. Pass an optional directory, such as `:RepoDiff .config/nvim`,
 to use the nearest repository containing that directory and limit the diff to

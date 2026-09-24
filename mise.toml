@@ -1,0 +1,192 @@
+# Source of truth for what gets installed into $HOME. Run `mise tasks` to list tasks.
+# Unix tasks (`run`) link files with scripts/dotfiles.sh; Windows tasks (`run_windows`)
+# copy files with scripts/dotfiles.ps1.
+
+[task_templates.platform]
+shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u -o pipefail -c{% endif %}'
+
+[tasks.install]
+extends = "platform"
+description = "Auto-detect macOS, Arch Linux, WSL, or Windows and install managed dotfiles"
+alias = "default"
+run = '''
+case "$(uname -s)" in
+  Darwin) platform=macos ;;
+  *) if [ -n "${WSL_DISTRO_NAME:-}" ]; then platform=wsl; else platform=arch; fi ;;
+esac
+mise run "$platform"
+'''
+run_windows = "mise run windows"
+
+[tasks.common]
+extends = "platform"
+description = "Link dotfiles shared by macOS, Arch Linux, and WSL"
+depends = ["vim", "pi-config", "claude-config"]
+run = '''
+. scripts/dotfiles.sh
+link .gitconfig "$HOME/.gitconfig"
+link .tmux.conf "$HOME/.tmux.conf"
+link .zshenv "$HOME/.zshenv"
+link .config/nvim "$HOME/.config/nvim"
+link .config/herdr/config.toml "$HOME/.config/herdr/config.toml"
+link .config/herdr/plugins/config/cloudmanic.herdr-plus "$HOME/.config/herdr/plugins/config/cloudmanic.herdr-plus"
+link .config/ghostty "$HOME/.config/ghostty"
+link .config/zed "$HOME/.config/zed"
+link .config/emacs "$HOME/.config/emacs"
+link .config/starship.toml "$HOME/.config/starship.toml"
+link .config/gh/config.yml "$HOME/.config/gh/config.yml"
+link .config/jj/config.toml "$HOME/.config/jj/config.toml"
+link .config/sqlfluff "$HOME/.config/sqlfluff"
+echo "Common dotfiles linked"
+'''
+
+[tasks.macos]
+extends = "platform"
+description = "Set up macOS-specific Zsh, Fish, Mise, and VS Code configuration"
+depends = ["common", "vscode-macos"]
+run = '''
+. scripts/dotfiles.sh
+link zshrc/macos/.zshrc "$HOME/.zshrc"
+link .config/fish/macos/config.fish "$HOME/.config/fish/config.fish"
+link .config/fish/macos/fish_plugins "$HOME/.config/fish/fish_plugins"
+link .config/mise/macos/config.toml "$HOME/.config/mise/config.toml"
+link bin/meld "$HOME/.local/bin/meld"
+echo "macOS dotfiles linked"
+'''
+
+[tasks.vscode-macos]
+extends = "platform"
+description = "Link macOS VS Code settings and install declared extensions"
+run = '''
+. scripts/dotfiles.sh
+user_dir="$HOME/Library/Application Support/Code/User"
+link vscode/macos/settings.json "$user_dir/settings.json"
+link vscode/macos/keybindings.json "$user_dir/keybindings.json"
+need code
+while IFS= read -r extension; do
+  case "$extension" in '' | '#'*) continue ;; esac
+  code --install-extension "$extension"
+done < vscode/macos/extensions.txt
+code --update-extensions
+'''
+
+[tasks.arch]
+extends = "platform"
+description = "Link Arch Linux-specific Zsh configuration"
+depends = ["common"]
+run = '''
+. scripts/dotfiles.sh
+link zshrc/arch-i3/.zshrc "$HOME/.zshrc"
+echo "Arch Linux dotfiles linked"
+'''
+
+[tasks.wsl]
+extends = "platform"
+description = "Link WSL-specific Fish and Mise configuration"
+depends = ["common"]
+run = '''
+. scripts/dotfiles.sh
+link .config/fish/wsl/config.fish "$HOME/.config/fish/config.fish"
+link .config/mise/wsl/config.toml "$HOME/.config/mise/config.toml"
+echo "WSL dotfiles linked"
+'''
+
+[tasks.windows]
+extends = "platform"
+description = "Copy Windows-specific PowerShell and Windows Terminal configuration"
+depends = ["pi-config", "claude-config"]
+run = 'echo "error: the windows task only runs on Windows" >&2; exit 1'
+run_windows = '''
+. ./scripts/dotfiles.ps1
+Copy-Dotfile powershell/Microsoft.PowerShell_profile.ps1 $PROFILE.CurrentUserCurrentHost
+if (Test-Path (Split-Path $WindowsTerminalSettings)) {
+  Copy-Dotfile windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json $WindowsTerminalSettings
+}
+"Windows dotfiles copied"
+'''
+
+[tasks.vim]
+extends = "platform"
+description = "Link Vim configuration, install vim-plug, and install declared plugins"
+run = '''
+. scripts/dotfiles.sh
+link .vimrc "$HOME/.vimrc"
+plug="$HOME/.vim/autoload/plug.vim"
+if [ ! -f "$plug" ]; then
+  need curl
+  curl -fLo "$plug" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+else
+  printf 'ok %s\n' "$plug"
+fi
+need vim
+vim -Nu .vimrc -n -es +'PlugInstall --sync' +qa
+'''
+
+[tasks.pi-config]
+extends = "platform"
+description = "Seed and link (copy on Windows) pi configuration"
+run = '''
+. scripts/dotfiles.sh
+seed .pi/agent/settings.json "$HOME/.pi/agent/settings.json"
+link .pi/web-search.json "$HOME/.pi/agent/web-search.json"
+'''
+run_windows = '''
+. ./scripts/dotfiles.ps1
+Copy-Dotfile .pi/agent/settings.json "$HOME\.pi\agent\settings.json" -Seed
+Copy-Dotfile .pi/web-search.json "$HOME\.pi\agent\web-search.json"
+'''
+
+[tasks.claude-config]
+extends = "platform"
+description = "Link (copy on Windows) Claude Code status line script"
+run = '''
+. scripts/dotfiles.sh
+link .claude/statusline.js "$HOME/.claude/statusline.js"
+'''
+run_windows = '''
+. ./scripts/dotfiles.ps1
+Copy-Dotfile .claude/statusline.js "$HOME\.claude\statusline.js"
+'''
+
+[tasks.clean]
+extends = "platform"
+description = "Remove repo-managed symlinks (on Windows, copies that still match the repo)"
+run = '''
+. scripts/dotfiles.sh
+unlink_managed zshrc/macos/.zshrc "$HOME/.zshrc"
+unlink_managed zshrc/arch-i3/.zshrc "$HOME/.zshrc"
+unlink_managed .config/fish/macos/config.fish "$HOME/.config/fish/config.fish"
+unlink_managed .config/fish/macos/fish_plugins "$HOME/.config/fish/fish_plugins"
+unlink_managed .config/fish/wsl/config.fish "$HOME/.config/fish/config.fish"
+unlink_managed .config/mise/macos/config.toml "$HOME/.config/mise/config.toml"
+unlink_managed .config/mise/wsl/config.toml "$HOME/.config/mise/config.toml"
+unlink_managed bin/meld "$HOME/.local/bin/meld"
+unlink_managed vscode/macos/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+unlink_managed vscode/macos/keybindings.json "$HOME/Library/Application Support/Code/User/keybindings.json"
+unlink_managed .gitconfig "$HOME/.gitconfig"
+unlink_managed .tmux.conf "$HOME/.tmux.conf"
+unlink_managed .zshenv "$HOME/.zshenv"
+unlink_managed .vimrc "$HOME/.vimrc"
+unlink_managed .config/nvim "$HOME/.config/nvim"
+unlink_managed .config/herdr/config.toml "$HOME/.config/herdr/config.toml"
+unlink_managed .config/herdr/plugins/config/cloudmanic.herdr-plus "$HOME/.config/herdr/plugins/config/cloudmanic.herdr-plus"
+unlink_managed .config/ghostty "$HOME/.config/ghostty"
+unlink_managed .config/zed "$HOME/.config/zed"
+unlink_managed .config/emacs "$HOME/.config/emacs"
+unlink_managed .config/starship.toml "$HOME/.config/starship.toml"
+unlink_managed .config/gh/config.yml "$HOME/.config/gh/config.yml"
+unlink_managed .config/jj/config.toml "$HOME/.config/jj/config.toml"
+unlink_managed .config/sqlfluff "$HOME/.config/sqlfluff"
+unlink_managed .pi/agent/settings.json "$HOME/.pi/agent/settings.json"
+unlink_managed .pi/web-search.json "$HOME/.pi/agent/web-search.json"
+unlink_managed .claude/statusline.js "$HOME/.claude/statusline.js"
+echo "Dotfiles unlinked"
+'''
+run_windows = '''
+. ./scripts/dotfiles.ps1
+Remove-Dotfile .pi/web-search.json "$HOME\.pi\agent\web-search.json"
+Remove-Dotfile .claude/statusline.js "$HOME\.claude\statusline.js"
+Remove-Dotfile powershell/Microsoft.PowerShell_profile.ps1 $PROFILE.CurrentUserCurrentHost
+Remove-Dotfile windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json $WindowsTerminalSettings
+"Unmodified dotfile copies removed"
+'''
