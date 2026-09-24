@@ -131,6 +131,7 @@ seed tools/pi/macos/agent/settings.json "$HOME/.pi/agent/settings.json"
 link tools/pi/common/agent/extensions/statusline.ts "$HOME/.pi/agent/extensions/statusline.ts"
 link tools/pi/common/agent/extensions/openai-fast.ts "$HOME/.pi/agent/extensions/openai-fast.ts"
 link tools/pi/common/agent/extensions/exit.ts "$HOME/.pi/agent/extensions/exit.ts"
+link tools/pi/common/agent/extensions/webfetch.ts "$HOME/.pi/agent/extensions/webfetch.ts"
 link tools/pi/common/web-search.json "$HOME/.pi/agent/web-search.json"
 '''
 run_windows = '''
@@ -139,6 +140,7 @@ Copy-Dotfile tools/pi/windows/agent/settings.json "$HOME\.pi\agent\settings.json
 Copy-Dotfile tools/pi/common/agent/extensions/statusline.ts "$HOME\.pi\agent\extensions\statusline.ts"
 Copy-Dotfile tools/pi/common/agent/extensions/openai-fast.ts "$HOME\.pi\agent\extensions\openai-fast.ts"
 Copy-Dotfile tools/pi/common/agent/extensions/exit.ts "$HOME\.pi\agent\extensions\exit.ts"
+Copy-Dotfile tools/pi/common/agent/extensions/webfetch.ts "$HOME\.pi\agent\extensions\webfetch.ts"
 Copy-Dotfile tools/pi/common/web-search.json "$HOME\.pi\agent\web-search.json"
 '''
 
@@ -187,6 +189,7 @@ unlink_managed tools/pi/macos/agent/settings.json "$HOME/.pi/agent/settings.json
 unlink_managed tools/pi/common/agent/extensions/statusline.ts "$HOME/.pi/agent/extensions/statusline.ts"
 unlink_managed tools/pi/common/agent/extensions/openai-fast.ts "$HOME/.pi/agent/extensions/openai-fast.ts"
 unlink_managed tools/pi/common/agent/extensions/exit.ts "$HOME/.pi/agent/extensions/exit.ts"
+unlink_managed tools/pi/common/agent/extensions/webfetch.ts "$HOME/.pi/agent/extensions/webfetch.ts"
 unlink_managed tools/pi/common/web-search.json "$HOME/.pi/agent/web-search.json"
 unlink_managed .claude/statusline.js "$HOME/.claude/statusline.js"
 echo "Dotfiles unlinked"
@@ -197,6 +200,7 @@ Remove-Dotfile tools/pi/common/web-search.json "$HOME\.pi\agent\web-search.json"
 Remove-Dotfile tools/pi/common/agent/extensions/statusline.ts "$HOME\.pi\agent\extensions\statusline.ts"
 Remove-Dotfile tools/pi/common/agent/extensions/openai-fast.ts "$HOME\.pi\agent\extensions\openai-fast.ts"
 Remove-Dotfile tools/pi/common/agent/extensions/exit.ts "$HOME\.pi\agent\extensions\exit.ts"
+Remove-Dotfile tools/pi/common/agent/extensions/webfetch.ts "$HOME\.pi\agent\extensions\webfetch.ts"
 Remove-Dotfile .claude/statusline.js "$HOME\.claude\statusline.js"
 Remove-Dotfile powershell/Microsoft.PowerShell_profile.ps1 $PROFILE.CurrentUserCurrentHost
 Remove-Dotfile windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json $WindowsTerminalSettings

@@ -42,6 +42,7 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `tools/pi/common/agent/extensions/statusline.ts` -> `~/.pi/agent/extensions/statusline.ts`
 - `tools/pi/common/agent/extensions/openai-fast.ts` -> `~/.pi/agent/extensions/openai-fast.ts`
 - `tools/pi/common/agent/extensions/exit.ts` -> `~/.pi/agent/extensions/exit.ts`
+- `tools/pi/common/agent/extensions/webfetch.ts` -> `~/.pi/agent/extensions/webfetch.ts`
 - `tools/pi/manifest.json` records Pi source-to-destination mappings by platform
 - `.claude/statusline.js` -> `~/.claude/statusline.js`
 - `.config/fish/macos/config.fish` -> `~/.config/fish/config.fish` on macOS
@@ -78,7 +79,7 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `tools/pi/manifest.json`: Maps sources (relative to `tools/pi/`) to `~/.pi` destinations and platforms; `seed` preserves local settings, while `managed` files are linked on Unix and copied safely on Windows
 - `tools/pi/macos/`: Pi settings profile used on macOS, Arch, and WSL
 - `tools/pi/windows/`: Windows Pi settings profile
-- `tools/pi/common/`: Shared Pi web-search preferences and local extensions (token speed, OpenAI Codex Fast mode, `/exit`)
+- `tools/pi/common/`: Shared Pi web-search preferences and local extensions (token speed, OpenAI Codex Fast mode, `/exit`, Jina-based `webfetch` tool)
 - `.claude/statusline.js`: Claude Code status line (Node); enable with `"statusLine": {"type": "command", "command": "node ~/.claude/statusline.js"}` in `~/.claude/settings.json`
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration

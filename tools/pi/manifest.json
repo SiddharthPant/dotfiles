@@ -37,6 +37,12 @@
       "destination": "agent/extensions/exit.ts",
       "platforms": ["macos", "arch", "wsl", "windows"],
       "mode": "managed"
+    },
+    {
+      "source": "common/agent/extensions/webfetch.ts",
+      "destination": "agent/extensions/webfetch.ts",
+      "platforms": ["macos", "arch", "wsl", "windows"],
+      "mode": "managed"
     }
   ]
 }
