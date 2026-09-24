@@ -1,9 +1,7 @@
 {
   "lastChangelogVersion": "0.87.1",
   "theme": "dark",
-  "packages": [
-    "npm:@plannotator/pi-extension"
-  ],
+  "packages": [],
   "hideThinkingBlock": false,
   "showCacheMissNotices": true,
   "defaultProjectTrust": "always",
