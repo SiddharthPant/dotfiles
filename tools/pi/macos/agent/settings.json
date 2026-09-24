@@ -1,6 +1,5 @@
 {
   "packages": [
-    "npm:pi-web-access",
     "npm:pi-cursor-sdk",
     "npm:@ogulcancelik/pi-herdr"
   ],

@@ -2,7 +2,6 @@
   "lastChangelogVersion": "0.87.1",
   "theme": "dark",
   "packages": [
-    "npm:pi-web-access",
     "npm:@plannotator/pi-extension"
   ],
   "hideThinkingBlock": false,
