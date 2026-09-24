@@ -13,13 +13,14 @@ The repo uses [mise](https://mise.jdx.dev) tasks in `mise.toml` as the source of
 - `mise run arch`: link Arch Linux-specific Zsh configuration
 - `mise run wsl`: link WSL-specific Fish and Mise configuration
 - `mise run windows`: copy Windows-specific PowerShell and Windows Terminal configuration
+- `mise run pi-config`: install the Pi platform profile and common files; mappings are documented in `tools/pi/manifest.json`
 - `mise run clean`: remove only repo-managed symlinks (on Windows, copies that still match the repo)
 
 On macOS and Linux, tasks run in bash and symlink files (`scripts/dotfiles.sh`). On Windows, `run_windows` tasks run in PowerShell 7 (`pwsh`) and copy files instead (`scripts/dotfiles.ps1`): a missing file is copied, and a copy that differs from the repo is reported but never overwritten. The Windows install covers the PowerShell profile (`$PROFILE.CurrentUserCurrentHost`), Windows Terminal settings, pi, and the Claude Code status line; Vim and Neovim are not set up on Windows.
 
 ## Managed Paths
 
-These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; `.pi/` and `.claude/` files are copied on Windows):
+These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; `tools/pi/` and `.claude/` sources are copied on Windows):
 
 - `.tmux.conf` -> `~/.tmux.conf`
 - `.gitconfig` -> `~/.gitconfig`
@@ -35,8 +36,13 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `.config/gh/config.yml` -> `~/.config/gh/config.yml`
 - `.config/jj/config.toml` -> `~/.config/jj/config.toml`
 - `.config/sqlfluff/` -> `~/.config/sqlfluff/`
-- `.pi/agent/settings.json` seeds mutable `~/.pi/agent/settings.json` when missing
-- `.pi/web-search.json` -> `~/.pi/web-search.json`
+- `tools/pi/macos/agent/settings.json` seeds `~/.pi/agent/settings.json` on macOS, Arch, and WSL
+- `tools/pi/windows/agent/settings.json` seeds `~/.pi/agent/settings.json` on Windows
+- `tools/pi/common/web-search.json` -> `~/.pi/agent/web-search.json` on all platforms
+- `tools/pi/common/agent/extensions/statusline.ts` -> `~/.pi/agent/extensions/statusline.ts`
+- `tools/pi/common/agent/extensions/openai-fast.ts` -> `~/.pi/agent/extensions/openai-fast.ts`
+- `tools/pi/common/agent/extensions/exit.ts` -> `~/.pi/agent/extensions/exit.ts`
+- `tools/pi/manifest.json` records Pi source-to-destination mappings by platform
 - `.claude/statusline.js` -> `~/.claude/statusline.js`
 - `.config/fish/macos/config.fish` -> `~/.config/fish/config.fish` on macOS
 - `.config/fish/macos/fish_plugins` -> `~/.config/fish/fish_plugins` on macOS
@@ -69,8 +75,10 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `.config/fish/macos/`: macOS Fish configuration and Fisher plugin declarations
 - `.config/fish/wsl/config.fish`: WSL Fish configuration
 - `.config/sqlfluff/.sqlfluff`: sqlfluff configuration
-- `.pi/agent/settings.json`: Initial Pi preferences and package declarations; runtime state stays local
-- `.pi/web-search.json`: Pi web-search plugin preferences
+- `tools/pi/manifest.json`: Maps sources (relative to `tools/pi/`) to `~/.pi` destinations and platforms; `seed` preserves local settings, while `managed` files are linked on Unix and copied safely on Windows
+- `tools/pi/macos/`: Pi settings profile used on macOS, Arch, and WSL
+- `tools/pi/windows/`: Windows Pi settings profile
+- `tools/pi/common/`: Shared Pi web-search preferences and local extensions (token speed, OpenAI Codex Fast mode, `/exit`)
 - `.claude/statusline.js`: Claude Code status line (Node); enable with `"statusLine": {"type": "command", "command": "node ~/.claude/statusline.js"}` in `~/.claude/settings.json`
 - `zshrc/macos/.zshrc`: macOS Zsh configuration
 - `zshrc/arch-i3/.zshrc`: Arch Linux Zsh configuration

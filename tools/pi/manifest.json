@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "destinationRoot": "~/.pi",
+  "files": [
+    {
+      "source": "macos/agent/settings.json",
+      "destination": "agent/settings.json",
+      "platforms": ["macos", "arch", "wsl"],
+      "mode": "seed"
+    },
+    {
+      "source": "windows/agent/settings.json",
+      "destination": "agent/settings.json",
+      "platforms": ["windows"],
+      "mode": "seed"
+    },
+    {
+      "source": "common/web-search.json",
+      "destination": "agent/web-search.json",
+      "platforms": ["macos", "arch", "wsl", "windows"],
+      "mode": "managed"
+    },
+    {
+      "source": "common/agent/extensions/statusline.ts",
+      "destination": "agent/extensions/statusline.ts",
+      "platforms": ["macos", "arch", "wsl", "windows"],
+      "mode": "managed"
+    },
+    {
+      "source": "common/agent/extensions/openai-fast.ts",
+      "destination": "agent/extensions/openai-fast.ts",
+      "platforms": ["macos", "arch", "wsl", "windows"],
+      "mode": "managed"
+    },
+    {
+      "source": "common/agent/extensions/exit.ts",
+      "destination": "agent/extensions/exit.ts",
+      "platforms": ["macos", "arch", "wsl", "windows"],
+      "mode": "managed"
+    }
+  ]
+}

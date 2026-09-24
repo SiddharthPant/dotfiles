@@ -1,12 +1,12 @@
 {
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-token-speed",
-    "npm:@tombell/pi-exit",
-    "npm:@diegopetrucci/pi-openai-fast",
     "npm:pi-cursor-sdk",
     "npm:@ogulcancelik/pi-herdr"
   ],
   "hideThinkingBlock": false,
-  "showCacheMissNotices": true
+  "showCacheMissNotices": true,
+  "modelThinkingLevels": {
+    "openai-codex/gpt-6-luna": "high"
+  }
 }

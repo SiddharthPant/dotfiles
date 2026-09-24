@@ -1,0 +1,29 @@
+{
+  "lastChangelogVersion": "0.87.1",
+  "theme": "dark",
+  "packages": [
+    "npm:pi-web-access",
+    "npm:@plannotator/pi-extension"
+  ],
+  "hideThinkingBlock": false,
+  "showCacheMissNotices": true,
+  "defaultProjectTrust": "always",
+  "defaultTools": [
+    "read",
+    "powershell",
+    "edit",
+    "write"
+  ],
+  "defaultProvider": "fireworks",
+  "defaultModel": "accounts/fireworks/models/deepseek-v4p1-flash",
+  "modelThinkingLevels": {
+    "fireworks/accounts/fireworks/models/deepseek-v4p1-flash": "max",
+    "openai-codex/gpt-6-luna": "high"
+  },
+  "enabledModels": [
+    "fireworks/accounts/fireworks/models/deepseek-v4p1-flash",
+    "fireworks/accounts/fireworks/models/glm-5p3-flash",
+    "openai-codex/gpt-6-luna",
+    "openai-codex/gpt-6-astra"
+  ]
+}
