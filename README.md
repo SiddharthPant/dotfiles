@@ -36,7 +36,7 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `.config/gh/config.yml` -> `~/.config/gh/config.yml`
 - `.config/jj/config.toml` -> `~/.config/jj/config.toml`
 - `.config/sqlfluff/` -> `~/.config/sqlfluff/`
-- `tools/pi/macos/agent/settings.json` seeds `~/.pi/agent/settings.json` on macOS, Arch, and WSL
+- `tools/pi/posix/agent/settings.json` seeds `~/.pi/agent/settings.json` on macOS, Arch, and WSL
 - `tools/pi/windows/agent/settings.json` seeds `~/.pi/agent/settings.json` on Windows
 - `tools/pi/common/web-search.json` -> `~/.pi/agent/web-search.json` on all platforms
 - `tools/pi/common/agent/extensions/statusline.ts` -> `~/.pi/agent/extensions/statusline.ts`
@@ -77,7 +77,7 @@ These paths are currently managed by `mise.toml` (symlinked on macOS and Linux; 
 - `.config/fish/wsl/config.fish`: WSL Fish configuration
 - `.config/sqlfluff/.sqlfluff`: sqlfluff configuration
 - `tools/pi/manifest.json`: Maps sources (relative to `tools/pi/`) to `~/.pi` destinations and platforms; `seed` preserves local settings, while `managed` files are linked on Unix and copied safely on Windows
-- `tools/pi/macos/`: Pi settings profile used on macOS, Arch, and WSL
+- `tools/pi/posix/`: Pi settings profile used on macOS, Linux, and WSL
 - `tools/pi/windows/`: Windows Pi settings profile
 - `tools/pi/common/`: Shared Pi web-search preferences and local extensions (token speed, OpenAI Codex Fast mode, `/exit`, Jina-based `webfetch` tool)
 - `.claude/statusline.js`: Claude Code status line (Node); enable with `"statusLine": {"type": "command", "command": "node ~/.claude/statusline.js"}` in `~/.claude/settings.json`

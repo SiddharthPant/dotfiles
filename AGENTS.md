@@ -10,7 +10,7 @@ Make the smallest correct change and edit the existing responsible file rather t
 
 When adding a managed path, add it to the right `mise.toml` task (`run` and, if it applies to Windows, `run_windows`) and to the `clean` task, and list it in `README.md`. Never overwrite or delete real files in `$HOME` while testing; tasks change real files, so do not run them to verify changes without asking.
 
-Copied files (Windows copies and seeded files such as `tools/pi/{macos,windows}/agent/settings.json`) can drift from the repo. Before changing a copied source or re-copying it, diff the source against its destination (`git diff --no-index <source> <destination>`) and reconcile:
+Copied files (Windows copies and seeded files such as `tools/pi/{posix,windows}/agent/settings.json`) can drift from the repo. Before changing a copied source or re-copying it, diff the source against its destination (`git diff --no-index <source> <destination>`) and reconcile:
 - Identical: nothing to do.
 - Only the destination changed (destination is newer than the source's last change, from both its mtime and `git log -1 --format=%ci -- <source>`, and the source has no uncommitted edits): fold the destination's changes into the source, then continue.
 - Only the source changed: the destination is just behind; leave it for the install task to report.

@@ -3,7 +3,7 @@
   "destinationRoot": "~/.pi",
   "files": [
     {
-      "source": "macos/agent/settings.json",
+      "source": "posix/agent/settings.json",
       "destination": "agent/settings.json",
       "platforms": ["macos", "arch", "wsl"],
       "mode": "seed"
