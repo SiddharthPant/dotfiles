@@ -17,20 +17,9 @@
       "destination": "agent/web-search.json"
     },
     {
-      "source": "agent/extensions/statusline.ts",
-      "destination": "agent/extensions/statusline.ts"
-    },
-    {
-      "source": "agent/extensions/openai-fast.ts",
-      "destination": "agent/extensions/openai-fast.ts"
-    },
-    {
-      "source": "agent/extensions/exit.ts",
-      "destination": "agent/extensions/exit.ts"
-    },
-    {
-      "source": "agent/extensions/webfetch.ts",
-      "destination": "agent/extensions/webfetch.ts"
+      "source": "agent/extensions",
+      "destination": "agent/extensions",
+      "recursive": true
     }
   ]
 }
