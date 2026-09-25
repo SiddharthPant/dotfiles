@@ -1,4 +1,4 @@
-//! Copy tool files listed in manifest.json files into $HOME:
+//! Copy tool files listed in manifest.json files into the home folder:
 //! `cargo run -q -p setup-tool -- [-d|--diff] (-a|--all | <tool>...)`.
 //! The root manifest.json maps alphanumeric tool names to their manifests (e.g. "pi" ->
 //! tools/pi/manifest.json); `--all` sets up every tool. Files are only copied when they differ;
@@ -16,6 +16,7 @@ use std::env;
 use std::fmt;
 use std::fs;
 use std::io::ErrorKind;
+use std::iter;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
@@ -34,7 +35,7 @@ use similar::{ChangeTag, TextDiff};
 const ROOT_MANIFEST: &str = "manifest.json";
 
 #[derive(Parser)]
-#[command(about = "Copy tool files listed in manifest.json files into $HOME")]
+#[command(about = "Copy tool files listed in manifest.json files into the home folder")]
 struct Args {
     /// Only show how each installed file differs from the repo; copy nothing
     #[arg(short, long)]
@@ -190,12 +191,49 @@ fn normalize(path: &Path) -> PathBuf {
     path.components().collect()
 }
 
+/// The first `$env:NAME` or `${env:NAME}` in `path` that is not set. pwsh expands those to ""
+/// even under `Set-StrictMode`, so they are checked here instead.
+fn unset_env_var(path: &str) -> Option<String> {
+    path.split('$').skip(1).find_map(|part| {
+        let braced = part.strip_prefix('{');
+        let rest = braced.unwrap_or(part);
+        let name: String = rest
+            .get(4..)
+            .filter(|_| {
+                rest.get(..4)
+                    .is_some_and(|p| p.eq_ignore_ascii_case("env:"))
+            })?
+            .chars()
+            .take_while(|&c| {
+                if braced.is_some() {
+                    c != '}'
+                } else {
+                    c.is_alphanumeric() || c == '_'
+                }
+            })
+            .collect();
+        (name.is_empty() || env::var_os(&name).is_none()).then_some(name)
+    })
+}
+
 /// Expand all paths in one shell call, one output line per path.
 fn expand(paths: &[&str]) -> Result<Vec<String>> {
+    if paths.is_empty() {
+        return Ok(Vec::new());
+    }
     let quoted: Vec<String> = paths.iter().map(|p| format!("\"{p}\"")).collect();
     let output = if cfg!(windows) {
+        if let Some(name) = paths.iter().find_map(|path| unset_env_var(path)) {
+            bail!("expanding paths failed: $env:{name} is not set");
+        }
+        // Fail on unset variables like bash's -u, and print UTF-8 instead of the console code page
+        let script = format!(
+            "$ErrorActionPreference = 'Stop'; Set-StrictMode -Version Latest; \
+             [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false); {}",
+            quoted.join(";")
+        );
         Command::new("pwsh")
-            .args(["-NoProfile", "-Command", &quoted.join(";")])
+            .args(["-NoProfile", "-Command", &script])
             .output()
     } else {
         Command::new("bash")
@@ -219,47 +257,59 @@ fn expand(paths: &[&str]) -> Result<Vec<String>> {
     Ok(expanded)
 }
 
-/// Turn a manifest's files for this OS into jobs.
-fn resolve(path: &Path, manifest: &Manifest, os: Os) -> Result<Vec<Job>> {
-    let files: Vec<&FileEntry> = manifest
-        .files
+/// Turn the manifests' files for this OS into jobs, expanding all their paths in one shell call.
+fn resolve(manifests: &[(PathBuf, Manifest)], os: Os) -> Result<Vec<Job>> {
+    let selected: Vec<(&Path, &Manifest, Vec<&FileEntry>)> = manifests
         .iter()
-        .filter(|file| file.platform.includes(os))
+        .map(|(path, manifest)| {
+            let files: Vec<&FileEntry> = (manifest.files.iter())
+                .filter(|file| file.platform.includes(os))
+                .collect();
+            (path.as_path(), manifest, files)
+        })
+        .filter(|(_, _, files)| !files.is_empty())
         .collect();
-    if files.is_empty() {
-        return Ok(Vec::new());
-    }
+    let paths: Vec<&str> = selected
+        .iter()
+        .flat_map(|(_, manifest, files)| {
+            iter::once(manifest.destination_root.as_str())
+                .chain(files.iter().map(|file| file.destination.as_str()))
+        })
+        .collect();
+    let mut expanded = expand(&paths)?.into_iter();
 
-    let mut paths = vec![manifest.destination_root.as_str()];
-    paths.extend(files.iter().map(|file| file.destination.as_str()));
-    let expanded = expand(&paths)?;
-    let (root, destinations) = expanded
-        .split_first()
-        .context("expanding paths gave no output")?;
     let mut jobs = Vec::new();
-    for (file, destination) in files.iter().zip(destinations) {
-        let src = normalize(&parent(path).join(file.platform.dir()).join(&file.source));
-        let dst = normalize(&Path::new(root).join(destination));
-        match (file.recursive, src.is_dir()) {
-            (false, false) => jobs.push(Job { dst, src }),
-            (true, true) => {
-                let mut sources = Vec::new();
-                walk(&src, &mut sources)?;
-                for source in sources {
-                    let dst = dst.join(source.strip_prefix(&src)?);
-                    jobs.push(Job { dst, src: source });
+    for (path, _, files) in selected {
+        let root = expanded
+            .next()
+            .context("expanding paths gave too few lines")?;
+        for file in files {
+            let destination = expanded
+                .next()
+                .context("expanding paths gave too few lines")?;
+            let src = normalize(&parent(path).join(file.platform.dir()).join(&file.source));
+            let dst = normalize(&Path::new(&root).join(destination));
+            match (file.recursive, src.is_dir()) {
+                (false, false) => jobs.push(Job { dst, src }),
+                (true, true) => {
+                    let mut sources = Vec::new();
+                    walk(&src, &mut sources)?;
+                    for source in sources {
+                        let dst = dst.join(source.strip_prefix(&src)?);
+                        jobs.push(Job { dst, src: source });
+                    }
                 }
+                (true, false) => bail!(
+                    "{}: {} is recursive but not a folder",
+                    path.display(),
+                    src.display()
+                ),
+                (false, true) => bail!(
+                    "{}: {} is a folder; set \"recursive\": true to sync it",
+                    path.display(),
+                    src.display()
+                ),
             }
-            (true, false) => bail!(
-                "{}: {} is recursive but not a folder",
-                path.display(),
-                src.display()
-            ),
-            (false, true) => bail!(
-                "{}: {} is a folder; set \"recursive\": true to sync it",
-                path.display(),
-                src.display()
-            ),
         }
     }
     Ok(jobs)
@@ -373,13 +423,18 @@ fn sync(Job { dst, src }: &Job, diff: bool) -> Result<String> {
             if let Some(parent) = dst.parent() {
                 fs::create_dir_all(parent)?;
             }
-            // Remove first so old symlinks are replaced instead of written through
-            if let Err(err) = fs::remove_file(dst)
-                && err.kind() != ErrorKind::NotFound
-            {
-                return Err(err.into());
+            // Write a temporary file next to dst and rename it over dst, so a failed write leaves
+            // dst intact and an old symlink is replaced instead of written through
+            let mut tmp = dst.as_os_str().to_owned();
+            tmp.push(".setup-tool.tmp");
+            let tmp = PathBuf::from(tmp);
+            let written = fs::write(&tmp, &new)
+                .and_then(|()| fs::set_permissions(&tmp, fs::metadata(src)?.permissions()))
+                .and_then(|()| fs::rename(&tmp, dst));
+            if let Err(err) = written {
+                fs::remove_file(&tmp).ok();
+                return Err(err).with_context(|| format!("failed to copy to {}", dst.display()));
             }
-            fs::copy(src, dst).with_context(|| format!("failed to copy to {}", dst.display()))?;
             Ok(format!(
                 "{} {} -> {}\n",
                 style("copied").green(),
@@ -408,17 +463,8 @@ fn main() -> Result<()> {
     step(1, Emoji("📃 ", ""), "Reading manifests...");
     let manifests = load(&args)?;
 
-    // Each manifest starts a shell to expand its paths, so resolve them in parallel
     step(2, Emoji("🔍 ", ""), "Resolving destinations...");
-    let os = Os::current();
-    let mut jobs: Vec<Job> = manifests
-        .par_iter()
-        .progress_with(progress(manifests.len()))
-        .map(|(path, manifest)| resolve(path, manifest, os))
-        .collect::<Result<Vec<_>>>()?
-        .into_iter()
-        .flatten()
-        .collect();
+    let mut jobs = resolve(&manifests, Os::current())?;
     // A tool named twice is harmless, but two sources for one destination would race
     jobs.sort();
     jobs.dedup();

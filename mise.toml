@@ -19,8 +19,14 @@ run = [
 ]
 
 [tasks.setup-tool]
-description = "Copy tool files into $HOME by tool name, e.g. pi (-a/--all for every tool, -d/--diff to only show differences)"
-run = "cargo run -q -p setup-tool --"
+description = "Copy tool files into the home folder by tool name"
+# Mirrors setup-tool's clap arguments so `mise run setup-tool -h` shows them
+usage = '''
+flag "-d --diff" help="Only show how each installed file differs from the repo; copy nothing"
+flag "-a --all" help="Set up every tool listed in the root manifest.json"
+arg "[tools]" var=#true help="Tools to set up by their name in the root manifest.json, e.g. pi"
+'''
+run = "cargo run -q -p setup-tool --{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
 
 [tasks.vim]
 extends = "platform"
