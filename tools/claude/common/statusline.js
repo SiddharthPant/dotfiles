@@ -5,6 +5,8 @@
 // Line 4: context window
 // Line 5: cost · time · lines changed · rate limits
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const { execFileSync } = require('child_process');
 
 const c = (code, s) => `\x1b[${code}m${s}\x1b[00m`;
@@ -77,7 +79,8 @@ if (pc) {
   const left = pc.expires_at ? pc.expires_at - now : 0;
   const ttl = pc.warm && left > 0 ? ` (${dur(left)} left)` : ' (cold)';
   if (pc.misses > 0) {
-    const cause = pc.last_miss_cause ? ` ${pc.last_miss_cause}` : '';
+    const causes = pc.last_miss_cause?.causes;
+    const cause = causes?.length ? ` ${causes.join(', ')}` : '';
     tok.push(c('01;31', `cache ✗ ${pc.misses}${cause}`) + c('90', ttl));
   } else {
     tok.push(c('32', `cache ✓ ${Math.round((pc.hit_ratio || 0) * 100)}%`) + c(left > 0 && left < 300 ? '33' : '90', ttl));
@@ -109,11 +112,22 @@ if (cost) {
     sess.push(`${c('32', '+' + (cost.total_lines_added || 0))} ${c('31', '−' + (cost.total_lines_removed || 0))}`);
   }
 }
-for (const [key, label] of [['five_hour', '5h'], ['seven_day', '7d']]) {
-  const rl = d.rate_limits?.[key];
-  if (!rl) continue;
+// rate_limits is left out in fast mode, so fall back to the last limits seen by any session
+const limitsFile = path.join(os.tmpdir(), 'claude-statusline-rate-limits.json');
+let limits = d.rate_limits;
+const stale = !limits;
+try {
+  if (limits) fs.writeFileSync(limitsFile, JSON.stringify(limits));
+  else limits = JSON.parse(fs.readFileSync(limitsFile, 'utf8'));
+} catch {}
+let shown = false;
+for (const [key, label] of [['five_hour', '5h'], ['seven_day', '7d'], ['spend_limit', 'spend']]) {
+  const rl = limits?.[key];
+  if (!rl || (rl.resets_at && rl.resets_at <= now)) continue;
   const reset = rl.resets_at ? c('90', ` (resets ${dur(rl.resets_at - now)})`) : '';
   sess.push(`${label} ${c(pctColor(rl.used_percentage), rl.used_percentage + '%')}${reset}`);
+  shown = true;
 }
+if (stale && shown) sess.push(c('90', 'limits last seen'));
 
 process.stdout.write([line1, model.join(sep), tok.join(sep), ctx.join(sep), sess.join(sep)].filter(Boolean).join('\n'));
