@@ -14,13 +14,17 @@
   "defaultProvider": "fireworks",
   "defaultModel": "accounts/fireworks/models/deepseek-v4p1-flash",
   "modelThinkingLevels": {
-    "fireworks/accounts/fireworks/models/deepseek-v4p1-flash": "max",
-    "openai-codex/gpt-6-luna": "high"
+    "fireworks/accounts/fireworks/models/deepseek-v4p1-flash": "high",
+    "fireworks/accounts/fireworks/models/glm-5p3-flash": "high",
+    "openai-codex/gpt-6-luna": "xhigh",
+    "openai-codex/gpt-6-astra": "xhigh",
+    "openrouter/xiaomi/mimo-v2.6-pro": "medium"
   },
   "enabledModels": [
     "fireworks/accounts/fireworks/models/deepseek-v4p1-flash",
     "fireworks/accounts/fireworks/models/glm-5p3-flash",
     "openai-codex/gpt-6-luna",
-    "openai-codex/gpt-6-astra"
+    "openai-codex/gpt-6-astra",
+    "openrouter/xiaomi/mimo-v2.6-pro"
   ]
 }
