@@ -1,0 +1,3 @@
+# macOS-only Git settings, included from ~/.gitconfig.
+[core]
+	excludesfile = ~/.config/git/ignore

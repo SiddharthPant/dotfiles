@@ -1,0 +1,16 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/mise",
+  "files": [
+    {
+      "platform": "macos",
+      "source": "config.toml",
+      "destination": "config.toml"
+    },
+    {
+      "platform": "windows",
+      "source": "config.toml",
+      "destination": "config.toml"
+    }
+  ]
+}

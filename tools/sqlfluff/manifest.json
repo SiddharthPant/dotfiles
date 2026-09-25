@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/sqlfluff",
+  "files": [
+    {
+      "platform": "macos",
+      "source": ".sqlfluff",
+      "destination": ".sqlfluff"
+    }
+  ]
+}

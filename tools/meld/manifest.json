@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.local/bin",
+  "files": [
+    {
+      "platform": "macos",
+      "source": "meld",
+      "destination": "meld"
+    }
+  ]
+}

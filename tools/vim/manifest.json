@@ -1,0 +1,16 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME",
+  "files": [
+    {
+      "platform": "group:posix",
+      "source": ".vimrc",
+      "destination": ".vimrc"
+    },
+    {
+      "platform": "windows",
+      "source": "_vimrc",
+      "destination": "_vimrc"
+    }
+  ]
+}

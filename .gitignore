@@ -1,6 +1,6 @@
 excels/
 themes/
-!vscode/**/themes/
+!old/vscode/**/themes/
 .idea
 .tox
 /media
@@ -22,11 +22,6 @@ static/CACHE/
 static/js/build
 .vscode/
 .env
-.config/zed/.tmp*
-.config/zed/conversations/
-.config/zed/embeddings/
-.config/zed/prompts/
-.config/zed/settings_backup.json
 
 # Rust build output for crates/
 /target/

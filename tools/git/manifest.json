@@ -1,0 +1,20 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME",
+  "files": [
+    {
+      "source": ".gitconfig",
+      "destination": ".gitconfig"
+    },
+    {
+      "platform": "macos",
+      "source": ".gitconfig.platform",
+      "destination": ".gitconfig.platform"
+    },
+    {
+      "platform": "windows",
+      "source": ".gitconfig.platform",
+      "destination": ".gitconfig.platform"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME",
+  "files": [
+    {
+      "platform": "macos",
+      "source": "settings.json",
+      "destination": "Library/Application Support/Code/User/settings.json"
+    },
+    {
+      "platform": "macos",
+      "source": "keybindings.json",
+      "destination": "Library/Application Support/Code/User/keybindings.json"
+    },
+    {
+      "platform": "windows",
+      "source": "settings.json",
+      "destination": "$env:APPDATA/Code/User/settings.json"
+    }
+  ]
+}

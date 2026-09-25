@@ -1,6 +1,6 @@
 # Source of truth for what gets installed into $HOME. Run `mise tasks` to list tasks.
-# Unix tasks (`run`) link files with scripts/dotfiles.sh; Windows tasks (`run_windows`)
-# copy files with scripts/dotfiles.ps1.
+# Tool files are copied by setup-tool (crates/setup-tool) from the manifests listed in the root
+# manifest.json; the tasks here add the install steps that are not plain file copies.
 
 # Toolchain for the Rust helper binaries in crates/; set it up with `mise install`.
 [tools]
@@ -10,111 +10,23 @@ rust = "1.98.1"
 shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u -o pipefail -c{% endif %}'
 
 [tasks.install]
-extends = "platform"
-description = "Auto-detect macOS, Arch Linux, WSL, or Windows and install managed dotfiles"
+description = "Copy every tool's files with setup-tool, then install Vim plugins and VS Code extensions"
 alias = "default"
-run = '''
-case "$(uname -s)" in
-  Darwin) platform=macos ;;
-  *) if [ -n "${WSL_DISTRO_NAME:-}" ]; then platform=wsl; else platform=arch; fi ;;
-esac
-mise run "$platform"
-'''
-run_windows = "mise run windows"
+run = [
+  "cargo run -q -p setup-tool -- --all",
+  "mise run vim",
+  "mise run vscode-extensions",
+]
 
-[tasks.common]
-extends = "platform"
-description = "Link dotfiles shared by macOS, Arch Linux, and WSL"
-depends = ["vim", "pi-config", "claude-config"]
-run = '''
-. scripts/dotfiles.sh
-link .gitconfig "$HOME/.gitconfig"
-link .tmux.conf "$HOME/.tmux.conf"
-link .zshenv "$HOME/.zshenv"
-link .config/nvim "$HOME/.config/nvim"
-link .config/herdr/config.toml "$HOME/.config/herdr/config.toml"
-link .config/herdr/plugins/config/cloudmanic.herdr-plus "$HOME/.config/herdr/plugins/config/cloudmanic.herdr-plus"
-link .config/ghostty "$HOME/.config/ghostty"
-link .config/zed "$HOME/.config/zed"
-link .config/emacs "$HOME/.config/emacs"
-link .config/starship.toml "$HOME/.config/starship.toml"
-link .config/gh/config.yml "$HOME/.config/gh/config.yml"
-link .config/jj/config.toml "$HOME/.config/jj/config.toml"
-link .config/sqlfluff "$HOME/.config/sqlfluff"
-echo "Common dotfiles linked"
-'''
-
-[tasks.macos]
-extends = "platform"
-description = "Set up macOS-specific Zsh, Fish, Mise, and VS Code configuration"
-depends = ["common", "vscode-macos"]
-run = '''
-. scripts/dotfiles.sh
-link zshrc/macos/.zshrc "$HOME/.zshrc"
-link .config/fish/macos/config.fish "$HOME/.config/fish/config.fish"
-link .config/fish/macos/fish_plugins "$HOME/.config/fish/fish_plugins"
-link .config/mise/macos/config.toml "$HOME/.config/mise/config.toml"
-link bin/meld "$HOME/.local/bin/meld"
-echo "macOS dotfiles linked"
-'''
-
-[tasks.vscode-macos]
-extends = "platform"
-description = "Link macOS VS Code settings and install declared extensions"
-run = '''
-. scripts/dotfiles.sh
-user_dir="$HOME/Library/Application Support/Code/User"
-link vscode/macos/settings.json "$user_dir/settings.json"
-link vscode/macos/keybindings.json "$user_dir/keybindings.json"
-need code
-while IFS= read -r extension; do
-  case "$extension" in '' | '#'*) continue ;; esac
-  code --install-extension "$extension"
-done < vscode/macos/extensions.txt
-code --update-extensions
-'''
-
-[tasks.arch]
-extends = "platform"
-description = "Link Arch Linux-specific Zsh configuration"
-depends = ["common"]
-run = '''
-. scripts/dotfiles.sh
-link zshrc/arch-i3/.zshrc "$HOME/.zshrc"
-echo "Arch Linux dotfiles linked"
-'''
-
-[tasks.wsl]
-extends = "platform"
-description = "Link WSL-specific Fish and Mise configuration"
-depends = ["common"]
-run = '''
-. scripts/dotfiles.sh
-link .config/fish/wsl/config.fish "$HOME/.config/fish/config.fish"
-link .config/mise/wsl/config.toml "$HOME/.config/mise/config.toml"
-echo "WSL dotfiles linked"
-'''
-
-[tasks.windows]
-extends = "platform"
-description = "Copy Windows-specific PowerShell and Windows Terminal configuration"
-depends = ["pi-config", "claude-config"]
-run = 'echo "error: the windows task only runs on Windows" >&2; exit 1'
-run_windows = '''
-. ./scripts/dotfiles.ps1
-Copy-Dotfile powershell/Microsoft.PowerShell_profile.ps1 $PROFILE.CurrentUserCurrentHost
-if (Test-Path (Split-Path $WindowsTerminalSettings)) {
-  Copy-Dotfile windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json $WindowsTerminalSettings
-}
-"Windows dotfiles copied"
-'''
+[tasks.setup-tool]
+description = "Copy tool files into $HOME by tool name, e.g. pi (-a/--all for every tool, -d/--diff to only show differences)"
+run = "cargo run -q -p setup-tool --"
 
 [tasks.vim]
 extends = "platform"
-description = "Link Vim configuration, install vim-plug, and install declared plugins"
+description = "Install vim-plug and the plugins declared in the posix .vimrc"
 run = '''
 . scripts/dotfiles.sh
-link .vimrc "$HOME/.vimrc"
 plug="$HOME/.vim/autoload/plug.vim"
 if [ ! -f "$plug" ]; then
   need curl
@@ -123,54 +35,38 @@ else
   printf 'ok %s\n' "$plug"
 fi
 need vim
-vim -Nu .vimrc -n -es +'PlugInstall --sync' +qa
+vim -Nu tools/vim/posix/.vimrc -n -es +'PlugInstall --sync' +qa
 '''
+run_windows = '"No Vim plugins to install: _vimrc declares none"'
 
-[tasks.pi-config]
+[tasks.vscode-extensions]
 extends = "platform"
-description = "Install Pi platform config from tools/pi"
+description = "Install the VS Code extensions listed in tools/vscode/<os>/extensions.txt"
 run = '''
 . scripts/dotfiles.sh
-seed tools/pi/posix/agent/settings.json "$HOME/.pi/agent/settings.json"
-link tools/pi/common/agent/extensions/statusline.ts "$HOME/.pi/agent/extensions/statusline.ts"
-link tools/pi/common/agent/extensions/openai-fast.ts "$HOME/.pi/agent/extensions/openai-fast.ts"
-link tools/pi/common/agent/extensions/exit.ts "$HOME/.pi/agent/extensions/exit.ts"
-link tools/pi/common/agent/extensions/webfetch.ts "$HOME/.pi/agent/extensions/webfetch.ts"
-link tools/pi/common/web-search.json "$HOME/.pi/agent/web-search.json"
+need code
+while IFS= read -r extension; do
+  case "$extension" in '' | '#'*) continue ;; esac
+  code --install-extension "$extension"
+done < tools/vscode/macos/extensions.txt
+code --update-extensions
 '''
 run_windows = '''
-. ./scripts/dotfiles.ps1
-Copy-Dotfile tools/pi/windows/agent/settings.json "$HOME\.pi\agent\settings.json" -Seed
-Copy-Dotfile tools/pi/common/agent/extensions/statusline.ts "$HOME\.pi\agent\extensions\statusline.ts"
-Copy-Dotfile tools/pi/common/agent/extensions/openai-fast.ts "$HOME\.pi\agent\extensions\openai-fast.ts"
-Copy-Dotfile tools/pi/common/agent/extensions/exit.ts "$HOME\.pi\agent\extensions\exit.ts"
-Copy-Dotfile tools/pi/common/agent/extensions/webfetch.ts "$HOME\.pi\agent\extensions\webfetch.ts"
-Copy-Dotfile tools/pi/common/web-search.json "$HOME\.pi\agent\web-search.json"
+Get-Content tools/vscode/windows/extensions.txt |
+  Where-Object { $_ -and -not $_.StartsWith('#') } |
+  ForEach-Object { code --install-extension $_ }
+code --update-extensions
 '''
 
 [tasks.lint]
 description = "Run clippy on the Rust helper crates with the workspace lints, failing on any warning"
 run = "cargo clippy --workspace --all-targets -- -D warnings"
 
-[tasks.setup-tool]
-description = "Copy tool files into $HOME by tool name, e.g. pi (-a/--all for every tool, -d/--diff to only show differences)"
-run = "cargo run -q -p setup-tool --"
-
-[tasks.claude-config]
-extends = "platform"
-description = "Link (copy on Windows) Claude Code status line script"
-run = '''
-. scripts/dotfiles.sh
-link .claude/statusline.js "$HOME/.claude/statusline.js"
-'''
-run_windows = '''
-. ./scripts/dotfiles.ps1
-Copy-Dotfile .claude/statusline.js "$HOME\.claude\statusline.js"
-'''
-
+# The old install symlinked these repo paths on macOS and Linux. The paths are where the links
+# still point, even though the files have since moved to tools/ or old/.
 [tasks.clean]
 extends = "platform"
-description = "Remove repo-managed symlinks (on Windows, copies that still match the repo)"
+description = "Remove symlinks left by the old link-based install (run once on macOS before setup-tool)"
 run = '''
 . scripts/dotfiles.sh
 unlink_managed zshrc/macos/.zshrc "$HOME/.zshrc"
@@ -197,24 +93,12 @@ unlink_managed .config/starship.toml "$HOME/.config/starship.toml"
 unlink_managed .config/gh/config.yml "$HOME/.config/gh/config.yml"
 unlink_managed .config/jj/config.toml "$HOME/.config/jj/config.toml"
 unlink_managed .config/sqlfluff "$HOME/.config/sqlfluff"
-unlink_managed tools/pi/posix/agent/settings.json "$HOME/.pi/agent/settings.json"
 unlink_managed tools/pi/common/agent/extensions/statusline.ts "$HOME/.pi/agent/extensions/statusline.ts"
 unlink_managed tools/pi/common/agent/extensions/openai-fast.ts "$HOME/.pi/agent/extensions/openai-fast.ts"
 unlink_managed tools/pi/common/agent/extensions/exit.ts "$HOME/.pi/agent/extensions/exit.ts"
 unlink_managed tools/pi/common/agent/extensions/webfetch.ts "$HOME/.pi/agent/extensions/webfetch.ts"
 unlink_managed tools/pi/common/web-search.json "$HOME/.pi/agent/web-search.json"
 unlink_managed .claude/statusline.js "$HOME/.claude/statusline.js"
-echo "Dotfiles unlinked"
+echo "Old symlinks removed"
 '''
-run_windows = '''
-. ./scripts/dotfiles.ps1
-Remove-Dotfile tools/pi/common/web-search.json "$HOME\.pi\agent\web-search.json"
-Remove-Dotfile tools/pi/common/agent/extensions/statusline.ts "$HOME\.pi\agent\extensions\statusline.ts"
-Remove-Dotfile tools/pi/common/agent/extensions/openai-fast.ts "$HOME\.pi\agent\extensions\openai-fast.ts"
-Remove-Dotfile tools/pi/common/agent/extensions/exit.ts "$HOME\.pi\agent\extensions\exit.ts"
-Remove-Dotfile tools/pi/common/agent/extensions/webfetch.ts "$HOME\.pi\agent\extensions\webfetch.ts"
-Remove-Dotfile .claude/statusline.js "$HOME\.claude\statusline.js"
-Remove-Dotfile powershell/Microsoft.PowerShell_profile.ps1 $PROFILE.CurrentUserCurrentHost
-Remove-Dotfile windows_terminal/mnt/c/Users/sidpa/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json $WindowsTerminalSettings
-"Unmodified dotfile copies removed"
-'''
+run_windows = '"Nothing to clean on Windows: the old install made copies, not links"'

@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/gh",
+  "files": [
+    {
+      "platform": "macos",
+      "source": "config.yml",
+      "destination": "config.yml"
+    }
+  ]
+}

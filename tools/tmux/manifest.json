@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME",
+  "files": [
+    {
+      "platform": "macos",
+      "source": ".tmux.conf",
+      "destination": ".tmux.conf"
+    }
+  ]
+}

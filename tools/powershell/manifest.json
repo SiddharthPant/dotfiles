@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME",
+  "files": [
+    {
+      "platform": "windows",
+      "source": "Microsoft.PowerShell_profile.ps1",
+      "destination": "$PROFILE"
+    }
+  ]
+}

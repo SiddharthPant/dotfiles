@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$env:LOCALAPPDATA/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState",
+  "files": [
+    {
+      "platform": "windows",
+      "source": "settings.json",
+      "destination": "settings.json"
+    }
+  ]
+}

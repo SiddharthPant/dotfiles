@@ -1,0 +1,47 @@
+[user]
+	name = SiddharthPant
+	email = 10671794+SiddharthPant@users.noreply.github.com
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = code -w
+
+[sequence]
+	editor = code -w
+
+[fetch]
+	prune = true
+
+[pull]
+	ff = only
+	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[rerere]
+	enabled = true
+
+[diff]
+	algorithm = histogram
+
+[difftool]
+	prompt = false
+[difftool "vscode"]
+	cmd = code --wait --diff "$LOCAL" "$REMOTE"
+
+[merge]
+	tool = vscode
+	conflictstyle = zdiff3
+[mergetool "vscode"]
+	cmd = code --wait --merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
+[alias]
+	undo = reset --mixed HEAD^
+
+# Platform-only settings, copied by setup-tool from tools/git/<os>/.gitconfig.platform.
+# Included last so they can override anything above.
+[include]
+	path = ~/.gitconfig.platform

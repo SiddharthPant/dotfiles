@@ -1,0 +1,10 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.claude",
+  "files": [
+    {
+      "source": "statusline.js",
+      "destination": "statusline.js"
+    }
+  ]
+}

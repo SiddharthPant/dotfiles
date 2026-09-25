@@ -1,0 +1,8 @@
+[settings]
+minimum_release_age_excludes = ["pi", "claude-code"]
+windows_default_inline_shell_args = "pwsh -Command"
+
+[tools]
+claude-code = "latest"
+make = "latest"
+pi = "latest"

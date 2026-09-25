@@ -1,6 +1,20 @@
 {
   "$schema": "./crates/setup-tool/schemas/root-manifest.schema.json",
   "manifests": {
-    "pi": "tools/pi/manifest.json"
+    "claude": "tools/claude/manifest.json",
+    "fish": "tools/fish/manifest.json",
+    "gh": "tools/gh/manifest.json",
+    "ghostty": "tools/ghostty/manifest.json",
+    "git": "tools/git/manifest.json",
+    "meld": "tools/meld/manifest.json",
+    "mise": "tools/mise/manifest.json",
+    "pi": "tools/pi/manifest.json",
+    "powershell": "tools/powershell/manifest.json",
+    "sqlfluff": "tools/sqlfluff/manifest.json",
+    "tmux": "tools/tmux/manifest.json",
+    "vim": "tools/vim/manifest.json",
+    "vscode": "tools/vscode/manifest.json",
+    "windowsterminal": "tools/windowsterminal/manifest.json",
+    "zsh": "tools/zsh/manifest.json"
   }
 }
