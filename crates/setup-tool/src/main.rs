@@ -1,7 +1,8 @@
 //! Copy tool files listed in manifest.json files into the home folder:
-//! `cargo run -q -p setup-tool -- [-d|--diff] (-a|--all | [-p|--pull] <tool>...)`.
+//! `cargo run -q -p setup-tool -- (-l|--list | [-d|--diff] (-a|--all | [-p|--pull] <tool>...))`.
 //! The root manifest.json maps alphanumeric tool names to their manifests (e.g. "pi" ->
-//! tools/pi/manifest.json); `--all` sets up every tool. Files are only copied when they differ;
+//! tools/pi/manifest.json); `--all` sets up every tool, and `--list` only prints each tool with
+//! how many files it installs on this OS. Files are only copied when they differ;
 //! `--diff` shows the differences instead. `--pull` copies the other way, from the home folder back
 //! into the repo, for bringing changes made outside the repo back into it; it only takes tool names,
 //! and for a recursive entry only pulls the files that the repo already has.
@@ -38,6 +39,7 @@ use similar::{ChangeTag, TextDiff};
 const ROOT_MANIFEST: &str = "manifest.json";
 
 #[derive(Parser)]
+#[expect(clippy::struct_excessive_bools, reason = "clap flags")]
 #[command(about = "Copy tool files listed in manifest.json files into the home folder")]
 struct Args {
     /// Only show how each installed file differs from the repo; copy nothing
@@ -49,8 +51,11 @@ struct Args {
     /// Copy the installed files back into the repo instead; only with tool names, not --all
     #[arg(short, long, conflicts_with = "all")]
     pull: bool,
+    /// List every tool in the root manifest.json and how many files it installs on this OS
+    #[arg(short, long, conflicts_with_all = ["all", "diff", "pull", "tools"])]
+    list: bool,
     /// Tools to set up by their name in the root manifest.json, e.g. pi
-    #[arg(required_unless_present = "all")]
+    #[arg(required_unless_present_any = ["all", "list"])]
     tools: Vec<String>,
 }
 
@@ -159,17 +164,32 @@ fn read_json<T: DeserializeOwned>(path: &Path) -> Result<T> {
     serde_json::from_str(&text).with_context(|| format!("invalid {}", path.display()))
 }
 
-/// Read the manifests of the requested tools (all of them for `--all`).
-fn load(args: &Args) -> Result<Vec<(PathBuf, Manifest)>> {
+/// Read the root manifest and check that every tool name is alphanumeric.
+fn read_root() -> Result<RootManifest> {
     let root: RootManifest = read_json(Path::new(ROOT_MANIFEST))?;
-    let names: Vec<&str> = root.manifests.keys().map(String::as_str).collect();
-    if let Some(name) = names
-        .iter()
+    if let Some(name) = root
+        .manifests
+        .keys()
         .find(|name| name.is_empty() || !name.chars().all(|c| c.is_ascii_alphanumeric()))
     {
         bail!("{ROOT_MANIFEST}: tool name {name:?} must be alphanumeric");
     }
+    Ok(root)
+}
 
+fn read_manifests<'a>(
+    paths: impl IntoIterator<Item = &'a PathBuf>,
+) -> Result<Vec<(PathBuf, Manifest)>> {
+    paths
+        .into_iter()
+        .map(|path| Ok((normalize(path), read_json(path)?)))
+        .collect()
+}
+
+/// Read the manifests of the requested tools (all of them for `--all`).
+fn load(args: &Args) -> Result<Vec<(PathBuf, Manifest)>> {
+    let root = read_root()?;
+    let names: Vec<&str> = root.manifests.keys().map(String::as_str).collect();
     let paths: Vec<&PathBuf> = if args.all {
         root.manifests.values().collect()
     } else {
@@ -182,10 +202,25 @@ fn load(args: &Args) -> Result<Vec<(PathBuf, Manifest)>> {
             })
             .collect::<Result<_>>()?
     };
-    paths
-        .into_iter()
-        .map(|path| Ok((normalize(path), read_json(path)?)))
-        .collect()
+    read_manifests(paths)
+}
+
+/// Print every tool with how many files it installs on this OS, dimming tools with none.
+/// All tools resolve in one shell call, and each job is matched back to its tool by the folder
+/// its source comes from.
+fn list() -> Result<()> {
+    let root = read_root()?;
+    let manifests = read_manifests(root.manifests.values())?;
+    let jobs = resolve(&manifests, Os::current())?;
+    let width = root.manifests.keys().map(String::len).max().unwrap_or(0);
+    for (name, (path, _)) in root.manifests.keys().zip(&manifests) {
+        let count = (jobs.iter())
+            .filter(|job| job.src.starts_with(parent(path)))
+            .count();
+        let line = style(format!("{name:width$}  {count} file(s)"));
+        println!("{}", if count == 0 { line.dim() } else { line });
+    }
+    Ok(())
 }
 
 fn parent(path: &Path) -> &Path {
@@ -465,6 +500,9 @@ fn progress(len: usize) -> ProgressBar {
 fn main() -> Result<()> {
     let started = Instant::now();
     let args = Args::parse();
+    if args.list {
+        return list();
+    }
 
     step(1, Emoji("📃 ", ""), "Reading manifests...");
     let manifests = load(&args)?;

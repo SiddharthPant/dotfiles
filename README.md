@@ -14,6 +14,7 @@ mise run                     # install everything
 - `install` (the default): `setup-tool --all`, then Vim plugins and VS Code extensions
 - `build`: build `crates/setup-tool` in release mode into `bin/`; rerun after changing the crate
 - `setup-tool <tool>...` or `-a`: copy tool files into the home folder when they differ; `-d` only shows the diffs, `-p <tool>` pulls the installed files back into the repo (not with `-a`; a recursive entry only pulls files the repo already has)
+- `setup-tool -l`: list every tool and how many files it installs on this OS
 - `setup-tool:dev -- <args>`: the same, from source with `cargo run`
 - `lint`: clippy with the strict workspace lints from `Cargo.toml`
 - `vim`, `vscode-extensions`: install vim-plug plugins, and the extensions in `tools/vscode/<os>/extensions.txt`

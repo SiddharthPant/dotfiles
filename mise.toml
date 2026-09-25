@@ -42,9 +42,10 @@ usage = '''
 flag "-d --diff" help="Only show how each installed file differs from the repo; copy nothing"
 flag "-a --all" help="Set up every tool listed in the root manifest.json"
 flag "-p --pull" help="Copy the installed files back into the repo instead; only with tool names, not --all"
+flag "-l --list" help="List every tool in the root manifest.json and how many files it installs on this OS"
 arg "[tools]" var=#true help="Tools to set up by their name in the root manifest.json, e.g. pi"
 '''
-run = "./bin/setup-tool{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% if usage.pull %} --pull{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
+run = "./bin/setup-tool{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% if usage.pull %} --pull{% endif %}{% if usage.list %} --list{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
 
 # No usage spec, so arguments pass straight to clap and new flags work while developing them;
 # see its help with `mise run setup-tool:dev -- -h`
