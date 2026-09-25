@@ -13,20 +13,43 @@ shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u 
 description = "Copy every tool's files with setup-tool, then install Vim plugins and VS Code extensions"
 alias = "default"
 run = [
-  "cargo run -q -p setup-tool -- --all",
+  "mise run setup-tool --all",
   "mise run vim",
   "mise run vscode-extensions",
 ]
 
+[tasks.build]
+extends = "platform"
+description = "Build setup-tool in release mode and copy it to bin/ (gitignored) for the setup-tool task"
+run = '''
+cargo build --release -q -p setup-tool
+mkdir -p bin
+cp target/release/setup-tool bin/
+echo "Built bin/setup-tool"
+'''
+run_windows = '''
+cargo build --release -q -p setup-tool
+if ($LASTEXITCODE) { exit $LASTEXITCODE }
+New-Item -ItemType Directory -Force bin | Out-Null
+Copy-Item target/release/setup-tool.exe bin/
+"Built bin/setup-tool.exe"
+'''
+
 [tasks.setup-tool]
-description = "Copy tool files into the home folder by tool name"
+description = "Copy tool files into the home folder by tool name with bin/setup-tool (run `mise run build` first)"
 # Mirrors setup-tool's clap arguments so `mise run setup-tool -h` shows them
 usage = '''
 flag "-d --diff" help="Only show how each installed file differs from the repo; copy nothing"
 flag "-a --all" help="Set up every tool listed in the root manifest.json"
 arg "[tools]" var=#true help="Tools to set up by their name in the root manifest.json, e.g. pi"
 '''
-run = "cargo run -q -p setup-tool --{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
+run = "./bin/setup-tool{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
+
+# No usage spec, so arguments pass straight to clap and new flags work while developing them;
+# see its help with `mise run setup-tool:dev -- -h`
+[tasks."setup-tool:dev"]
+description = "Run setup-tool from source with cargo, passing arguments through; for developing the crate"
+run = "cargo run -q -p setup-tool --"
 
 [tasks.vim]
 extends = "platform"

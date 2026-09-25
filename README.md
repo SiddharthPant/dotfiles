@@ -4,11 +4,13 @@ Personal configuration files for daily development tools on macOS and Windows.
 
 ## Setup
 
-The repo uses [mise](https://mise.jdx.dev) tasks in `mise.toml` as the source of truth for what gets installed into `$HOME`. Run `mise trust` once in the repo, `mise install` to set up the pinned tools (Rust for the helper binaries in `crates/`), then `mise tasks` to list them.
+The repo uses [mise](https://mise.jdx.dev) tasks in `mise.toml` as the source of truth for what gets installed into `$HOME`. Run `mise trust` once in the repo, `mise install` to set up the pinned tools (Rust for the helper binaries in `crates/`), and `mise run build` to build `setup-tool` into `bin/` (gitignored); then `mise run setup-tool -ad` shows what would change. `mise tasks` lists every task.
 
 - `mise run install` (or just `mise run`): copy every tool's files with `setup-tool --all`, then install Vim plugins and VS Code extensions
-- `mise run setup-tool pi`: copy a tool's files into `$HOME` with the `crates/setup-tool` Rust binary, copying only files that differ and overwriting them. Tools are named in the root `manifest.json` (alphanumeric name -> manifest path, e.g. `pi` -> `tools/pi/manifest.json`), and several can be given at once (`mise run setup-tool fish tmux`); add `-d`/`--diff` (e.g. `mise run setup-tool -d pi`) to only show how each copy differs from the repo
+- `mise run build`: build `crates/setup-tool` in release mode and copy the binary to `bin/`; run it again after changing the crate
+- `mise run setup-tool pi`: copy a tool's files into `$HOME` with `bin/setup-tool`, copying only files that differ and overwriting them. Tools are named in the root `manifest.json` (alphanumeric name -> manifest path, e.g. `pi` -> `tools/pi/manifest.json`), and several can be given at once (`mise run setup-tool fish tmux`); add `-d`/`--diff` (e.g. `mise run setup-tool -d pi`) to only show how each copy differs from the repo
 - `mise run setup-tool -a` (`--all`): set up every tool in the root `manifest.json`; combine with `-d` (`-ad`) to only show differences
+- `mise run setup-tool:dev -- <args>`: run `setup-tool` from source with `cargo run` while developing the crate; arguments pass straight through (`mise run setup-tool:dev -- -h` for its help)
 - `mise run vim`: install vim-plug and the plugins declared in the posix `.vimrc`
 - `mise run vscode-extensions`: install the VS Code extensions listed in `tools/vscode/<os>/extensions.txt`
 - `mise run lint`: run clippy on the Rust helper crates in `crates/` with the strict workspace lints from `Cargo.toml`

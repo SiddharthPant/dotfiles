@@ -23,5 +23,6 @@ static/js/build
 .vscode/
 .env
 
-# Rust build output for crates/
+# Rust build output for crates/, and the setup-tool binary copied by `mise run build`
 /target/
+/bin/
