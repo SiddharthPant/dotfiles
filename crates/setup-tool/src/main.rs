@@ -1,8 +1,10 @@
 //! Copy tool files listed in manifest.json files into the home folder:
-//! `cargo run -q -p setup-tool -- [-d|--diff] (-a|--all | <tool>...)`.
+//! `cargo run -q -p setup-tool -- [-d|--diff] (-a|--all | [-p|--pull] <tool>...)`.
 //! The root manifest.json maps alphanumeric tool names to their manifests (e.g. "pi" ->
 //! tools/pi/manifest.json); `--all` sets up every tool. Files are only copied when they differ;
-//! `--diff` shows the differences instead.
+//! `--diff` shows the differences instead. `--pull` copies the other way, from the home folder back
+//! into the repo, for bringing changes made outside the repo back into it; it only takes tool names,
+//! and for a recursive entry only pulls the files that the repo already has.
 //!
 //! Each file's `platform` (default "common") picks where it applies and the source folder next to
 //! the manifest: "group:posix" -> posix/, "group:linux" -> linux/, "macos" -> macos/, and so on.
@@ -17,6 +19,7 @@ use std::fmt;
 use std::fs;
 use std::io::ErrorKind;
 use std::iter;
+use std::mem;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
@@ -43,6 +46,9 @@ struct Args {
     /// Set up every tool listed in the root manifest.json
     #[arg(short, long, conflicts_with = "tools")]
     all: bool,
+    /// Copy the installed files back into the repo instead; only with tool names, not --all
+    #[arg(short, long, conflicts_with = "all")]
+    pull: bool,
     /// Tools to set up by their name in the root manifest.json, e.g. pi
     #[arg(required_unless_present = "all")]
     tools: Vec<String>,
@@ -465,6 +471,11 @@ fn main() -> Result<()> {
 
     step(2, Emoji("🔍 ", ""), "Resolving destinations...");
     let mut jobs = resolve(&manifests, Os::current())?;
+    if args.pull {
+        for job in &mut jobs {
+            mem::swap(&mut job.src, &mut job.dst);
+        }
+    }
     // A tool named twice is harmless, but two sources for one destination would race
     jobs.sort();
     jobs.dedup();
@@ -482,6 +493,8 @@ fn main() -> Result<()> {
 
     if args.diff {
         step(3, Emoji("🔎 ", ""), "Comparing files...");
+    } else if args.pull {
+        step(3, Emoji("🚚 ", ""), "Pulling files into the repo...");
     } else {
         step(3, Emoji("🚚 ", ""), "Copying files...");
     }

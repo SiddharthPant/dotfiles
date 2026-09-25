@@ -10,6 +10,7 @@ The repo uses [mise](https://mise.jdx.dev) tasks in `mise.toml` as the source of
 - `mise run build`: build `crates/setup-tool` in release mode and copy the binary to `bin/`; run it again after changing the crate
 - `mise run setup-tool pi`: copy a tool's files into `$HOME` with `bin/setup-tool`, copying only files that differ and overwriting them. Tools are named in the root `manifest.json` (alphanumeric name -> manifest path, e.g. `pi` -> `tools/pi/manifest.json`), and several can be given at once (`mise run setup-tool fish tmux`); add `-d`/`--diff` (e.g. `mise run setup-tool -d pi`) to only show how each copy differs from the repo
 - `mise run setup-tool -a` (`--all`): set up every tool in the root `manifest.json`; combine with `-d` (`-ad`) to only show differences
+- `mise run setup-tool -p pi` (`--pull`): copy the installed files back into the repo, for changes made outside the repo (e.g. an app edited its settings); only takes tool names, not `--all`, and a recursive entry only pulls files the repo already has. Combine with `-d` (`-pd pi`) to see what would change in the repo first
 - `mise run setup-tool:dev -- <args>`: run `setup-tool` from source with `cargo run` while developing the crate; arguments pass straight through (`mise run setup-tool:dev -- -h` for its help)
 - `mise run vim`: install vim-plug and the plugins declared in the posix `.vimrc`
 - `mise run vscode-extensions`: install the VS Code extensions listed in `tools/vscode/<os>/extensions.txt`
