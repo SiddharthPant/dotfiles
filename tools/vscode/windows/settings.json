@@ -2,13 +2,13 @@
   "[rust]": {
     "editor.semanticHighlighting.enabled": true
   },
-  "chat.disableAIFeatures"                 : true,
-  "editor.bracketPairColorization.enabled" : true,
-  "editor.cursorBlinking"                  : "solid",
-  "editor.cursorSmoothCaretAnimation"      : "on",
-  "editor.fontFamily"                      : "Cascadia Code",
-  "editor.fontLigatures"                   : true,
-  "editor.linkedEditing"                   : true,
+  "chat.disableAIFeatures": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorBlinking": "solid",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.fontFamily": "Cascadia Code",
+  "editor.fontLigatures": true,
+  "editor.linkedEditing": true,
   // Make certain parts of code italics
   // I use default theme and don't like to customize it beyond this
   "editor.semanticTokenColorCustomizations": {
@@ -24,8 +24,8 @@
       }
     }
   },
-  "editor.smoothScrolling"         : true,
-  "editor.stickyTabStops"          : true,
+  "editor.smoothScrolling": true,
+  "editor.stickyTabStops": true,
   "editor.tokenColorCustomizations": {
     "textMateRules": [
       {
@@ -39,53 +39,58 @@
       }
     ]
   },
-  "editor.wordWrap"                 : "on",
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 90,
   "extensions.ignoreRecommendations": true,
-  "files.exclude"                   : {
+  "files.exclude": {
     "**/.jj": true
   },
-  "security.workspace.trust.enabled": false,
-  "telemetry.telemetryLevel"        : "off",
-  "todo-tree.regex.regex"           : "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
-  "todo-tree.ripgrep.ripgrep"       : "%LOCALAPPDATA%\\Microsoft\\WinGet\\Links\\rg.exe",
-  "window.autoDetectColorScheme"    : true,
-  "workbench.activityBar.location"  : "top",
-  "workbench.editor.wrapTabs"       : true,
-  "workbench.editorAssociations"    : {
-    "*.md": "vscode.markdown.editor"
-  },
-  "workbench.experimental.modernUI"   : true,
-  "workbench.startupEditor"           : "none",
-  "git.autofetch"                     : true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
   "json.schemaDownload.trustedDomains": {
-    "https://aka.ms"                                       : true,
-    "https://developer.microsoft.com/json-schemas/"        : true,
-    "https://json-schema.org/"                             : true,
-    "https://json.schemastore.org/"                        : true,
-    "https://raw.githubusercontent.com"                    : true,
+    "https://aka.ms": true,
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com": true,
     "https://raw.githubusercontent.com/devcontainers/spec/": true,
-    "https://raw.githubusercontent.com/microsoft/vscode/"  : true,
-    "https://schemastore.azurewebsites.net/"               : true,
-    "https://www.schemastore.org/"                         : true
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
   },
+  "rewrap.wrappingColumn": 90,
+  "security.workspace.trust.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-    },
     "Command Prompt": {
+      "args": [],
+      "icon": "terminal-cmd",
       "path": [
         "${env:windir}\\Sysnative\\cmd.exe",
         "${env:windir}\\System32\\cmd.exe"
-      ],
-      "args": [],
-      "icon": "terminal-cmd"
+      ]
     },
     "Git Bash": {
-      "source": "Git Bash",
-      "icon"  : "terminal-git-bash"
+      "icon": "terminal-git-bash",
+      "source": "Git Bash"
+    },
+    "PowerShell": {
+      "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
     }
   },
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "git.confirmSync": false,
-  "rewrap.wrappingColumn": 90
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
+  "todo-tree.ripgrep.ripgrep": "%LOCALAPPDATA%\\Microsoft\\WinGet\\Links\\rg.exe",
+  "window.autoDetectColorScheme": true,
+  "workbench.activityBar.location": "top",
+  "workbench.editor.wrapTabs": true,
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.editor"
+  },
+  "workbench.experimental.modernUI": true,
+  "workbench.startupEditor": "none",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "security.allowedUNCHosts": [
+    "mbp"
+  ]
 }
