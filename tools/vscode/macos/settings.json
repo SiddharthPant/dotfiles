@@ -74,5 +74,6 @@
     "https://raw.githubusercontent.com/microsoft/vscode/": true,
     "https://schemastore.azurewebsites.net/": true,
     "https://www.schemastore.org/": true
-  }
+  },
+  "git.confirmSync": false
 }
