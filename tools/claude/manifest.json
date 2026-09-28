@@ -3,6 +3,10 @@
   "destinationRoot": "$HOME/.claude",
   "files": [
     {
+      "source": "settings.json",
+      "destination": "settings.json"
+    },
+    {
       "source": "statusline.js",
       "destination": "statusline.js"
     }
