@@ -2,6 +2,7 @@
   "$schema": "./crates/setup-tool/schemas/root-manifest.schema.json",
   "manifests": {
     "claude": "tools/claude/manifest.json",
+    "fancontrol": "tools/fancontrol/manifest.json",
     "fish": "tools/fish/manifest.json",
     "gh": "tools/gh/manifest.json",
     "ghostty": "tools/ghostty/manifest.json",

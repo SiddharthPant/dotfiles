@@ -1,0 +1,639 @@
+{
+  "__VERSION__": "281",
+  "FanControl": {
+    "Controls": [
+      {
+        "NickName": "Case Fan Back #1",
+        "Identifier": "/lpc/nct6798d/control/0",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "CPU + GPU"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6798d/fan/0"
+        },
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 17,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            0,
+            238,
+            false
+          ],
+          [
+            1,
+            239,
+            false
+          ],
+          [
+            10,
+            247,
+            false
+          ],
+          [
+            20,
+            485,
+            false
+          ],
+          [
+            30,
+            698,
+            false
+          ],
+          [
+            40,
+            881,
+            false
+          ],
+          [
+            50,
+            1028,
+            false
+          ],
+          [
+            60,
+            1179,
+            false
+          ],
+          [
+            70,
+            1308,
+            false
+          ],
+          [
+            80,
+            1428,
+            false
+          ],
+          [
+            90,
+            1542,
+            false
+          ],
+          [
+            100,
+            1669,
+            false
+          ]
+        ]
+      },
+      {
+        "NickName": "CPU 3 Fans Top #2",
+        "Identifier": "/lpc/nct6798d/control/1",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "CPU + GPU"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6798d/fan/1"
+        },
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 100,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            10,
+            461,
+            false
+          ],
+          [
+            20,
+            639,
+            false
+          ],
+          [
+            30,
+            930,
+            false
+          ],
+          [
+            40,
+            1178,
+            false
+          ],
+          [
+            50,
+            1384,
+            false
+          ],
+          [
+            60,
+            1578,
+            false
+          ],
+          [
+            70,
+            1746,
+            false
+          ],
+          [
+            80,
+            1896,
+            false
+          ],
+          [
+            90,
+            2012,
+            false
+          ],
+          [
+            100,
+            2150,
+            false
+          ]
+        ]
+      },
+      {
+        "NickName": "Case front 3 Fans #3",
+        "Identifier": "/lpc/nct6798d/control/2",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "CPU + GPU"
+        },
+        "SelectedOffset": 20,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6798d/fan/2"
+        },
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 100,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            0,
+            296,
+            false
+          ],
+          [
+            10,
+            296,
+            false
+          ],
+          [
+            20,
+            301,
+            false
+          ],
+          [
+            30,
+            470,
+            false
+          ],
+          [
+            40,
+            630,
+            false
+          ],
+          [
+            50,
+            795,
+            false
+          ],
+          [
+            60,
+            960,
+            false
+          ],
+          [
+            70,
+            1124,
+            false
+          ],
+          [
+            80,
+            1290,
+            false
+          ],
+          [
+            90,
+            1448,
+            false
+          ],
+          [
+            100,
+            1623,
+            false
+          ]
+        ]
+      },
+      {
+        "NickName": "Fan #4",
+        "Identifier": "/lpc/nct6798d/control/3",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "Fan #5",
+        "Identifier": "/lpc/nct6798d/control/4",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "CPU Pump #6",
+        "Identifier": "/lpc/nct6798d/control/5",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "Pump"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6798d/fan/5"
+        },
+        "SelectedStart": 25,
+        "SelectedStop": 16,
+        "MinimumPercent": 60,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 53,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            10,
+            0,
+            false
+          ],
+          [
+            20,
+            741,
+            false
+          ],
+          [
+            30,
+            1211,
+            false
+          ],
+          [
+            40,
+            1609,
+            false
+          ],
+          [
+            50,
+            1928,
+            false
+          ],
+          [
+            60,
+            2243,
+            false
+          ],
+          [
+            70,
+            2514,
+            false
+          ],
+          [
+            80,
+            2761,
+            false
+          ],
+          [
+            90,
+            3008,
+            false
+          ],
+          [
+            100,
+            3214,
+            false
+          ]
+        ]
+      },
+      {
+        "NickName": "Fan #7",
+        "Identifier": "/lpc/nct6798d/control/6",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "Control 1 - NVIDIA GeForce RTX 3090",
+        "Identifier": "NVApiWrapper/0-GA102-A/control/0",
+        "IsHidden": false,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "NVApiWrapper/0-GA102-A/fan/0"
+        },
+        "SelectedStart": 49,
+        "SelectedStop": 46,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            40,
+            0,
+            false
+          ],
+          [
+            50,
+            886,
+            false
+          ],
+          [
+            60,
+            1332,
+            false
+          ],
+          [
+            70,
+            1783,
+            false
+          ],
+          [
+            80,
+            2209,
+            false
+          ],
+          [
+            90,
+            2682,
+            false
+          ],
+          [
+            100,
+            3089,
+            false
+          ]
+        ]
+      },
+      {
+        "NickName": "Control 2 - NVIDIA GeForce RTX 3090",
+        "Identifier": "NVApiWrapper/0-GA102-A/control/1",
+        "IsHidden": false,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "NVApiWrapper/0-GA102-A/fan/1"
+        },
+        "SelectedStart": 49,
+        "SelectedStop": 46,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            40,
+            0,
+            false
+          ],
+          [
+            50,
+            882,
+            false
+          ],
+          [
+            60,
+            1332,
+            false
+          ],
+          [
+            70,
+            1783,
+            false
+          ],
+          [
+            80,
+            2226,
+            false
+          ],
+          [
+            90,
+            2672,
+            false
+          ],
+          [
+            100,
+            3104,
+            false
+          ]
+        ]
+      }
+    ],
+    "CustomSensors": [],
+    "FanCurves": [
+      {
+        "Name": "CPU",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedTempSource": {
+          "Identifier": "/amdcpu/0/temperature/2"
+        },
+        "Points": [
+          "20,20",
+          "40,20",
+          "60,30",
+          "75,50",
+          "85,100"
+        ],
+        "MaximumTemperature": 90,
+        "MinimumTemperature": 20,
+        "MaximumCommand": 100,
+        "HysteresisConfig": {
+          "ResponseTimeUp": 5,
+          "ResponseTimeDown": 10,
+          "HysteresisValueUp": 2,
+          "HysteresisValueDown": 3,
+          "IgnoreHysteresisAtLimits": true
+        }
+      },
+      {
+        "Name": "GPU",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedTempSource": {
+          "Identifier": "NVApiWrapper/0-GA102-A/sensor/0"
+        },
+        "Points": [
+          "20,20",
+          "45,20",
+          "65,30",
+          "75,50",
+          "85,100"
+        ],
+        "MaximumTemperature": 90,
+        "MinimumTemperature": 20,
+        "MaximumCommand": 100,
+        "HysteresisConfig": {
+          "ResponseTimeUp": 3,
+          "ResponseTimeDown": 10,
+          "HysteresisValueUp": 2,
+          "HysteresisValueDown": 3,
+          "IgnoreHysteresisAtLimits": true
+        }
+      },
+      {
+        "Name": "CPU + GPU",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedFanCurves": [
+          {
+            "Name": "CPU"
+          },
+          {
+            "Name": "GPU"
+          }
+        ],
+        "SelectedMixFunction": 0
+      },
+      {
+        "Name": "Pump",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "Percent": 100
+      }
+    ],
+    "FanSensors": [
+      {
+        "Identifier": "/lpc/nct6798d/fan/0",
+        "IsHidden": false,
+        "NickName": "Case Fan Back #1"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/1",
+        "IsHidden": false,
+        "NickName": "CPU 3 Fans Top #2"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/2",
+        "IsHidden": false,
+        "NickName": "Case front 3 Fans #3"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/3",
+        "IsHidden": true,
+        "NickName": "Fan #4"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/4",
+        "IsHidden": true,
+        "NickName": "Fan #5"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/5",
+        "IsHidden": false,
+        "NickName": "CPU Pump #6"
+      },
+      {
+        "Identifier": "/lpc/nct6798d/fan/6",
+        "IsHidden": true,
+        "NickName": "Fan #7"
+      },
+      {
+        "Identifier": "NVApiWrapper/0-GA102-A/fan/0",
+        "IsHidden": false,
+        "NickName": "Control 1 - NVIDIA GeForce RTX 3090"
+      },
+      {
+        "Identifier": "NVApiWrapper/0-GA102-A/fan/1",
+        "IsHidden": false,
+        "NickName": "Control 2 - NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "TemperatureSensors": []
+  },
+  "Sensors": {
+    "AdlxWrapperSettings": {
+      "Enabled": true
+    },
+    "DisabledPlugins": [],
+    "DisableStorageSensors": false,
+    "LibreHardwareMonitorSettings": {
+      "Controller": true,
+      "CPU": true,
+      "EmbeddedEC": true,
+      "GPU": true,
+      "Memory": true,
+      "Motherboard": true,
+      "PowerMonitor": true,
+      "PSU": false,
+      "Storage": true,
+      "StorageUpdateInterval": "00:01:00",
+      "ZeroRPMOverride": true
+    },
+    "NvAPIWrapperSettings": {
+      "Enabled": true,
+      "ZeroRPMOverride": true
+    }
+  },
+  "MainWindow": {
+    "Fahrenheit": false,
+    "HideCalibration": false,
+    "HideFanSpeedCards": true,
+    "HorizontalUIOrientation": false,
+    "PrimaryColor": "#FF607D8B",
+    "SecondaryColor": "#FFAEEA00",
+    "SelectedTheme": "",
+    "ShowHiddenCards": false,
+    "SyncThemeWithWindows": true,
+    "SyncTrayIconColorWithWindows": true,
+    "TrayIconColor": null,
+    "TrayIcons": []
+  }
+}
