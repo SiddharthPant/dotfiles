@@ -18,7 +18,6 @@ mise run                     # install everything
 - `setup-tool:dev -- <args>`: the same, from source with `cargo run`
 - `lint`: clippy with the strict workspace lints from `Cargo.toml`
 - `vim`, `vscode-extensions`: install vim-plug plugins, and the extensions in `tools/vscode/<os>/extensions.txt`
-- `clean`: remove symlinks left by the old link-based install (once, on macOS)
 
 Files are copied, not linked. Apps that edit their own settings (VS Code, Windows Terminal, `gh`, `git config --global`, `mise use -g`, fisher, Ghostty's theme) make copies drift: check with `-d`, bring changes back with `-p`.
 
