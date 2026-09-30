@@ -1,0 +1,11 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/zed",
+  "files": [
+    {
+      "platform": "group:posix",
+      "source": "settings.json",
+      "destination": "settings.json"
+    }
+  ]
+}

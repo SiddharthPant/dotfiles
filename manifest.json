@@ -16,6 +16,7 @@
     "vim": "tools/vim/manifest.json",
     "vscode": "tools/vscode/manifest.json",
     "windowsterminal": "tools/windowsterminal/manifest.json",
+    "zed": "tools/zed/manifest.json",
     "zsh": "tools/zsh/manifest.json"
   }
 }
