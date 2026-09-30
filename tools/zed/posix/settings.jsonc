@@ -115,7 +115,6 @@
         "variable.parameter": { "font_style": "italic" },
         "attribute": { "font_style": "italic" },
         "function.decorator": {
-          "color": "#73ade9ff",
           "font_style": "italic",
         },
         "emphasis": { "font_style": "italic" },
@@ -129,12 +128,14 @@
         "variable.parameter": { "font_style": "italic" },
         "attribute": { "font_style": "italic" },
         "function.decorator": {
-          "color": "#5b79e3ff",
           "font_style": "italic",
         },
         "emphasis": { "font_style": "italic" },
         "lifetime": { "font_style": "italic" },
       },
     },
+  },
+  "file_types": {
+    "Plain Text": [".env", ".env.*"],
   },
 }

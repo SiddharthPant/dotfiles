@@ -13,7 +13,7 @@ shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u 
 description = "Copy every tool's files with setup-tool, then install Vim plugins and VS Code extensions"
 alias = "default"
 run = [
-  "mise run setup-tool --all",
+  "setup-tool --all",
   "mise run vim",
   "mise run vscode-extensions",
 ]
@@ -23,29 +23,15 @@ extends = "platform"
 description = "Build setup-tool in release mode and copy it to bin/ (gitignored) for the setup-tool task"
 run = '''
 cargo build --release -q -p setup-tool
-mkdir -p bin
-cp target/release/setup-tool bin/
-echo "Built bin/setup-tool"
+cp target/release/setup-tool ~/.local/bin/
+echo "Built and installed setup-tool to local bin"
 '''
 run_windows = '''
 cargo build --release -q -p setup-tool
 if ($LASTEXITCODE) { exit $LASTEXITCODE }
-New-Item -ItemType Directory -Force bin | Out-Null
-Copy-Item target/release/setup-tool.exe bin/
-"Built bin/setup-tool.exe"
+Copy-Item target/release/setup-tool.exe ./
+"Built setup-tool.exe"
 '''
-
-[tasks.setup-tool]
-description = "Copy tool files into the home folder by tool name with bin/setup-tool (run `mise run build` first)"
-# Mirrors setup-tool's clap arguments so `mise run setup-tool -h` shows them
-usage = '''
-flag "-d --diff" help="Only show how each installed file differs from the repo; copy nothing"
-flag "-a --all" help="Set up every tool listed in the root manifest.json"
-flag "-p --pull" help="Copy the installed files back into the repo instead; only with tool names, not --all"
-flag "-l --list" help="List every tool in the root manifest.json and how many files it installs on this OS"
-arg "[tools]" var=#true help="Tools to set up by their name in the root manifest.json, e.g. pi"
-'''
-run = "./bin/setup-tool{% if usage.diff %} --diff{% endif %}{% if usage.all %} --all{% endif %}{% if usage.pull %} --pull{% endif %}{% if usage.list %} --list{% endif %}{% for tool in usage.tools %} {{ tool | quote }}{% endfor %}"
 
 # No usage spec, so arguments pass straight to clap and new flags work while developing them;
 # see its help with `mise run setup-tool:dev -- -h`
