@@ -1,13 +1,49 @@
 amends "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Config.pkl"
+
 import "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Builtins.pkl"
 // Using a coding agent? See https://hk.jdx.dev/agents
 
-local linters = new Mapping {
-    ["cargo_clippy"] = Builtins.cargo_clippy
-    ["cargo_fmt"] = Builtins.cargo_fmt
-    ["shellcheck"] = Builtins.shellcheck
-    ["shellharden"] = Builtins.shellharden
-    ["shfmt"] = Builtins.shfmt
+/// old/ is an archive of retired configs; linting it would only add noise.
+exclude = List("old/**")
+
+local linters = new Mapping<String, Step> {
+  // Rust
+  ["cargo_fmt"] = Builtins.cargo_fmt
+  // Shell
+  ["shellcheck"] = Builtins.shellcheck
+  ["shellharden"] = Builtins.shellharden
+  ["shfmt"] = Builtins.shfmt
+  // Config formats
+  ["taplo"] = Builtins.taplo
+  // The builtin wraps fix in `sh -c` to swallow exit 11, which Windows lacks; Pkl 0.32 exits 0 after writing.
+  ["pkl_format"] = (Builtins.pkl_format) {
+    shell = null
+    fix {
+      command = "pkl format --write {{ files }}"
+    }
+  }
+  // Hygiene, built into hk
+  ["trailing_whitespace"] = Builtins.trailing_whitespace
+  ["newlines"] = Builtins.newlines
+  ["mixed_line_ending"] = Builtins.mixed_line_ending
+  ["byte_order_marker"] = Builtins.byte_order_marker
+  ["check_merge_conflict"] = Builtins.check_merge_conflict
+  // macOS and Windows filesystems are both case-insensitive.
+  ["check_case_conflict"] = Builtins.check_case_conflict
+  ["check_added_large_files"] = Builtins.check_added_large_files
+  ["check_executables_have_shebangs"] = Builtins.check_executables_have_shebangs
+  // Secrets
+  ["detect_private_key"] = Builtins.detect_private_key
+  ["gitleaks"] = Builtins.gitleaks
 }
 
 steps = linters
+
+hooks {
+  // Clippy is too slow for every commit, so it runs before pushing instead.
+  ["pre-push"] {
+    steps {
+      ["cargo_clippy"] = Builtins.cargo_clippy
+    }
+  }
+}

@@ -112,7 +112,7 @@ packadd nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec d
 # Add and initialize Vim's optional hlyank package.
 g:hlyank_invisual = v:true
 g:hlput_enable = v:true
-packadd hlyank  
+packadd hlyank
 
 g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
 packadd osc52  # Add and initialize Vim's optional OSC 52 package.
