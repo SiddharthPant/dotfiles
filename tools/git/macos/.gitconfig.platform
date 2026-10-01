@@ -1,3 +1,9 @@
 # macOS-only Git settings, included from ~/.gitconfig.
 [core]
 	excludesfile = ~/.config/git/ignore
+[hook "hk-pre-push"]
+	command = test \"${HK:-1}\" = \"0\" || ~/.local/bin/mise x hk -- hk run pre-push --from-hook
+	event = pre-push
+[hook "hk-pre-commit"]
+	command = test \"${HK:-1}\" = \"0\" || ~/.local/bin/mise x hk -- hk run pre-commit --from-hook --staged
+	event = pre-commit

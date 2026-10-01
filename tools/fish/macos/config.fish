@@ -1,7 +1,15 @@
+# The following lines were added by Docker Desktop to add commands to your PATH.
+export PATH="$PATH:/Users/sid/.docker/bin"
+# End of Docker Desktop section.
+
 # Environment shared with the macOS Zsh setup.
 set -gx EDITOR "code -w"
 set -gx VISUAL $EDITOR
 set -gx FZF_DEFAULT_COMMAND 'rg --files --ignore-vcs --hidden'
+
+# Raise the open-file soft limit from macOS's default of 256; parallel test
+# suites that open many sockets (database pools, NATS) run out otherwise.
+ulimit -S -n 1048576
 
 # Keep the effective macOS paths reproducible without relying on universal
 # fish_user_paths state. fish_add_path ignores directories that do not exist.

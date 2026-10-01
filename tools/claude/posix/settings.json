@@ -12,7 +12,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "sonnet",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "node ~/.claude/statusline.js",
@@ -29,6 +29,9 @@
   "effortLevel": "high",
   "modelSettings": {
     "claude-sonnet-5-5": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5-5": {
       "effortLevel": "high"
     }
   },
