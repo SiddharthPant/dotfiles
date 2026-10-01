@@ -6,6 +6,16 @@
       "platform": "group:posix",
       "source": "settings.jsonc",
       "destination": "settings.json"
+    },
+    {
+      "platform": "windows",
+      "source": "settings.jsonc",
+      "destination": "$env:APPDATA/Zed/settings.json"
+    },
+    {
+      "platform": "windows",
+      "source": "keymap.jsonc",
+      "destination": "$env:APPDATA/Zed/keymap.json"
     }
   ]
 }

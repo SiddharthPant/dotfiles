@@ -1,0 +1,153 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "ui_font_size": 16,
+  "buffer_font_size": 14,
+  "buffer_font_family": "Cascadia Code",
+  "buffer_font_features": { "calt": true },
+  "cli_default_open_behavior": "new_window",
+  "icon_theme": {
+    "mode": "system",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)",
+  },
+  "git_panel": {
+    "folder_indicator": "both",
+    "file_icons": true,
+    "tree_view": true,
+    "show_count_badge": true,
+  },
+  "terminal": {
+    "show_count_badge": false,
+  },
+  "project_panel": {
+    "sort_mode": "directories_first",
+    "hide_root": true,
+    "git_status_indicator": true,
+    "diagnostic_badges": true,
+    "scrollbar": {
+      "horizontal_scroll": false,
+    },
+    "bold_folder_labels": false,
+    "folder_indicator": "both",
+    "entry_spacing": "standard",
+    "hide_gitignore": false,
+    "dock": "left",
+  },
+  "title_bar": {
+    "show_branch_status_icon": true,
+  },
+  "status_bar": {
+    "show_active_file": false,
+    "line_endings_button": true,
+  },
+  "code_lens": "on",
+  "completion_menu_item_kind": "symbol",
+  "completion_menu_scrollbar": "auto",
+  "show_completion_documentation": true,
+  "show_completions_on_input": false,
+  "show_whitespaces": "trailing",
+  "markdown_preview": {
+    "open_markdown_files_in_preview": true,
+  },
+  "colorize_brackets": true,
+  "inlay_hints": {
+    "show_background": true,
+    "enabled": true,
+  },
+  "line_ending": "prefer_lf",
+  "indent_guides": {
+    "coloring": "indent_aware",
+  },
+  "soft_wrap": "bounded",
+  "toolbar": {
+    "code_actions": true,
+  },
+  "show_signature_help_after_edits": true,
+  "auto_signature_help": true,
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "double_click_in_multibuffer": "open",
+  "cursor_animation": {
+    "enabled": true,
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "default_open_behavior": "new_window",
+  "reveal_if_open": true,
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "mode": "subtle",
+    "allow_data_collection": "no",
+  },
+  "agent": {
+    "favorite_models": [],
+    "model_parameters": [],
+    "enable_feedback": false,
+  },
+  "disable_ai": true,
+  "telemetry": {
+    "anthropic_retention": false,
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "theme": {
+    "mode": "system",
+    "dark": "Ayu Dark",
+    "light": "Ayu Light",
+  },
+  "semantic_tokens": "combined",
+  "global_lsp_settings": {
+    "semantic_token_rules": [
+      {
+        "token_type": "parameter",
+        "style": ["variable.parameter"],
+        "font_style": "italic",
+      },
+      {
+        "token_type": "label",
+        "style": ["label"],
+        "font_style": "normal",
+      },
+    ],
+  },
+  "theme_overrides": {
+    "One Dark": {
+      "syntax": {
+        "comment": { "font_style": "italic" },
+        "comment.doc": { "font_style": "italic" },
+        "variable.parameter": { "font_style": "italic" },
+        "attribute": { "font_style": "italic" },
+        "function.decorator": {
+          "font_style": "italic",
+        },
+        "emphasis": { "font_style": "italic" },
+        "lifetime": { "font_style": "italic" },
+      },
+    },
+    "One Light": {
+      "syntax": {
+        "comment": { "font_style": "italic" },
+        "comment.doc": { "font_style": "italic" },
+        "variable.parameter": { "font_style": "italic" },
+        "attribute": { "font_style": "italic" },
+        "function.decorator": {
+          "font_style": "italic",
+        },
+        "emphasis": { "font_style": "italic" },
+        "lifetime": { "font_style": "italic" },
+      },
+    },
+  },
+  "file_types": {
+    "Plain Text": [".env", ".env.*"],
+  },
+}

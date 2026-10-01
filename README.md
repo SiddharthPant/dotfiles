@@ -7,7 +7,8 @@ Personal configuration for macOS and Windows, installed by [mise](https://mise.j
 ```sh
 mise trust && mise install   # pinned Rust toolchain
 mise run build               # build and install setup-tool
-setup-tool -ad      # preview what would change
+setup-tool -ad               # linux/macos preview what would change
+.\setup-tool.exe -ad         # same but for windows
 mise run                     # install everything
 ```
 
