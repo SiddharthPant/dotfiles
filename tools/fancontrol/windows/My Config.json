@@ -275,8 +275,8 @@
       {
         "NickName": "CPU Pump #6",
         "Identifier": "/lpc/nct6798d/control/5",
-        "IsHidden": false,
-        "Enable": true,
+        "IsHidden": true,
+        "Enable": false,
         "SelectedFanCurve": {
           "Name": "Pump"
         },
@@ -289,7 +289,7 @@
         "MinimumPercent": 60,
         "SelectedCommandStepUp": 8,
         "SelectedCommandStepDown": 8,
-        "ManualControlValue": 53,
+        "ManualControlValue": 100,
         "ManualControl": false,
         "ForceApply": false,
         "Calibration": [
@@ -544,7 +544,7 @@
       },
       {
         "Name": "Pump",
-        "IsHidden": false,
+        "IsHidden": true,
         "CommandMode": 0,
         "Percent": 100
       }

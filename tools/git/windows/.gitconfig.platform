@@ -1,6 +1,6 @@
 # Windows-only Git settings, included from ~/.gitconfig.
 [core]
-	autocrlf = false
+	autocrlf = input
 	longpaths = true
 [credential]
 	helper = manager

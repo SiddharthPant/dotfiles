@@ -14,7 +14,7 @@
     },
     {
       "platform": "windows",
-      "source": "settings.json",
+      "source": "settings.jsonc",
       "destination": "$env:APPDATA/Code/User/settings.json"
     }
   ]

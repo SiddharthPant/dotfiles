@@ -4,7 +4,14 @@
 
 # Toolchain for the Rust helper binaries in crates/; set it up with `mise install`.
 [tools]
+gitleaks = "latest"
+hk = "latest"
+pkl = "latest"
 rust = "1.98.1"
+shellcheck = "latest"
+shellharden = "latest"
+shfmt = "latest"
+taplo = "latest"
 
 [task_templates.platform]
 shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u -o pipefail -c{% endif %}'
