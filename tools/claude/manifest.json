@@ -3,12 +3,18 @@
   "destinationRoot": "$HOME/.claude",
   "files": [
     {
+      "source": "statusline.js",
+      "destination": "statusline.js"
+    },
+    {
+      "platform": "group:posix",
       "source": "settings.json",
       "destination": "settings.json"
     },
     {
-      "source": "statusline.js",
-      "destination": "statusline.js"
+      "platform": "windows",
+      "source": "settings.json",
+      "destination": "settings.json"
     }
   ]
 }

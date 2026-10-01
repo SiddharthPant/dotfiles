@@ -4,3 +4,9 @@
 	longpaths = true
 [credential]
 	helper = manager
+[hook "hk-pre-push"]
+	command = test \"${HK:-1}\" = \"0\" || 'C:\\Users\\sidpa\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe' x hk -- hk run pre-push --from-hook
+	event = pre-push
+[hook "hk-pre-commit"]
+	command = test \"${HK:-1}\" = \"0\" || 'C:\\Users\\sidpa\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe' x hk -- hk run pre-commit --from-hook --staged
+	event = pre-commit
