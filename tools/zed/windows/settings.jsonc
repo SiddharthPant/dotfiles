@@ -119,34 +119,6 @@
       },
     ],
   },
-  "theme_overrides": {
-    "One Dark": {
-      "syntax": {
-        "comment": { "font_style": "italic" },
-        "comment.doc": { "font_style": "italic" },
-        "variable.parameter": { "font_style": "italic" },
-        "attribute": { "font_style": "italic" },
-        "function.decorator": {
-          "font_style": "italic",
-        },
-        "emphasis": { "font_style": "italic" },
-        "lifetime": { "font_style": "italic" },
-      },
-    },
-    "One Light": {
-      "syntax": {
-        "comment": { "font_style": "italic" },
-        "comment.doc": { "font_style": "italic" },
-        "variable.parameter": { "font_style": "italic" },
-        "attribute": { "font_style": "italic" },
-        "function.decorator": {
-          "font_style": "italic",
-        },
-        "emphasis": { "font_style": "italic" },
-        "lifetime": { "font_style": "italic" },
-      },
-    },
-  },
   "file_types": {
     "Plain Text": [".env", ".env.*"],
   },

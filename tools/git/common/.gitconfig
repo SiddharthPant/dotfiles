@@ -6,10 +6,10 @@
 	defaultBranch = main
 
 [core]
-	editor = code -w
+	editor = zed --wait
 
 [sequence]
-	editor = code -w
+	editor = zed --wait
 
 [fetch]
 	prune = true
@@ -26,11 +26,12 @@
 
 [diff]
 	algorithm = histogram
+	tool = zed
 
 [difftool]
 	prompt = false
-[difftool "vscode"]
-	cmd = code --wait --diff "$LOCAL" "$REMOTE"
+[difftool "zed"]
+	cmd = zed --wait --diff "$LOCAL" "$REMOTE"
 
 [merge]
 	tool = vscode
