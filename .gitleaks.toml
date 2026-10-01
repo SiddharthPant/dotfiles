@@ -5,6 +5,7 @@ useDefault = true
 description = "Gitignored build output, vendored assets and local secrets"
 paths = [
   '''^target[\\/]''',
+  '''^old[\\/]''',
   '''^setup-tool\.exe$''',
   '''^bin[\\/]''',
   '''^dist(\.tmp)?[\\/]''',
