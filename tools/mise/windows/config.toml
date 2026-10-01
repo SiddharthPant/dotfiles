@@ -4,5 +4,7 @@ windows_default_inline_shell_args = "pwsh -Command"
 
 [tools]
 claude-code = "latest"
+hk = "latest"
+java = "latest"
 make = "latest"
 pi = "latest"

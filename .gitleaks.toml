@@ -1,0 +1,13 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Gitignored build output, vendored assets and local secrets"
+paths = [
+  '''^target[\\/]''',
+  '''^setup-tool\.exe$''',
+  '''^bin[\\/]''',
+  '''^dist(\.tmp)?[\\/]''',
+  '''^assets[\\/]vendor[\\/]''',
+  '''^\.env\.local$''',
+]
