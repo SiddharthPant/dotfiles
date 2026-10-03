@@ -38,6 +38,10 @@ cargo-binstall = "1.24.0"
 "cargo:cargo-llvm-lines" = "0.4.48"
 rust = "1.98.1"
 hk = "2.4.0"
+java = "27.0.0"
+editorconfig-checker = "4.0.2"
+gitleaks = "8.30.1"
+pkl = "0.32.1"
 
 [settings]
 auto_update = true
