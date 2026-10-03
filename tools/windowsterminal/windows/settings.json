@@ -51,7 +51,8 @@
             "cursorShape": "filledBox",
             "font":
             {
-                "face": "Cascadia Code"
+                "face": "JetBrainsMono Nerd Font",
+                "size": 11
             }
         },
         "list":

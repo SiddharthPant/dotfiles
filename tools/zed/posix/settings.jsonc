@@ -2,11 +2,10 @@
   "buffer_font_family": "JetBrainsMono Nerd Font",
   "ui_font_size": 14,
   "buffer_font_size": 12,
-  "cli_default_open_behavior": "new_window",
   "icon_theme": {
     "mode": "system",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha",
   },
   "git_panel": {
     "folder_indicator": "both",
@@ -51,7 +50,7 @@
   "indent_guides": {
     "coloring": "indent_aware",
   },
-  "soft_wrap": "prefer_line",
+  "soft_wrap": "bounded",
   "toolbar": {
     "code_actions": true,
   },
@@ -88,23 +87,9 @@
   "theme": {
     "mode": "system",
     "dark": "Catppuccin Mocha",
-    "light": "One Light",
+    "light": "Catppuccin Latte",
   },
   "semantic_tokens": "combined",
-  "global_lsp_settings": {
-    "semantic_token_rules": [
-      {
-        "token_type": "parameter",
-        "style": ["variable.parameter"],
-        "font_style": "italic",
-      },
-      {
-        "token_type": "label",
-        "style": ["label"],
-        "font_style": "normal",
-      },
-    ],
-  },
   "file_types": {
     "Plain Text": [".env", ".env.*"],
   },
