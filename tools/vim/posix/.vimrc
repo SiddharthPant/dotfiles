@@ -1,5 +1,4 @@
 vim9script
-
 scriptencoding utf-8  # Decode this script itself as UTF-8.
 set nocompatible  # Disable legacy Vi-compatible behavior.
 set encoding=utf-8  # Use UTF-8 internally for text and buffers.
@@ -7,24 +6,15 @@ set encoding=utf-8  # Use UTF-8 internally for text and buffers.
 g:mapleader = ' '  # Use Space as the prefix for global custom mappings.
 g:maplocalleader = ','  # Use comma as the prefix for buffer-local custom mappings.
 
-plug#begin()
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'will133/vim-dirdiff'
-Plug 'tpope/vim-fugitive'
-plug#end()
-
-g:rainbow_conf = {
-  guifgs: ['#FF5555', '#F1FA8C', '#50FA7B', '#8BE9FD', '#BD93F9'],
-  ctermfgs: ['203', '228', '84', '117', '141'],
-}
-g:rainbow_active = 1
+syntax on
+filetype indent on
 
 # Appearance
 set termguicolors # Enable 24-bit terminal colors.
 set background=dark  # Tell color schemes to use their dark-background palette.
-colorscheme novum  # Load the Novum color scheme.
 &t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
 &t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
+colorscheme lunaperche
 
 set number  # Show absolute line numbers.
 set relativenumber  # Show relative line numbers away from the cursor line.
@@ -40,7 +30,6 @@ set laststatus=3  # Use one global status line instead of one per window.
 # Editing
 set backspace=indent,eol,start  # Editing: Allow Backspace over autoindent, line breaks, and the point where Insert mode started.
 set autoindent  # Copy the current line's indent when starting a new line.
-set smartindent  # Add extra C-like indentation heuristics.
 set shiftround  # Round indentation commands to a multiple of 'shiftwidth'.
 set linebreak  # Wrap long lines at convenient character boundaries without changing the file.
 set breakindent  # Preserve an appropriate visual indent on wrapped screen lines.
