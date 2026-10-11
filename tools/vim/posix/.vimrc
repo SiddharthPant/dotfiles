@@ -6,15 +6,19 @@ set encoding=utf-8  # Use UTF-8 internally for text and buffers.
 g:mapleader = ' '  # Use Space as the prefix for global custom mappings.
 g:maplocalleader = ','  # Use comma as the prefix for buffer-local custom mappings.
 
+# MacVim's bundled gvimrc loads its own colorscheme unless this is set, and it runs after this file.
+g:macvim_skip_colorscheme = 1
+
 syntax on
-filetype indent on
+filetype plugin indent on
 
 # Appearance
 set termguicolors # Enable 24-bit terminal colors.
-set background=dark  # Tell color schemes to use their dark-background palette.
 &t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
 &t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
-colorscheme lunaperche
+# colorscheme lunaperche
+# Set after the colorscheme: default.vim resets 'background' with `set bg&`, which would undo this.
+set background=dark  # Tell color schemes to use their dark-background palette.
 
 set number  # Show absolute line numbers.
 set relativenumber  # Show relative line numbers away from the cursor line.
@@ -64,7 +68,7 @@ set wrapscan  # Continue searches from the opposite end after reaching the file 
 set autocompletedelay=100  # Wait 100 ms before showing automatic insert completion.
 set complete=.^5,w^5,b^5,u^5  # Complete from the current buffer first, then windows, loaded buffers, and unloaded buffers.
 set completeopt=menu,noselect,popup,fuzzy  # Always show a fuzzy completion menu without preselecting an item; use popup details.
-set pumopt=height:15 # Give the insert-completion popup a rounded border and fixed size/opacity limits.
+set pumopt=height:15 # Fix the insert-completion popup to a 15-row height.
 
 inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -98,16 +102,16 @@ set undofile  # Save undo history to disk so it survives closing a file.
 # Enable Default Vim feature packages
 packadd! matchit # Make % jump over html tags etc.
 packadd! editorconfig # Make vim respect editorconfig
-packadd comment # Make gc comment a line
-packadd nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec default) or switching to Insert mode
+packadd! comment # Make gc comment a line
+packadd! nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec default) or switching to Insert mode
 
 # Add and initialize Vim's optional hlyank package.
 g:hlyank_invisual = v:true
 g:hlput_enable = v:true
-packadd hlyank
+packadd! hlyank
 
 g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
-packadd osc52  # Add and initialize Vim's optional OSC 52 package.
+packadd osc52  # Source now: 'clipmethod' only accepts registered provider names.
 set clipmethod+=osc52  # Add OSC 52 escape sequences as a clipboard transport.
 
 g:netrw_banner = 0  # Built-in netrw remains the dependency-free explorer. Hide netrw's banner and command help.
