@@ -13,14 +13,15 @@ g:rainbow_conf = {
 }
 g:rainbow_active = 1
 
+syntax on
+filetype plugin indent on
+
 # Appearance
 set termguicolors # Enable 24-bit terminal colors.
 set background=dark  # Tell color schemes to use their dark-background palette.
 colorscheme catppuccin  # Load the Novum color scheme.
 &t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
 &t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
-filetype plugin indent on
-syntax on
 set guifont=Cascadia_Code:h12:cANSI:qDRAFT
 
 set number  # Show absolute line numbers.
@@ -72,7 +73,7 @@ set wrapscan  # Continue searches from the opposite end after reaching the file 
 set autocompletedelay=100  # Wait 100 ms before showing automatic insert completion.
 set complete=.^5,w^5,b^5,u^5  # Complete from the current buffer first, then windows, loaded buffers, and unloaded buffers.
 set completeopt=menu,noselect,popup,fuzzy  # Always show a fuzzy completion menu without preselecting an item; use popup details.
-set pumopt=height:15 # Give the insert-completion popup a rounded border and fixed size/opacity limits.
+set pumopt=height:15 # Fix the insert-completion popup to a 15-row height.
 
 inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -106,16 +107,16 @@ set undofile  # Save undo history to disk so it survives closing a file.
 # Enable Default Vim feature packages
 packadd! matchit # Make % jump over html tags etc.
 packadd! editorconfig # Make vim respect editorconfig
-packadd comment # Make gc comment a line
-packadd nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec default) or switching to Insert mode
+packadd! comment # Make gc comment a line
+packadd! nohlsearch # Auto remove highlighted searches after 'updatetime'(4-sec default) or switching to Insert mode
 
 # Add and initialize Vim's optional hlyank package.
 g:hlyank_invisual = v:true
 g:hlput_enable = v:true
-packadd hlyank
+packadd! hlyank
 
 g:osc52_disable_paste = true  # Disable OSC 52 paste support while retaining its clipboard-copy support.
-packadd osc52  # Add and initialize Vim's optional OSC 52 package.
+packadd osc52  # Source now: 'clipmethod' only accepts registered provider names.
 
 def WaylandCopy(reg: string, regtype: string, lines: list<string>)
     var cmd = 'wl-copy --type text/plain'
