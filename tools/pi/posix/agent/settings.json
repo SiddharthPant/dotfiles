@@ -1,8 +1,5 @@
 {
-  "packages": [
-    "npm:pi-cursor-sdk",
-    "npm:@ogulcancelik/pi-herdr"
-  ],
+  "packages": [],
   "hideThinkingBlock": false,
   "showCacheMissNotices": true,
   "modelThinkingLevels": {
