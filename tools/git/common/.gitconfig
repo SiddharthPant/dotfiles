@@ -6,10 +6,10 @@
 	defaultBranch = main
 
 [core]
-	editor = zed --wait
+	editor = vim
 
 [sequence]
-	editor = zed --wait
+	editor = vim
 
 [fetch]
 	prune = true
@@ -26,12 +26,12 @@
 
 [diff]
 	algorithm = histogram
-	tool = zed
+	tool = vim
 
 [difftool]
 	prompt = false
-[difftool "zed"]
-	cmd = zed --wait --diff "$LOCAL" "$REMOTE"
+[difftool "vim"]
+	cmd = vim -d "$LOCAL" "$REMOTE"
 
 [merge]
 	tool = vscode
