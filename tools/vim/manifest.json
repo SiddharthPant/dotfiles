@@ -11,6 +11,11 @@
       "platform": "windows",
       "source": "_vimrc",
       "destination": "_vimrc"
+    },
+    {
+      "platform": "macos",
+      "source": ".gvimrc",
+      "destination": ".gvimrc"
     }
   ]
 }

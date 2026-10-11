@@ -16,7 +16,7 @@ filetype plugin indent on
 set termguicolors # Enable 24-bit terminal colors.
 &t_SI = "\e[6 q"  # Ask the terminal for a vertical-bar cursor in Insert mode.
 &t_EI = "\e[2 q"  # Ask the terminal for a block cursor after leaving Insert mode.
-# colorscheme lunaperche
+colorscheme lunaperche
 # Set after the colorscheme: default.vim resets 'background' with `set bg&`, which would undo this.
 set background=dark  # Tell color schemes to use their dark-background palette.
 
