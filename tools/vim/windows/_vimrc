@@ -32,7 +32,7 @@ set sidescrolloff=10  # Keep ten columns visible to either side when scrolling h
 set signcolumn=yes  # Always reserve the sign column so text does not shift when signs appear.
 set showmatch  # Briefly highlight a matching bracket after inserting one.
 set listchars=tab:^\ ,nbsp:¬,extends:»,precedes:«,trail:•  # Define how tabs, non-breaking spaces, overflow, and trailing spaces look with 'list'.
-set laststatus=3  # Use one global status line instead of one per window.
+set laststatus=2  # Give every window its own status line so each split shows its file name.
 &statusline = '%f %m%=%y %{&fileencoding ==# "" ? &encoding : &fileencoding}'  # Show file name and modified state on the left, then type and encoding on the right.
 
 # Editing
@@ -166,7 +166,7 @@ set clipmethod^=osc52,wl_clipboard  # Add OSC 52 escape sequences and wl-clipboa
 
 g:netrw_banner = 0  # Built-in netrw remains the dependency-free explorer. Hide netrw's banner and command help.
 g:netrw_liststyle = 3  # Display netrw files in a tree view.
-g:netrw_winsize = 25 # Narrow down the netrw window
+g:netrw_winsize = -25  # Negative means absolute columns, so :Lexplore opens 25 columns wide.
 
 # Show a short top-right popup notification, falling back to message history.
 def Notify(message: string)

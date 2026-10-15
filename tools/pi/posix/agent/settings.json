@@ -4,5 +4,14 @@
   "showCacheMissNotices": true,
   "modelThinkingLevels": {
     "openai-codex/gpt-6-luna": "high"
-  }
+  },
+  "lastChangelogVersion": "1.2.0",
+  "enabledModels": [
+    "fireworks/accounts/fireworks/models/deepseek-v4p1-flash",
+    "fireworks/accounts/fireworks/models/glm-5p3-flash",
+    "openai-codex/gpt-6-astra",
+    "openai-codex/gpt-6.1-sol",
+    "anthropic/claude-haiku-5-5",
+    "anthropic/claude-opus-5-5"
+  ]
 }
