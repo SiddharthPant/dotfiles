@@ -1,49 +1,23 @@
 {
   "[rust]": {
+    "editor.inlayHints.enabled": "off",
     "editor.semanticHighlighting.enabled": true
   },
   "chat.disableAIFeatures": true,
-  "editor.bracketPairColorization.enabled": true,
-  "markdown.preview.fontSize": 16,
-  "editor.fontSize": 12,
   "editor.lineHeight": 1.6,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
-  "editor.fontFamily": "Cascadia Code",
+  "editor.find.closeOnResult": true,
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
   "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.guides.bracketPairs": false,
+  "editor.inlayHints.enabled": "off",
   "editor.linkedEditing": true,
-  // Make certain parts of code italics
-  // I use default theme and don't like to customize it beyond this
-  "editor.semanticTokenColorCustomizations": {
-    "rules": {
-      "comment": {
-        "italic": true
-      },
-      "lifetime:rust": {
-        "italic": true
-      },
-      "typeParameter": {
-        "italic": true
-      }
-    }
-  },
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
-  "editor.tokenColorCustomizations": {
-    "textMateRules": [
-      {
-        "scope": [
-          "comment",
-          "storage.modifier.lifetime.rust"
-        ],
-        "settings": {
-          "fontStyle": "italic"
-        }
-      }
-    ]
-  },
-  "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 90,
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 100,
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
     "**/.jj": true
@@ -82,10 +56,12 @@
       "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
     }
   },
-  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
-  "todo-tree.ripgrep.ripgrep": "%LOCALAPPDATA%\\Microsoft\\WinGet\\Links\\rg.exe",
   "window.autoDetectColorScheme": true,
+  "window.density.layout": "compact",
   "workbench.activityBar.location": "top",
+  "workbench.diffEditorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.editor"
