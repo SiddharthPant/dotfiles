@@ -2,6 +2,9 @@
 minimum_release_age_excludes = ["pi", "claude-code"]
 windows_default_inline_shell_args = "pwsh -Command"
 
+[settings.self_update]
+auto = true
+
 [tools]
 claude-code = "latest"
 editorconfig-checker = "latest"

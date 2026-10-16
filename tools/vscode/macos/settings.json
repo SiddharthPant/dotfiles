@@ -4,7 +4,6 @@
     "editor.semanticHighlighting.enabled": true
   },
   "chat.disableAIFeatures": true,
-  "editor.bracketPairColorization.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
@@ -16,7 +15,8 @@
   "editor.linkedEditing": true,
   "editor.smoothScrolling": true,
   "editor.stickyTabStops": true,
-  "editor.wordWrap": "on",
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 100,
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
     "**/.jj": true
@@ -24,6 +24,7 @@
   "git.autofetch": true,
   "git.confirmSync": false,
   "json.schemaDownload.trustedDomains": {
+    "https://aka.ms": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
@@ -33,11 +34,10 @@
     "https://schemastore.azurewebsites.net/": true,
     "https://www.schemastore.org/": true
   },
+  "rewrap.wrappingColumn": 90,
   "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.fontSize": 12,
-  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!",
-  "todo-tree.ripgrep.ripgrep": "/opt/homebrew/bin/rg",
   "window.autoDetectColorScheme": true,
   "window.density.layout": "compact",
   "workbench.activityBar.location": "top",
@@ -49,5 +49,6 @@
     "*.md": "vscode.markdown.editor"
   },
   "workbench.experimental.modernUI": true,
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "diffEditor.ignoreTrimWhitespace": false
 }
