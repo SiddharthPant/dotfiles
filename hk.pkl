@@ -24,7 +24,10 @@ local linters = new Mapping<String, Step> {
   }
   // Hygiene, built into hk
   ["trailing_whitespace"] = Builtins.trailing_whitespace
-  ["newlines"] = Builtins.newlines
+  // These apps rewrite their configs without a final newline, so adding one would leave installs forever out of sync.
+  ["newlines"] = (Builtins.newlines) {
+    exclude = List("tools/fancontrol/windows/**", "tools/pi/*/agent/settings.json")
+  }
   ["mixed_line_ending"] = Builtins.mixed_line_ending
   ["byte_order_marker"] = Builtins.byte_order_marker
   ["check_merge_conflict"] = Builtins.check_merge_conflict
