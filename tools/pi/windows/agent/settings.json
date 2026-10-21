@@ -1,9 +1,7 @@
 {
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "1.3.0",
   "theme": "dark",
-  "packages": [
-    "npm:@plannotator/pi-extension"
-  ],
+  "packages": [],
   "hideThinkingBlock": false,
   "showCacheMissNotices": true,
   "defaultProjectTrust": "always",
@@ -27,6 +25,7 @@
     "fireworks/accounts/fireworks/models/glm-5p3-flash",
     "openai-codex/gpt-6-luna",
     "openai-codex/gpt-6-astra",
-    "openrouter/xiaomi/mimo-v2.6-pro"
+    "openrouter/xiaomi/mimo-v2.6-pro",
+    "anthropic/claude-opus-5-5"
   ]
 }

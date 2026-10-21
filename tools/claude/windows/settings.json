@@ -11,17 +11,9 @@
     "refreshInterval": 10
   },
   "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "plannotator@plannotator": true
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "plannotator": {
-      "source": {
-        "source": "github",
-        "repo": "backnotprop/plannotator"
-      }
-    }
-  },
+  "extraKnownMarketplaces": {},
   "feedbackDrafts": "off",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
