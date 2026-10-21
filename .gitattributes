@@ -1,0 +1,3 @@
+# FanControl rewrites its config with CRLF, and core.autocrlf=input never restores CRLF on checkout,
+# so pin it to keep installs and pulls byte-identical. Other Windows apps here write LF.
+tools/fancontrol/windows/** text eol=crlf

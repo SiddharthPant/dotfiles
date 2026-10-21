@@ -1,5 +1,5 @@
 {
-  "__VERSION__": "281",
+  "__VERSION__": "283",
   "FanControl": {
     "Controls": [
       {
@@ -615,7 +615,8 @@
       "PSU": false,
       "Storage": true,
       "StorageUpdateInterval": "00:01:00",
-      "ZeroRPMOverride": true
+      "ZeroRPMOverride": true,
+      "ExcludeUsbStorage": false
     },
     "NvAPIWrapperSettings": {
       "Enabled": true,
