@@ -25,8 +25,7 @@ fish_add_path --global \
     $HOME/.rd/bin \
     /Users/Shared/DBngin/postgresql/17.0/bin \
     /Users/Shared/DBngin/mysql/8.4.2/bin \
-    $HOME/.lmstudio/bin \
-    /Library/Frameworks/Python.framework/Versions/3.15/bin
+    $HOME/.lmstudio/bin
 
 # This socket appears while the corresponding local MySQL service is running.
 set -gx MYSQL_UNIX_PORT /tmp/mysql_3306.sock

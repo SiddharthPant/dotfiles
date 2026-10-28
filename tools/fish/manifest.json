@@ -11,6 +11,11 @@
       "platform": "macos",
       "source": "fish_plugins",
       "destination": "fish_plugins"
+    },
+    {
+      "platform": "macos",
+      "source": "conf.d/python-3.15.fish",
+      "destination": "conf.d/python-3.15.fish"
     }
   ]
 }
