@@ -26,7 +26,12 @@ local linters = new Mapping<String, Step> {
   ["trailing_whitespace"] = Builtins.trailing_whitespace
   // These apps rewrite their configs without a final newline, so adding one would leave installs forever out of sync.
   ["newlines"] = (Builtins.newlines) {
-    exclude = List("tools/fancontrol/windows/**", "tools/pi/*/agent/settings.json")
+    exclude =
+      List(
+        "tools/fancontrol/windows/**",
+        "tools/pi/*/agent/settings.json",
+        "tools/claude/*/settings.json",
+      )
   }
   ["mixed_line_ending"] = Builtins.mixed_line_ending
   ["byte_order_marker"] = Builtins.byte_order_marker

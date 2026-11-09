@@ -4,6 +4,7 @@
     "editor.semanticHighlighting.enabled": true
   },
   "chat.disableAIFeatures": true,
+  "editor.bracketPairColorization.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.find.closeOnResult": true,
@@ -34,12 +35,10 @@
     "https://schemastore.azurewebsites.net/": true,
     "https://www.schemastore.org/": true
   },
-  "rewrap.wrappingColumn": 90,
   "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.fontSize": 12,
   "window.autoDetectColorScheme": true,
-  "window.density.layout": "compact",
   "workbench.activityBar.location": "top",
   "workbench.diffEditorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
@@ -50,5 +49,6 @@
   },
   "workbench.experimental.modernUI": true,
   "workbench.startupEditor": "none",
+  "workbench.iconTheme": "vscode-modern-icons",
   "diffEditor.ignoreTrimWhitespace": false
 }

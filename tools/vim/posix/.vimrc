@@ -115,7 +115,7 @@ packadd osc52  # Source now: 'clipmethod' only accepts registered provider names
 set clipmethod+=osc52  # Add OSC 52 escape sequences as a clipboard transport.
 
 g:netrw_banner = 0  # Built-in netrw remains the dependency-free explorer. Hide netrw's banner and command help.
-g:netrw_liststyle = 3  # Display netrw files in a tree view.
+# g:netrw_liststyle = 3  # Display netrw files in a tree view.
 g:netrw_winsize = -25  # Negative means absolute columns, so :Lexplore opens 25 columns wide.
 
 # Show a short top-right popup notification, falling back to message history.

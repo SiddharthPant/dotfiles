@@ -3,12 +3,10 @@
   "permissions": {
     "allow": [
       "Bash",
-      "Read(*)",
-      "Write(*)",
+      "Read",
+      "Write",
       "WebSearch",
-      "WebFetch",
-      "mcp__plugin_context7_context7__resolve-library-id",
-      "mcp__plugin_context7_context7__query-docs"
+      "WebFetch"
     ],
     "defaultMode": "auto"
   },
@@ -22,7 +20,6 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
   },
   "feedbackDrafts": "off",
