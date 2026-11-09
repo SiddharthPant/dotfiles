@@ -1,13 +1,14 @@
 [tools]
 "cargo:cargo-expand" = "1.0.127"
 taplo = "0.10.0"
-cargo-binstall = "1.26.1"
+cargo-binstall = "1.26.2"
 "cargo:cargo-llvm-lines" = "0.4.48"
-hk = { version = "2.10.0", workflow = "release.yml" }
+hk = { version = "2.11.1", workflow = "release.yml" }
 java = "27.0.1+0"
 editorconfig-checker = "4.0.2"
 gitleaks = "8.30.1"
-pkl = "0.32.2"
+pkl = "0.33.0"
 
 [settings.self_update]
 auto = true
+check_duration = "1d"

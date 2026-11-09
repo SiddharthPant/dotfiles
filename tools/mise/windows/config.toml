@@ -4,6 +4,7 @@ windows_default_inline_shell_args = "pwsh -Command"
 
 [settings.self_update]
 auto = true
+check_duration = "1d"
 
 [tools]
 claude-code = "latest"
