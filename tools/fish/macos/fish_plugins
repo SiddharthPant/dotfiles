@@ -7,3 +7,6 @@ gazorby/fish-abbreviation-tips
 halostatue/fish-docker@v1.x
 nickeb96/puffer-fish
 adriaanzon/fish-artisan-completion
+jhillyerd/plugin-git
+jorgebucaran/hydro
+franciscolourenco/done
