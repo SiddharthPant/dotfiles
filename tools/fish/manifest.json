@@ -1,20 +1,17 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME/.config/fish",
   "files": [
     {
-      "platform": "macos",
-      "source": "config.fish",
+      "source": "macos/config.fish",
       "destination": "config.fish"
     },
     {
-      "platform": "macos",
-      "source": "fish_plugins",
+      "source": "macos/fish_plugins",
       "destination": "fish_plugins"
     },
     {
-      "platform": "macos",
-      "source": "conf.d/python-3.15.fish",
+      "source": "macos/conf.d/python-3.15.fish",
       "destination": "conf.d/python-3.15.fish"
     }
   ]

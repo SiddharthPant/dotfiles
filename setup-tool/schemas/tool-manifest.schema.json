@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "setup-tool tool manifest",
+  "description": "Files that setup-tool syncs between this tool's folder and the home folder.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["destinationRoot", "files"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "enabled": {
+      "description": "Set to false to leave this tool out of setup-tool entirely.",
+      "type": "boolean",
+      "default": true
+    },
+    "destinationRoot": {
+      "description": "Base folder for relative destinations, e.g. $HOME/.pi. $NAME and ${NAME} are environment variables; $HOME is the home folder on every OS.",
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "destination"],
+        "properties": {
+          "source": {
+            "description": "Path next to this manifest, starting with the platform folder that decides where it applies: common (everywhere), posix (macOS, Linux, WSL), linux (Linux, WSL), macos, wsl or windows. A folder syncs every file under it.",
+            "type": "string",
+            "pattern": "^(common|posix|linux|macos|wsl|windows)/."
+          },
+          "destination": {
+            "description": "Where the source is installed: relative to destinationRoot, or absolute, e.g. $APPDATA/Code/User/settings.json. Uses the same variables as destinationRoot.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,9 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
-  "destinationRoot": "${env:ProgramFiles(x86)}/FanControl/Configurations",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "${ProgramFiles(x86)}/FanControl/Configurations",
   "files": [
     {
-      "platform": "windows",
-      "source": "My Config.json",
+      "source": "windows/My Config.json",
       "destination": "My Config.json"
     }
   ]

@@ -3,8 +3,8 @@
 A quick reference for what the Neovim config adds on top of the vimrc. Leader is `<Space>`.
 Press `<Space>` and wait, and which-key lists everything under it.
 
-The config is a single file, `tools/nvim/posix/init.lua`, installed to `~/.config/nvim/init.lua` by `setup-tool nvim`.
-Plugins are pinned in `nvim-pack-lock.json` next to it; after `vim.pack.update()`, bring the new pins back with `setup-tool -p nvim`.
+The config is a single file, `tools/nvim/posix/init.lua`, installed to `~/.config/nvim/init.lua` by `setup-tool install nvim`.
+Plugins are pinned in `nvim-pack-lock.json` next to it; after `vim.pack.update()`, bring the new pins back with `setup-tool pull nvim`.
 
 ## LSP
 

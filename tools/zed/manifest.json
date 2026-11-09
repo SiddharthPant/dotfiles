@@ -1,21 +1,18 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME/.config/zed",
   "files": [
     {
-      "platform": "group:posix",
-      "source": "settings.jsonc",
+      "source": "posix/settings.jsonc",
       "destination": "settings.json"
     },
     {
-      "platform": "windows",
-      "source": "settings.jsonc",
-      "destination": "$env:APPDATA/Zed/settings.json"
+      "source": "windows/settings.jsonc",
+      "destination": "$APPDATA/Zed/settings.json"
     },
     {
-      "platform": "windows",
-      "source": "keymap.jsonc",
-      "destination": "$env:APPDATA/Zed/keymap.json"
+      "source": "windows/keymap.jsonc",
+      "destination": "$APPDATA/Zed/keymap.json"
     }
   ]
 }

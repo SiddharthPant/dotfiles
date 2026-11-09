@@ -1,13 +1,14 @@
 # Source of truth for what gets installed into $HOME. Run `mise tasks` to list tasks.
-# Tool files are copied by setup-tool (crates/setup-tool) from the manifests listed in the root
-# manifest.json; the tasks here add the install steps that are not plain file copies.
+# Tool files are copied by setup-tool (Go, setup-tool/) as listed in tools/*/manifest.json;
+# the tasks here add the install steps that are not plain file copies.
 
-# Toolchain for the Rust helper binaries in crates/; set it up with `mise install`.
+# Go builds setup-tool; the rest are linters run by hk. Set them up with `mise install`.
 [tools]
 gitleaks = "latest"
+go = "1.27.3"
+golangci-lint = "latest"
 hk = "latest"
 pkl = "latest"
-rust = "1.98.1"
 shellcheck = "latest"
 shellharden = "latest"
 shfmt = "latest"
@@ -20,31 +21,29 @@ shell = '{% if os() == "windows" %}pwsh -NoProfile -Command{% else %}bash -e -u 
 description = "Copy every tool's files with setup-tool, then install Vim plugins and VS Code extensions"
 alias = "default"
 run = [
-  "setup-tool --all",
+  "setup-tool install",
   "mise run vim",
   "mise run vscode-extensions",
 ]
 
 [tasks.build]
 extends = "platform"
-description = "Build setup-tool in release mode and copy it to bin/ (gitignored) for the setup-tool task"
+description = "Build setup-tool and install it to ~/.local/bin (to the repo root as setup-tool.exe on Windows)"
 run = '''
-cargo build --release -q -p setup-tool
-cp target/release/setup-tool ~/.local/bin/
+go build -trimpath -o ~/.local/bin/setup-tool ./setup-tool
 echo "Built and installed setup-tool to local bin"
 '''
 run_windows = '''
-cargo build --release -q -p setup-tool
+go build -trimpath -o setup-tool.exe ./setup-tool
 if ($LASTEXITCODE) { exit $LASTEXITCODE }
-Copy-Item target/release/setup-tool.exe ./
 "Built setup-tool.exe"
 '''
 
-# No usage spec, so arguments pass straight to clap and new flags work while developing them;
-# see its help with `mise run setup-tool:dev -- -h`
+# No usage spec, so arguments pass straight through and new flags work while developing them;
+# see its help with `mise run setup-tool:dev -- help`
 [tasks."setup-tool:dev"]
-description = "Run setup-tool from source with cargo, passing arguments through; for developing the crate"
-run = "cargo run -q -p setup-tool --"
+description = "Run setup-tool from source, passing arguments through; for developing it"
+run = "go run ./setup-tool"
 
 [tasks.vim]
 extends = "platform"
@@ -83,5 +82,9 @@ code --update-extensions
 '''
 
 [tasks.lint]
-description = "Run clippy on the Rust helper crates with the workspace lints, failing on any warning"
-run = "cargo clippy --workspace --all-targets -- -D warnings"
+description = "Run golangci-lint on setup-tool with the lints in .golangci.yml"
+run = "golangci-lint run ./..."
+
+[tasks.test]
+description = "Run setup-tool's tests"
+run = "go test ./..."

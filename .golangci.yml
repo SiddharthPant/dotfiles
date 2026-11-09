@@ -1,0 +1,33 @@
+# Lints for setup-tool, run by hk before pushing and by `mise run lint`.
+version: "2"
+
+linters:
+  # The standard set (errcheck, govet, ineffassign, staticcheck, unused) plus checks for error
+  # wrapping, simpler modern Go, and common style slips.
+  enable:
+    - copyloopvar
+    - errorlint
+    - gocritic
+    - intrange
+    - misspell
+    - modernize
+    - nilerr
+    - perfsprint
+    - unconvert
+    - unparam
+    - usestdlibvars
+  settings:
+    errcheck:
+      # Closing a file opened for reading, or removing a temp file on an error path, has nothing
+      # useful to report.
+      exclude-functions:
+        - (*os.File).Close
+        - os.Remove
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true

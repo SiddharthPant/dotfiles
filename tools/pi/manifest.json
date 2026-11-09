@@ -1,25 +1,22 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME/.pi",
   "files": [
     {
-      "platform": "group:posix",
-      "source": "agent/settings.json",
+      "source": "posix/agent/settings.json",
       "destination": "agent/settings.json"
     },
     {
-      "platform": "windows",
-      "source": "agent/settings.json",
+      "source": "windows/agent/settings.json",
       "destination": "agent/settings.json"
     },
     {
-      "source": "web-search.json",
+      "source": "common/web-search.json",
       "destination": "agent/web-search.json"
     },
     {
-      "source": "agent/extensions",
-      "destination": "agent/extensions",
-      "recursive": true
+      "source": "common/agent/extensions",
+      "destination": "agent/extensions"
     }
   ]
 }

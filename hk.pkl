@@ -1,14 +1,14 @@
-amends "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.4.0/hk@2.4.0#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Builtins.pkl"
 // Using a coding agent? See https://hk.jdx.dev/agents
 
 /// old/ is an archive of retired configs; linting it would only add noise.
 exclude = List("old/**")
 
 local linters = new Mapping<String, Step> {
-  // Rust
-  ["cargo_fmt"] = Builtins.cargo_fmt
+  // Go
+  ["go_fmt"] = Builtins.go_fmt
   // Shell
   ["shellcheck"] = Builtins.shellcheck
   ["shellharden"] = Builtins.shellharden
@@ -48,10 +48,10 @@ local linters = new Mapping<String, Step> {
 steps = linters
 
 hooks {
-  // Clippy is too slow for every commit, so it runs before pushing instead.
+  // golangci-lint type-checks the whole module, which is too slow for every commit, so it runs before pushing.
   ["pre-push"] {
     steps {
-      ["cargo_clippy"] = Builtins.cargo_clippy
+      ["golangci_lint"] = Builtins.golangci_lint
     }
   }
 }

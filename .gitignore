@@ -23,8 +23,8 @@ static/js/build
 .vscode/
 .env
 
-# Rust build output for crates/, and the setup-tool binary copied by `mise run build`
+# setup-tool.exe, built into the repo root by `mise run build` on Windows
+/setup-tool.exe
+# Build output left by the old Rust setup-tool; drop these lines once the folders are deleted
 /target/
 /bin/
-/setup-tool
-/setup-tool.exe

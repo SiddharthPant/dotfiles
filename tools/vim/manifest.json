@@ -1,40 +1,33 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME",
   "files": [
     {
-      "platform": "group:posix",
-      "source": ".vimrc",
+      "source": "posix/.vimrc",
       "destination": ".vimrc"
     },
     {
-      "platform": "windows",
-      "source": "_vimrc",
+      "source": "windows/_vimrc",
       "destination": "_vimrc"
     },
     {
-      "platform": "macos",
-      "source": ".gvimrc",
+      "source": "macos/.gvimrc",
       "destination": ".gvimrc"
     },
     {
-      "platform": "group:posix",
-      "source": ".vim/ftdetect/templ.vim",
+      "source": "posix/.vim/ftdetect/templ.vim",
       "destination": ".vim/ftdetect/templ.vim"
     },
     {
-      "platform": "group:posix",
-      "source": ".vim/syntax/templ.vim",
+      "source": "posix/.vim/syntax/templ.vim",
       "destination": ".vim/syntax/templ.vim"
     },
     {
-      "platform": "group:posix",
-      "source": ".vim/ftplugin/templ.vim",
+      "source": "posix/.vim/ftplugin/templ.vim",
       "destination": ".vim/ftplugin/templ.vim"
     },
     {
-      "platform": "group:posix",
-      "source": ".vim/indent/templ.vim",
+      "source": "posix/.vim/indent/templ.vim",
       "destination": ".vim/indent/templ.vim"
     }
   ]

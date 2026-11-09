@@ -1,15 +1,13 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME",
   "files": [
     {
-      "platform": "macos",
-      "source": ".zshenv",
+      "source": "macos/.zshenv",
       "destination": ".zshenv"
     },
     {
-      "platform": "macos",
-      "source": ".zshrc",
+      "source": "macos/.zshrc",
       "destination": ".zshrc"
     }
   ]

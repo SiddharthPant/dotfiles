@@ -1,19 +1,17 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME/.claude",
   "files": [
     {
-      "source": "statusline.js",
+      "source": "common/statusline.js",
       "destination": "statusline.js"
     },
     {
-      "platform": "group:posix",
-      "source": "settings.json",
+      "source": "posix/settings.json",
       "destination": "settings.json"
     },
     {
-      "platform": "windows",
-      "source": "settings.json",
+      "source": "windows/settings.json",
       "destination": "settings.json"
     }
   ]

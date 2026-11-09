@@ -1,23 +1,18 @@
 {
-  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
   "destinationRoot": "$HOME/.config/ghostty",
   "files": [
     {
-      "platform": "macos",
-      "source": "config",
+      "source": "macos/config",
       "destination": "config"
     },
     {
-      "platform": "macos",
-      "source": "shaders",
-      "destination": "shaders",
-      "recursive": true
+      "source": "macos/shaders",
+      "destination": "shaders"
     },
     {
-      "platform": "macos",
-      "source": "auto",
-      "destination": "auto",
-      "recursive": true
+      "source": "macos/auto",
+      "destination": "auto"
     }
   ]
 }
