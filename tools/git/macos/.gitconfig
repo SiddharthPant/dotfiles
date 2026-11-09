@@ -1,6 +1,48 @@
-# macOS-only Git settings, included from ~/.gitconfig.
+[user]
+	name = SiddharthPant
+	email = 10671794+SiddharthPant@users.noreply.github.com
+
+[init]
+	defaultBranch = main
+
 [core]
+	editor = vim
 	excludesfile = ~/.config/git/ignore
+
+[sequence]
+	editor = vim
+
+[fetch]
+	prune = true
+
+[pull]
+	ff = only
+	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[rerere]
+	enabled = true
+
+[diff]
+	algorithm = histogram
+	tool = vim
+
+[difftool]
+	prompt = false
+[difftool "vim"]
+	cmd = vim -d "$LOCAL" "$REMOTE"
+
+[merge]
+	tool = vscode
+	conflictstyle = zdiff3
+[mergetool "vscode"]
+	cmd = code --wait --merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
+[alias]
+	undo = reset --mixed HEAD^
+
 [hook "hk-commit-msg"]
 	command = test \"${HK:-1}\" = \"0\" || ~/.local/bin/mise x hk -- hk run commit-msg --from-hook
 	event = commit-msg

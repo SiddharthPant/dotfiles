@@ -3,18 +3,14 @@
   "destinationRoot": "$HOME",
   "files": [
     {
+      "platform": "macos",
       "source": ".gitconfig",
       "destination": ".gitconfig"
     },
     {
-      "platform": "macos",
-      "source": ".gitconfig.platform",
-      "destination": ".gitconfig.platform"
-    },
-    {
       "platform": "windows",
-      "source": ".gitconfig.platform",
-      "destination": ".gitconfig.platform"
+      "source": ".gitconfig",
+      "destination": ".gitconfig"
     }
   ]
 }

@@ -7,6 +7,8 @@
 
 [core]
 	editor = vim
+	autocrlf = input
+	longpaths = true
 
 [sequence]
 	editor = vim
@@ -42,7 +44,12 @@
 [alias]
 	undo = reset --mixed HEAD^
 
-# Platform-only settings, copied by setup-tool from tools/git/<os>/.gitconfig.platform.
-# Included last so they can override anything above.
-[include]
-	path = ~/.gitconfig.platform
+[credential]
+	helper = manager
+
+[hook "hk-pre-push"]
+	command = test \"${HK:-1}\" = \"0\" || 'C:\\Users\\sidpa\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe' x hk -- hk run pre-push --from-hook
+	event = pre-push
+[hook "hk-pre-commit"]
+	command = test \"${HK:-1}\" = \"0\" || 'C:\\Users\\sidpa\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe' x hk -- hk run pre-commit --from-hook --staged
+	event = pre-commit
