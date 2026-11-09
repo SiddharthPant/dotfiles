@@ -9,5 +9,5 @@ export VISUAL="$EDITOR"
 export MYSQL_UNIX_PORT="/tmp/mysql_3306.sock"
 
 if [ -d "$HOME/Library/Application Support/Herd/config/php/84" ]; then
-  export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
+	export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
 fi

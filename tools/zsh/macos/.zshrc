@@ -42,7 +42,7 @@ PS1='%F{blue}%~ %(?.%F{green}.%F{red})%#%f '
 
 # Terminal title: dir while idle, "dir — cmd" while a command runs
 if [[ "$TERM" == *ghostty* || "$TERM_PROGRAM" == ghostty ]]; then
-  _ghostty_title() { print -nP "\033]0;$1\007"; }
-  precmd() { _ghostty_title "%~"; }
-  preexec() { _ghostty_title "%~ — ${1[(w)1]}"; }
+	_ghostty_title() { print -nP "\033]0;$1\007"; }
+	precmd() { _ghostty_title "%~"; }
+	preexec() { _ghostty_title "%~ — ${1[(w)1]}"; }
 fi
