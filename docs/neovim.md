@@ -31,7 +31,8 @@ Renaming an HTML or templ open tag also renames its closing tag.
 
 ## Go and templ
 
-- Saving a `.go` file runs goimports: gofmt plus adding missing and dropping unused imports. `.templ` files run `templ fmt`.
+- Saving a `.go` file runs `golangci-lint fmt` when the project has a golangci-lint config (`.golangci.yml`, `.yaml`, `.toml` or `.json`), which applies the formatters enabled there.
+  Otherwise it runs goimports: gofmt plus adding missing and dropping unused imports. `.templ` files run `templ fmt`.
 - golangci-lint runs through its language server whenever a Go file is opened or saved, and its findings show up as diagnostics tagged with the linter name (`errcheck`, `staticcheck`, ...).
   It uses the project's `.golangci.yml` when there is one, otherwise its standard set (errcheck, govet, ineffassign, staticcheck, unused).
   For the whole module at once, run `golangci-lint run ./...` from `<leader>cc`.

@@ -584,8 +584,12 @@ end, { desc = 'Toggle completion menu auto-show' })
 require('conform').setup({
   formatters_by_ft = {
     lua = { 'stylua' },
-    -- gofmt plus adding missing and removing unused imports.
-    go = { 'goimports' },
+    -- A project with a golangci-lint config gets the formatters it enables there, so saving matches
+    -- what its lint step checks. Elsewhere goimports gives gofmt plus import fixing.
+    go = function(bufnr)
+      local has_config = vim.fs.root(bufnr, { '.golangci.yml', '.golangci.yaml', '.golangci.toml', '.golangci.json' })
+      return { has_config and 'golangci-lint' or 'goimports' }
+    end,
     templ = { 'templ' },
     python = { 'ruff_organize_imports', 'ruff_format' },
     rust = { 'rustfmt' },
