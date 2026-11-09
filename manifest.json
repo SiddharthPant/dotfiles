@@ -9,6 +9,7 @@
     "git": "tools/git/manifest.json",
     "meld": "tools/meld/manifest.json",
     "mise": "tools/mise/manifest.json",
+    "nvim": "tools/nvim/manifest.json",
     "pi": "tools/pi/manifest.json",
     "powershell": "tools/powershell/manifest.json",
     "sqlfluff": "tools/sqlfluff/manifest.json",

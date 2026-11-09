@@ -1,0 +1,16 @@
+{
+  "$schema": "../../crates/setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/nvim",
+  "files": [
+    {
+      "platform": "group:posix",
+      "source": "init.lua",
+      "destination": "init.lua"
+    },
+    {
+      "platform": "group:posix",
+      "source": "nvim-pack-lock.json",
+      "destination": "nvim-pack-lock.json"
+    }
+  ]
+}
