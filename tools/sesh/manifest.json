@@ -1,0 +1,14 @@
+{
+  "$schema": "../../setup-tool/schemas/tool-manifest.schema.json",
+  "destinationRoot": "$HOME/.config/sesh",
+  "files": [
+    {
+      "source": "macos/sesh.toml",
+      "destination": "sesh.toml"
+    },
+    {
+      "source": "macos/layout.sh",
+      "destination": "layout.sh"
+    }
+  ]
+}

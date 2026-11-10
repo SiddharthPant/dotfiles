@@ -1,0 +1,24 @@
+#:schema https://github.com/joshmedeski/sesh/raw/main/sesh.schema.json
+
+# Running sessions stay on top; configured projects and zoxide folders share one most-used-first list.
+sort_order = ["tmux", ["config", "zoxide"]]
+
+# Every project opens as one window: nvim as the main pane, with a shell on the right (see layout.sh).
+# Pinned projects also get claude above the shell. The layout only runs when a session is created,
+# so reattaching never disturbs one in use.
+[[session]]
+name = "dotfiles"
+path = "~/dotfiles"
+alias = "dot"
+startup_command = "~/.config/sesh/layout.sh claude && nvim"
+
+[[session]]
+name = "notices-srsalegal"
+path = "~/projects/clients/advsanjay/notices-srsalegal"
+alias = "ns"
+startup_command = "~/.config/sesh/layout.sh claude && nvim"
+
+# `**` rather than `*/*` because client projects sit a level deeper (clients/<client>/<project>).
+[[wildcard]]
+pattern = "~/projects/**"
+startup_command = "~/.config/sesh/layout.sh && nvim"
