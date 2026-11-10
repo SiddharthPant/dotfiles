@@ -112,6 +112,10 @@ vim.g.netrw_banner = 0
 -- vim.g.netrw_liststyle = 3
 -- Negative means absolute columns, so :Lexplore opens 25 columns wide.
 vim.g.netrw_winsize = -25
+-- netrw binds <C-h> to its hiding list unless that action has another key, which would shadow tmux
+-- navigation; vim-tmux-navigator takes <C-l>, so refresh gets a key here too.
+vim.keymap.set('n', '<leader>eh', '<Plug>NetrwHideEdit', { desc = 'netrw: edit hiding list' })
+vim.keymap.set('n', '<leader>er', '<Plug>NetrwRefresh', { desc = 'netrw: refresh listing' })
 
 --- Looks up vim.notify at call time so messages go through fidget once it has taken over.
 local function notify(message)
@@ -402,6 +406,8 @@ vim.pack.add({
   gh('lewis6991/gitsigns.nvim'),
   gh('dlyongemallo/diffview-plus.nvim'),
   gh('NeogitOrg/neogit'),
+  -- <C-h/j/k/l> and <C-\> move across Neovim splits and tmux panes; .tmux.conf holds the other half.
+  gh('christoomey/vim-tmux-navigator'),
 })
 
 -- Notifications and LSP progress in a corner overlay, instead of the message area.
@@ -626,7 +632,8 @@ end, { desc = 'Toggle format on save' })
 -- Navigation and editing
 
 -- Files as an editable buffer on `-`; netrw stays the handler for directories and :Explore.
-require('oil').setup({ default_file_explorer = false })
+-- Oil's <C-h> (horizontal split) and <C-l> (refresh) would shadow tmux navigation in its buffers.
+require('oil').setup({ default_file_explorer = false, keymaps = { ['<C-h>'] = false, ['<C-l>'] = false } })
 map('n', '-', '<Cmd>Oil<CR>', { desc = 'Open parent directory in oil' })
 
 map('n', '<leader>u', '<Cmd>Undotree<CR>', { desc = 'Toggle undo tree' })

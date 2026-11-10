@@ -147,7 +147,14 @@ Output keeps its ANSI colours (baleia). For any other buffer with raw colour cod
 
 `-` opens the current file's directory as an editable buffer: rename or delete by editing lines, create by adding them, then `:w` to apply.
 In oil, `<CR>` opens, `-` goes up, `_` jumps to the cwd, `g.` shows hidden files, `<C-p>` previews and `g?` lists the rest.
-netrw is unchanged for `:Explore`, `:Lexplore` and opening directories.
+netrw still handles `:Explore`, `:Lexplore` and opening directories, with its hiding list on `<leader>eh` and refresh on `<leader>er`,
+since `<C-h>`/`<C-l>` navigate panes there as everywhere else. In oil, `<C-h>` (horizontal split) and `<C-l>` (refresh) are turned off for the same reason.
+
+## Splits and tmux panes (vim-tmux-navigator)
+
+`<C-h/j/k/l>` move to the split in that direction, and past the last split into the neighbouring tmux pane; `<C-\>` goes back to the previous one.
+The same keys work from any tmux pane, so nvim, claude and a shell side by side behave like one set of splits.
+In a shell pane `<C-l>` moves instead of clearing, so `<prefix> <C-l>` clears the screen.
 
 ## Built-in extras
 
