@@ -2,6 +2,10 @@
 export PATH="$PATH:/Users/sid/.docker/bin"
 # End of Docker Desktop section.
 
+# SSH clients such as Windows OpenSSH send no locale, and without one tmux
+# assumes a non-UTF-8 terminal and draws every non-ASCII character as "_".
+set -q LANG; or set -gx LANG en_IN.UTF-8
+
 # Environment shared with the macOS Zsh setup.
 set -gx EDITOR "code -w"
 set -gx VISUAL $EDITOR
