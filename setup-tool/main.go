@@ -5,19 +5,18 @@
 // platform folder it lives in (common, posix, linux, macos, wsl or windows), which also decides
 // where it applies; a source that is a folder syncs every file under it. A destination is relative
 // to destinationRoot unless it is absolute. Both may use $NAME or ${NAME} environment variables,
-// and $HOME is the home folder on every OS. A manifest with "enabled": false is skipped.
+// and $HOME is the home folder on every OS.
 package main
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
-	"slices"
 	"strings"
 
 	"github.com/aymanbagabas/go-udiff"
@@ -26,12 +25,11 @@ import (
 const usage = `Sync the files listed in tools/*/manifest.json with the home folder.
 
 Usage:
-  setup-tool list               list each tool and how many files it has on this OS
   setup-tool diff [tool...]     show how the installed files differ from the repo
   setup-tool install [tool...]  copy repo files that differ into the home folder
   setup-tool pull [tool...]     copy installed files that differ back into the repo
 
-Without tool names, diff, install and pull cover every enabled tool.
+Without tool names, each command covers every tool.
 `
 
 var errUsage = errors.New("usage")
@@ -57,64 +55,43 @@ func run(args []string) error {
 	case "help", "-h", "--help":
 		fmt.Print(usage)
 		return nil
-	case "list", "diff", "install", "pull":
+	case "diff", "install", "pull":
 	default:
 		return errUsage
 	}
 
-	tools, err := loadTools("tools", currentSystem())
-	if err != nil {
-		return err
-	}
-	if cmd == "list" {
-		if len(names) > 0 {
-			return errUsage
-		}
-		list(tools)
-		return nil
-	}
-	selected, err := selectTools(tools, names)
+	files, err := loadFiles("tools", names, currentSystem())
 	if err != nil {
 		return err
 	}
 
 	// Two repo files installed to the same place would overwrite each other.
 	owner := map[string]string{}
-	for _, t := range selected {
-		for _, f := range t.files {
-			if src, ok := owner[f.home]; ok && src != f.repo {
-				return fmt.Errorf("%s is the destination of both %s and %s", f.home, src, f.repo)
-			}
-			owner[f.home] = f.repo
+	for _, f := range files {
+		if src, ok := owner[f.home]; ok && src != f.repo {
+			return fmt.Errorf("%s is the destination of both %s and %s", f.home, src, f.repo)
 		}
+		owner[f.home] = f.repo
 	}
 
 	failed := 0
-	for _, t := range selected {
-		for _, f := range t.files {
-			src, dst := f.repo, f.home
-			if cmd == "pull" {
-				src, dst = dst, src
-			}
-			out, err := syncFile(cmd, src, dst)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "error:", err)
-				failed++
-				continue
-			}
-			fmt.Print(out)
+	for _, f := range files {
+		src, dst := f.repo, f.home
+		if cmd == "pull" {
+			src, dst = dst, src
 		}
+		out, err := syncFile(cmd, src, dst)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "error:", err)
+			failed++
+			continue
+		}
+		fmt.Print(out)
 	}
 	if failed > 0 {
 		return fmt.Errorf("%d file(s) failed", failed)
 	}
 	return nil
-}
-
-type tool struct {
-	name     string
-	disabled bool
-	files    []file
 }
 
 // file pairs a file in the repo with where it is installed.
@@ -124,7 +101,6 @@ type file struct {
 
 type manifest struct {
 	Schema          string `json:"$schema"`
-	Enabled         *bool  `json:"enabled"`
 	DestinationRoot string `json:"destinationRoot"`
 	Files           []struct {
 		Source      string `json:"source"`
@@ -132,46 +108,49 @@ type manifest struct {
 	} `json:"files"`
 }
 
-// loadTools reads every dir/*/manifest.json and resolves the files that apply to sys.
-func loadTools(dir, sys string) ([]tool, error) {
-	paths, err := filepath.Glob(filepath.Join(dir, "*", "manifest.json"))
+// loadFiles resolves the files that apply to sys from dir/<name>/manifest.json for each name, or
+// from every manifest when no names are given.
+func loadFiles(dir string, names []string, sys string) ([]file, error) {
+	if len(names) == 0 {
+		names = []string{"*"}
+	}
+	var files []file
+	for _, name := range names {
+		pattern := filepath.Join(dir, name, "manifest.json")
+		paths, err := filepath.Glob(pattern)
+		if err != nil {
+			return nil, err
+		}
+		if len(paths) == 0 {
+			return nil, fmt.Errorf("no manifest at %s", pattern)
+		}
+		for _, path := range paths {
+			found, err := loadManifest(path, sys)
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", path, err)
+			}
+			files = append(files, found...)
+		}
+	}
+	return files, nil
+}
+
+func loadManifest(path, sys string) ([]file, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	var tools []tool
-	for _, path := range paths {
-		t, err := loadTool(path, sys)
-		if err != nil {
-			return nil, fmt.Errorf("%s: %w", path, err)
-		}
-		tools = append(tools, t)
-	}
-	return tools, nil
-}
-
-func loadTool(path, sys string) (tool, error) {
-	toolDir := filepath.Dir(path)
-	t := tool{name: filepath.Base(toolDir)}
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return t, err
-	}
 	var m manifest
-	dec := json.NewDecoder(bytes.NewReader(data))
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&m); err != nil {
-		return t, err
-	}
-	if m.Enabled != nil && !*m.Enabled {
-		t.disabled = true
-		return t, nil
+	if err := json.Unmarshal(data, &m, json.RejectUnknownMembers(true)); err != nil {
+		return nil, err
 	}
 
+	var files []file
 	for _, entry := range m.Files {
 		platform, _, _ := strings.Cut(entry.Source, "/")
 		applies, known := platforms[platform]
 		if !known {
-			return t, fmt.Errorf("source %q must start with a platform folder such as common/ or macos/", entry.Source)
+			return nil, fmt.Errorf("source %q must start with a platform folder such as common/ or macos/", entry.Source)
 		}
 		if !applies(sys) {
 			continue
@@ -179,29 +158,29 @@ func loadTool(path, sys string) (tool, error) {
 		// Expanded only for entries that apply, so Windows-only variables need not exist elsewhere.
 		dst, err := expand(entry.Destination)
 		if err != nil {
-			return t, err
+			return nil, err
 		}
 		if !filepath.IsAbs(dst) {
 			root, err := expand(m.DestinationRoot)
 			if err != nil {
-				return t, err
+				return nil, err
 			}
 			dst = filepath.Join(root, dst)
 		}
-		src := filepath.Join(toolDir, filepath.FromSlash(entry.Source))
+		src := filepath.Join(filepath.Dir(path), filepath.FromSlash(entry.Source))
 		err = filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
 			if err != nil || d.IsDir() {
 				return err
 			}
 			rel, err := filepath.Rel(src, path)
-			t.files = append(t.files, file{repo: path, home: filepath.Join(dst, rel)})
+			files = append(files, file{repo: path, home: filepath.Join(dst, rel)})
 			return err
 		})
 		if err != nil {
-			return t, err
+			return nil, err
 		}
 	}
-	return t, nil
+	return files, nil
 }
 
 // platforms maps each platform folder to the systems it applies to.
@@ -251,44 +230,6 @@ func expand(path string) (string, error) {
 	return filepath.Clean(expanded), nil
 }
 
-// selectTools returns the named tools, or every enabled tool when no names are given.
-func selectTools(tools []tool, names []string) ([]tool, error) {
-	if len(names) == 0 {
-		return slices.DeleteFunc(slices.Clone(tools), func(t tool) bool { return t.disabled }), nil
-	}
-	var selected []tool
-	for _, name := range names {
-		i := slices.IndexFunc(tools, func(t tool) bool { return t.name == name })
-		switch {
-		case i < 0:
-			return nil, fmt.Errorf("unknown tool %q", name)
-		case tools[i].disabled:
-			return nil, fmt.Errorf("tool %q is disabled in its manifest", name)
-		case !slices.ContainsFunc(selected, func(t tool) bool { return t.name == name }):
-			selected = append(selected, tools[i])
-		}
-	}
-	return selected, nil
-}
-
-// list prints every tool with how many files it has on this OS, dimming the ones with none.
-func list(tools []tool) {
-	width := 0
-	for _, t := range tools {
-		width = max(width, len(t.name))
-	}
-	for _, t := range tools {
-		line := fmt.Sprintf("%-*s  %d file(s)", width, t.name, len(t.files))
-		if t.disabled {
-			line = fmt.Sprintf("%-*s  disabled", width, t.name)
-		}
-		if t.disabled || len(t.files) == 0 {
-			line = paint(line, dim)
-		}
-		fmt.Println(line)
-	}
-}
-
 // syncFile copies src over dst when they differ, or for diff only describes the difference.
 func syncFile(cmd, src, dst string) (string, error) {
 	data, err := os.ReadFile(src)
@@ -312,11 +253,7 @@ func syncFile(cmd, src, dst string) (string, error) {
 	if err := writeFile(dst, data, src); err != nil {
 		return "", fmt.Errorf("copy to %s: %w", dst, err)
 	}
-	verb := "copied"
-	if cmd == "pull" {
-		verb = "pulled"
-	}
-	return paint(verb, green) + " " + src + " -> " + dst + "\n", nil
+	return paint("copied", green) + " " + src + " -> " + dst + "\n", nil
 }
 
 // writeFile writes data to a temporary file next to dst and renames it over dst, so a failed

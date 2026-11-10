@@ -8,8 +8,8 @@ import (
 	"testing"
 )
 
-// TestLoadTools checks platform folders, folder sources, variables and disabled manifests.
-func TestLoadTools(t *testing.T) {
+// TestLoadFiles checks platform folders, folder sources, variables and tool names.
+func TestLoadFiles(t *testing.T) {
 	dir, home := t.TempDir(), t.TempDir()
 	t.Setenv("SETUP_TOOL_TEST_HOME", home)
 	write := func(path, data string) {
@@ -22,7 +22,7 @@ func TestLoadTools(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	for _, path := range []string{"app/common/a.conf", "app/posix/themes/dark.conf", "app/posix/themes/sub/light.conf", "app/windows/b.conf"} {
+	for _, path := range []string{"app/common/a.conf", "app/posix/themes/dark.conf", "app/posix/themes/sub/light.conf", "app/windows/b.conf", "other/common/c.conf"} {
 		write(path, "")
 	}
 	write("app/manifest.json", `{
@@ -33,32 +33,43 @@ func TestLoadTools(t *testing.T) {
 			{"source": "windows/b.conf", "destination": "$WINDOWS_ONLY_VARIABLE/b.conf"}
 		]
 	}`)
-	write("old/manifest.json", `{"enabled": false, "destinationRoot": "$NOT_SET", "files": []}`)
+	write("other/manifest.json", `{
+		"destinationRoot": "$SETUP_TOOL_TEST_HOME",
+		"files": [{"source": "common/c.conf", "destination": "c.conf"}]
+	}`)
 
-	tools, err := loadTools(dir, "linux")
-	if err != nil {
-		t.Fatal(err)
+	load := func(names ...string) []string {
+		t.Helper()
+		files, err := loadFiles(dir, names, "linux")
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got []string
+		for _, f := range files {
+			src, _ := filepath.Rel(dir, f.repo)
+			dst, _ := filepath.Rel(home, f.home)
+			got = append(got, filepath.ToSlash(src)+" -> "+filepath.ToSlash(dst))
+		}
+		slices.Sort(got)
+		return got
 	}
-	if len(tools) != 2 || tools[0].name != "app" || !tools[1].disabled {
-		t.Fatalf("got tools %+v", tools)
-	}
-	var got []string
-	for _, f := range tools[0].files {
-		src, _ := filepath.Rel(dir, f.repo)
-		dst, _ := filepath.Rel(home, f.home)
-		got = append(got, filepath.ToSlash(src)+" -> "+filepath.ToSlash(dst))
-	}
-	slices.Sort(got)
 	want := []string{
 		"app/common/a.conf -> a.conf",
 		"app/posix/themes/dark.conf -> .config/themes/dark.conf",
 		"app/posix/themes/sub/light.conf -> .config/themes/sub/light.conf",
+		"other/common/c.conf -> c.conf",
 	}
-	if !slices.Equal(got, want) {
-		t.Errorf("got %q\nwant %q", got, want)
+	if got := load(); !slices.Equal(got, want) {
+		t.Errorf("every tool: got %q\nwant %q", got, want)
+	}
+	if got := load("app"); !slices.Equal(got, want[:3]) {
+		t.Errorf("one tool: got %q\nwant %q", got, want[:3])
 	}
 
-	if _, err := loadTools(dir, "windows"); err == nil || !strings.Contains(err.Error(), "$WINDOWS_ONLY_VARIABLE is not set") {
+	if _, err := loadFiles(dir, []string{"nope"}, "linux"); err == nil {
+		t.Error("an unknown tool name should fail")
+	}
+	if _, err := loadFiles(dir, nil, "windows"); err == nil || !strings.Contains(err.Error(), "$WINDOWS_ONLY_VARIABLE is not set") {
 		t.Errorf("an unset variable should fail where its entry applies, got %v", err)
 	}
 }
@@ -89,7 +100,7 @@ func TestSyncFile(t *testing.T) {
 	if out, err := syncFile("diff", repo, home); err != nil || !strings.Contains(out, "\n-echo bye\n+echo hi\n") {
 		t.Fatalf("diff: %q, %v", out, err)
 	}
-	if out, err := syncFile("pull", home, repo); err != nil || !strings.HasPrefix(out, "pulled ") {
+	if out, err := syncFile("pull", home, repo); err != nil || !strings.HasPrefix(out, "copied ") {
 		t.Fatalf("pull: %q, %v", out, err)
 	}
 	if data, _ := os.ReadFile(repo); string(data) != "echo bye\n" {

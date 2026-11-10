@@ -7,11 +7,6 @@
   "required": ["destinationRoot", "files"],
   "properties": {
     "$schema": { "type": "string" },
-    "enabled": {
-      "description": "Set to false to leave this tool out of setup-tool entirely.",
-      "type": "boolean",
-      "default": true
-    },
     "destinationRoot": {
       "description": "Base folder for relative destinations, e.g. $HOME/.pi. $NAME and ${NAME} are environment variables; $HOME is the home folder on every OS.",
       "type": "string"
