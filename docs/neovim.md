@@ -108,6 +108,19 @@ Folds come from treesitter and start open: `zc` / `zo` / `za` close, open and to
 While several cursors exist: `<Left>` / `<Right>` cycle the main cursor, `<leader>x` deletes the main one, and `<Esc>` resumes paused cursors or else clears them all.
 Any normal-mode edit or motion runs at every cursor.
 
+## Markdown (render-markdown)
+
+Markdown buffers are rendered in place in Normal mode: heading bars, code block backgrounds, aligned tables, bullets, checkboxes, callouts and link icons.
+Insert mode shows the raw text, and so does the line under the cursor, so editing is unchanged.
+
+| Keys / command | Action |
+|---|---|
+| `<leader>tm` | Toggle rendering everywhere |
+| `:RenderMarkdown buf_toggle` | Toggle it for this buffer only |
+| `:RenderMarkdown preview` | Rendered copy in a side window while editing the raw text |
+
+The glyphs need a Nerd Font. Code blocks show the language name without an icon, as no icon plugin is installed.
+
 ## Git
 
 In a buffer tracked by git (gitsigns):

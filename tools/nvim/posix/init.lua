@@ -408,6 +408,7 @@ vim.pack.add({
   gh('NeogitOrg/neogit'),
   -- <C-h/j/k/l> and <C-\> move across Neovim splits and tmux panes; .tmux.conf holds the other half.
   gh('christoomey/vim-tmux-navigator'),
+  gh('MeanderingProgrammer/render-markdown.nvim'),
 })
 
 -- Notifications and LSP progress in a corner overlay, instead of the message area.
@@ -681,6 +682,22 @@ vim.api.nvim_set_hl(0, 'MultiCursorMatchPreview', { link = 'Search', default = t
 vim.api.nvim_set_hl(0, 'MultiCursorDisabledCursor', { reverse = true, default = true })
 vim.api.nvim_set_hl(0, 'MultiCursorDisabledVisual', { link = 'Visual', default = true })
 vim.api.nvim_set_hl(0, 'MultiCursorDisabledSign', { link = 'SignColumn', default = true })
+
+-- Markdown
+
+-- Renders headings, code blocks, tables, lists and links in place in Normal mode; Insert mode and
+-- the cursor line show the raw text.
+require('render-markdown').setup({
+  -- Its heading signs outrank gitsigns in the one-cell sign column and would hide hunk markers.
+  sign = { enabled = false },
+  -- Nothing here can render LaTeX: there is no latex parser, utftex or latex2text.
+  latex = { enabled = false },
+})
+map('n', '<leader>tm', function()
+  local markdown = require('render-markdown')
+  markdown.toggle()
+  notify('Markdown rendering ' .. (markdown.get() and 'enabled' or 'disabled'))
+end, { desc = 'Toggle Markdown rendering' })
 
 -- Git
 
