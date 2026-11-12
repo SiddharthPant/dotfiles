@@ -3,7 +3,7 @@
 taplo = "0.10.0"
 cargo-binstall = "1.26.2"
 "cargo:cargo-llvm-lines" = "0.4.48"
-hk = { version = "2.11.1", workflow = "release.yml" }
+hk = { version = "2.12.0", workflow = "release.yml" }
 java = "27.0.1+0"
 editorconfig-checker = "4.0.2"
 gitleaks = "8.30.1"
