@@ -197,130 +197,12 @@ map('n', '<leader>bo', function()
   notify(message)
 end, { silent = true, desc = 'Delete other unmodified buffers' })
 
--- Fuzzy file, buffer and live-grep completion on the command line, as in the vimrc.
-local selected_match = ''
-local allfiles = nil
-
-local function grep_complete(arglead)
-  if #arglead < 2 then
-    return {}
-  end
-  if vim.fn.executable('rg') == 1 then
-    return vim.fn.systemlist("rg --vimgrep --smart-case --hidden --glob '!.git' -- " .. vim.fn.shellescape(arglead))
-  end
-  return vim.fn.systemlist(
-    'grep -REIHns --exclude-dir=.git --exclude-dir=.jj --exclude-dir=node_modules --exclude-dir=target --exclude="tags" --exclude="*.swp" -- '
-      .. vim.fn.shellescape(arglead)
-      .. ' .'
-  )
-end
-
---- Lists project files once per command-line session, preferring fd over find.
-local function fuzzy_find(arglead)
-  if not allfiles then
-    local root = vim.g.fzfind_root or '.'
-    if vim.fn.executable('fd') == 1 then
-      allfiles = vim.fn.systemlist(
-        'fd --color=never --hidden --type f --type l --exclude .git --exclude .jj --exclude node_modules --exclude target --exclude vendor --exclude dist . '
-          .. vim.fn.shellescape(root)
-      )
-    else
-      allfiles = vim.fn.systemlist(
-        'find '
-          .. vim.fn.shellescape(root)
-          .. ' \\( -path "*/.git" -o -path "*/.jj" -o -path "*/node_modules" -o -path "*/target" -o -path "*/vendor" -o -path "*/dist" \\) -prune -o \\( -type f -o -type l \\) -print'
-      )
-    end
-  end
-  return arglead == '' and allfiles or vim.fn.matchfuzzy(allfiles, arglead)
-end
-
---- Listed buffers with the alternate buffer promoted first.
-local function fuzzy_buffer(arglead)
-  local buffers = vim.split(vim.fn.execute('buffers', 'silent!'), '\n', { trimempty = true })
-  for i, line in ipairs(buffers) do
-    if line:match('^%s*%d+%s+#') then
-      buffers[1], buffers[i] = buffers[i], buffers[1]
-      break
-    end
-  end
-  return arglead == '' and buffers or vim.fn.matchfuzzy(buffers, arglead)
-end
-
---- Saves the popup selection before Neovim tears down a custom command line.
-local function select_command_line_item()
-  selected_match = ''
-  if vim.fn.match(vim.fn.getcmdline(), [[^\s*\%(Grep\|Find\|Buffer\)\s]]) == -1 then
-    return
-  end
-  local info = vim.fn.cmdcomplete_info()
-  local pum_visible = info.pum_visible == true or info.pum_visible == 1
-  if vim.tbl_isempty(info) or not pum_visible or #info.matches == 0 then
-    return
-  end
-  -- Use the highlighted item, or the first candidate when nothing is highlighted.
-  selected_match = info.selected ~= -1 and info.matches[info.selected + 1] or info.matches[1]
-  vim.fn.setcmdline(info.cmdline_orig)
-end
-
-local function first_match(pattern, complete)
-  if selected_match == '' and pattern ~= '' then
-    selected_match = complete(pattern)[1] or ''
-  end
-  return selected_match
-end
-
-local function visit_grep_match(pattern)
-  if first_match(pattern, grep_complete) == '' then
-    notify('No grep match selected')
-    return
-  end
-  local item = vim.fn.getqflist({ lines = { selected_match } }).items[1]
-  if not item then
-    notify('Could not parse grep match')
-    return
-  end
-  if (item.bufnr or 0) == 0 or item.lnum <= 0 then
-    notify('Could not open grep match')
-    return
-  end
-  vim.cmd('buffer ' .. item.bufnr)
-  vim.fn.cursor(item.lnum, math.max(item.col, 1))
-  vim.bo[item.bufnr].buflisted = true
-  vim.cmd('normal! zvzz')
-end
-
-local function open_selected_file(pattern)
-  if first_match(pattern, fuzzy_find) ~= '' then
-    vim.cmd('edit ' .. vim.fn.fnameescape(selected_match))
-  end
-end
-
-local function open_selected_buffer(pattern)
-  local number = first_match(pattern, fuzzy_buffer):match('^%s*(%d+)')
-  if number then
-    vim.cmd('buffer ' .. number)
-  end
-end
-
-vim.api.nvim_create_user_command('Grep', function(o) visit_grep_match(o.args) end, { nargs = '+', complete = grep_complete })
-vim.api.nvim_create_user_command('Find', function(o) open_selected_file(o.args) end, { nargs = '*', complete = fuzzy_find })
-vim.api.nvim_create_user_command('Buffer', function(o) open_selected_buffer(o.args) end, { nargs = '*', complete = fuzzy_buffer })
-
-map('n', '<leader><Space>', ':Find <C-@>')
-map('n', '<leader><BS>', ':Buffer <C-@>')
-map('n', '<leader>/', ':Grep <C-@>')
-map('n', '<leader>?', ":Grep <C-R>=expand('<cword>')<CR><C-@>")
-map('n', '<leader>fh', ':help <C-@>')
-
 local group = vim.api.nvim_create_augroup('UserConfig', { clear = true })
 local autocmd = function(event, opts)
   vim.api.nvim_create_autocmd(event, vim.tbl_extend('force', { group = group }, opts))
 end
 
 autocmd('CmdlineChanged', { pattern = { ':', '/', '?' }, callback = function() vim.fn.wildtrigger() end })
-autocmd('CmdlineEnter', { pattern = ':', callback = function() allfiles = nil end })
-autocmd('CmdlineLeavePre', { pattern = ':', callback = select_command_line_item })
 
 autocmd('TextYankPost', {
   callback = function()
@@ -384,6 +266,8 @@ local function gh(repo)
 end
 
 vim.pack.add({
+  -- File-type icons, picked up by fzf-lua, oil, diffview, which-key and render-markdown.
+  gh('nvim-tree/nvim-web-devicons'),
   gh('neovim/nvim-lspconfig'),
   gh('mason-org/mason.nvim'),
   gh('mason-org/mason-lspconfig.nvim'),
@@ -398,7 +282,9 @@ vim.pack.add({
   gh('folke/which-key.nvim'),
   gh('folke/flash.nvim'),
   { src = gh('jake-stewart/multicursor.nvim'), version = '1.0' },
+  gh('windwp/nvim-autopairs'),
   gh('stevearc/oil.nvim'),
+  gh('ibhagwan/fzf-lua'),
   { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
   gh('nvim-lua/plenary.nvim'),
   gh('m00qek/baleia.nvim'),
@@ -576,7 +462,7 @@ require('blink.cmp').setup({
     },
   },
   signature = { enabled = true },
-  -- The command line keeps the native wildmenu that :Find, :Buffer and :Grep rely on.
+  -- The command line keeps the native wildmenu, which the CmdlineChanged autocmd opens as you type.
   cmdline = { enabled = false },
   fuzzy = { implementation = 'prefer_rust_with_warning' },
 })
@@ -637,6 +523,23 @@ end, { desc = 'Toggle format on save' })
 require('oil').setup({ default_file_explorer = false, keymaps = { ['<C-h>'] = false, ['<C-l>'] = false } })
 map('n', '-', '<Cmd>Oil<CR>', { desc = 'Open parent directory in oil' })
 
+-- Pickers on the keys the vimrc's command-line :Find, :Buffer and :Grep used.
+local fzf = require('fzf-lua')
+fzf.setup({
+  -- Search dotfiles too, as files already does, but never inside VCS metadata.
+  grep = {
+    hidden = true,
+    rg_opts = [[--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -g "!.git" -g "!.jj" -e]],
+  },
+})
+map('n', '<leader><Space>', fzf.files, { desc = 'Find file' })
+map('n', '<leader><BS>', fzf.buffers, { desc = 'Find buffer' })
+map('n', '<leader>/', fzf.live_grep, { desc = 'Live grep' })
+map('n', '<leader>?', fzf.grep_cword, { desc = 'Grep word under cursor' })
+map('x', '<leader>?', fzf.grep_visual, { desc = 'Grep selection' })
+map('n', '<leader>fh', fzf.helptags, { desc = 'Find help tag' })
+map('n', '<leader>fr', fzf.resume, { desc = 'Resume last picker' })
+
 map('n', '<leader>u', '<Cmd>Undotree<CR>', { desc = 'Toggle undo tree' })
 
 -- f/t/;/, keep their Vim behaviour; flash only owns its own keys.
@@ -647,26 +550,32 @@ map('o', 'r', function() require('flash').remote() end, { desc = 'Flash remote o
 map({ 'o', 'x' }, 'R', function() require('flash').treesitter_search() end, { desc = 'Flash treesitter search' })
 map('c', '<C-s>', function() require('flash').toggle() end, { desc = 'Toggle flash labels in search' })
 
+-- Closes brackets and quotes as they are typed. Brackets after an accepted completion are blink.cmp's
+-- own doing, so the two need no integration.
+require('nvim-autopairs').setup({})
+
 local mc = require('multicursor-nvim')
 mc.setup()
-map({ 'n', 'x' }, '<Up>', function() mc.lineAddCursor(-1) end, { desc = 'Add cursor above' })
-map({ 'n', 'x' }, '<Down>', function() mc.lineAddCursor(1) end, { desc = 'Add cursor below' })
-map({ 'n', 'x' }, '<leader><Up>', function() mc.lineSkipCursor(-1) end, { desc = 'Skip line above' })
-map({ 'n', 'x' }, '<leader><Down>', function() mc.lineSkipCursor(1) end, { desc = 'Skip line below' })
-map({ 'n', 'x' }, '<leader>n', function() mc.matchAddCursor(1) end, { desc = 'Add cursor at next match' })
-map({ 'n', 'x' }, '<leader>N', function() mc.matchAddCursor(-1) end, { desc = 'Add cursor at previous match' })
-map({ 'n', 'x' }, '<leader>s', function() mc.matchSkipCursor(1) end, { desc = 'Skip next match' })
-map({ 'n', 'x' }, '<leader>S', function() mc.matchSkipCursor(-1) end, { desc = 'Skip previous match' })
-map({ 'n', 'x' }, '<leader>m', mc.matchAllAddCursors, { desc = 'Add cursors at all matches' })
+-- Everything sits in the <leader>m group: arrow keys stay plain motions with or without cursors,
+-- and no single-letter leader map blocks that letter as a prefix.
+map({ 'n', 'x' }, '<leader>mk', function() mc.lineAddCursor(-1) end, { desc = 'Add cursor above' })
+map({ 'n', 'x' }, '<leader>mj', function() mc.lineAddCursor(1) end, { desc = 'Add cursor below' })
+map({ 'n', 'x' }, '<leader>mK', function() mc.lineSkipCursor(-1) end, { desc = 'Skip line above' })
+map({ 'n', 'x' }, '<leader>mJ', function() mc.lineSkipCursor(1) end, { desc = 'Skip line below' })
+map({ 'n', 'x' }, '<leader>mn', function() mc.matchAddCursor(1) end, { desc = 'Add cursor at next match' })
+map({ 'n', 'x' }, '<leader>mN', function() mc.matchAddCursor(-1) end, { desc = 'Add cursor at previous match' })
+map({ 'n', 'x' }, '<leader>ms', function() mc.matchSkipCursor(1) end, { desc = 'Skip next match' })
+map({ 'n', 'x' }, '<leader>mS', function() mc.matchSkipCursor(-1) end, { desc = 'Skip previous match' })
+map({ 'n', 'x' }, '<leader>ma', mc.matchAllAddCursors, { desc = 'Add cursors at all matches' })
 map({ 'n', 'x' }, '<C-q>', mc.toggleCursor, { desc = 'Toggle cursor' })
 map('n', '<C-LeftMouse>', mc.handleMouse)
 map('n', '<C-LeftDrag>', mc.handleMouseDrag)
 map('n', '<C-LeftRelease>', mc.handleMouseRelease)
 -- These only exist while there is more than one cursor.
 mc.addKeymapLayer(function(layer)
-  layer({ 'n', 'x' }, '<Left>', mc.prevCursor)
-  layer({ 'n', 'x' }, '<Right>', mc.nextCursor)
-  layer({ 'n', 'x' }, '<leader>x', mc.deleteCursor)
+  layer({ 'n', 'x' }, '<leader>mh', mc.prevCursor)
+  layer({ 'n', 'x' }, '<leader>ml', mc.nextCursor)
+  layer({ 'n', 'x' }, '<leader>mx', mc.deleteCursor)
   layer('n', '<Esc>', function()
     if mc.cursorsEnabled() then
       mc.clearCursors()
@@ -736,7 +645,6 @@ local close_diffview = '<Cmd>DiffviewClose<CR>'
 require('diffview').setup({
   -- Tried first, so colocated jj repos show jj changes; plain git repos still work.
   preferred_adapter = 'jj',
-  use_icons = false,
   keymaps = {
     view = { { 'n', 'q', close_diffview, { desc = 'Close Diffview' } } },
     file_panel = { { 'n', 'q', close_diffview, { desc = 'Close Diffview' } } },
@@ -783,6 +691,7 @@ require('which-key').setup({
     { '<leader>c', group = 'code' },
     { '<leader>f', group = 'find' },
     { '<leader>g', group = 'git' },
+    { '<leader>m', group = 'multicursor', mode = { 'n', 'x' } },
     { '<leader>t', group = 'toggle' },
     { '<leader>z', group = 'fold' },
     { 'gr', group = 'lsp' },

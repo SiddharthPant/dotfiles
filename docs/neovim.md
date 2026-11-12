@@ -6,6 +6,23 @@ Press `<Space>` and wait, and which-key lists everything under it.
 The config is a single file, `tools/nvim/posix/init.lua`, installed to `~/.config/nvim/init.lua` by `setup-tool install nvim`.
 Plugins are pinned in `nvim-pack-lock.json` next to it; after `vim.pack.update()`, bring the new pins back with `setup-tool pull nvim`.
 
+## Finding (fzf-lua)
+
+| Keys | Action |
+|---|---|
+| `<leader><Space>` | Files in the cwd, dotfiles included, skipping `.git`, `.jj` and anything gitignored |
+| `<leader><BS>` | Open buffers, most recent first |
+| `<leader>/` | Live grep: results update as you type (rg, same exclusions as files) |
+| `<leader>?` | Grep the word under the cursor, or the selection in visual mode |
+| `<leader>fh` | Help tags |
+| `<leader>fr` | Reopen the last picker with its query and results |
+
+In a picker: type to filter, `<C-j>` / `<C-k>` or arrows to move, `<CR>` to open, `<C-s>` / `<C-v>` / `<C-t>` to open in a split, vsplit or tab, `<Esc>` to close.
+`<Tab>` marks several entries, and `<CR>` then sends them to the quickfix list. In a grep, `<C-g>` switches between regex search and fuzzy filtering of the results.
+`<F4>` toggles the preview and `<S-Up>` / `<S-Down>` scroll it. `<F1>` lists every key.
+`<A-h>` / `<A-i>` toggle hidden and gitignored files, and `<A-q>` sends the marked entries to the quickfix list.
+`:FzfLua` with no argument lists every other picker (LSP symbols, git status, keymaps, ...).
+
 ## LSP
 
 Most of these are Neovim defaults; they only do something once a server is attached.
@@ -55,6 +72,12 @@ The menu does not pop up on its own, the same as the vimrc.
 | `<C-k>` | Toggle signature help |
 | `<leader>ta` | Toggle auto-showing the menu while typing |
 
+## Auto pairs (nvim-autopairs)
+
+Typing an opening bracket or quote also inserts its closer, and typing the closer steps over it.
+`<BS>` inside an empty pair deletes both halves, and `<CR>` between brackets puts them on separate lines with the cursor indented between them.
+No closer is added directly before a word. With several cursors, pairs are inserted at each one.
+
 ## Formatting (conform)
 
 Files are formatted on save.
@@ -98,15 +121,16 @@ Folds come from treesitter and start open: `zc` / `zo` / `za` close, open and to
 
 | Keys | Action |
 |---|---|
-| `<Up>` / `<Down>` | Add a cursor on the line above / below |
-| `<leader>n` / `<leader>N` | Add a cursor at the next / previous match of the word or selection |
-| `<leader>s` / `<leader>S` | Skip the next / previous match |
-| `<leader>m` | Add cursors at every match |
+| `<leader>mk` / `<leader>mj` | Add a cursor on the line above / below |
+| `<leader>mK` / `<leader>mJ` | Skip the line above / below |
+| `<leader>mn` / `<leader>mN` | Add a cursor at the next / previous match of the word or selection |
+| `<leader>ms` / `<leader>mS` | Skip the next / previous match |
+| `<leader>ma` | Add cursors at every match |
 | `<C-q>` | Drop a cursor here and pause all cursors; move, drop more, then `<Esc>` to resume |
 | `<C-click>` | Add or remove a cursor with the mouse |
 
-While several cursors exist: `<Left>` / `<Right>` cycle the main cursor, `<leader>x` deletes the main one, and `<Esc>` resumes paused cursors or else clears them all.
-Any normal-mode edit or motion runs at every cursor.
+While several cursors exist: `<leader>mh` / `<leader>ml` cycle the main cursor, `<leader>mx` deletes the main one, and `<Esc>` resumes paused cursors or else clears them all.
+Any normal-mode edit or motion runs at every cursor, arrow keys included.
 
 ## Markdown (render-markdown)
 
@@ -119,7 +143,7 @@ Insert mode shows the raw text, and so does the line under the cursor, so editin
 | `:RenderMarkdown buf_toggle` | Toggle it for this buffer only |
 | `:RenderMarkdown preview` | Rendered copy in a side window while editing the raw text |
 
-The glyphs need a Nerd Font. Code blocks show the language name without an icon, as no icon plugin is installed.
+The glyphs need a Nerd Font. Code blocks show the language's icon (nvim-web-devicons) next to its name.
 
 ## Git
 

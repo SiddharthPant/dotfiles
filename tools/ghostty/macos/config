@@ -12,6 +12,10 @@ window-inherit-working-directory = false
 tab-inherit-working-directory = false
 split-inherit-working-directory = true
 
+# Option sends Alt, so terminal apps get Alt chords (fzf's alt-h/alt-i/alt-q, readline's alt-b/alt-f).
+# On the U.S. layout this only gives up Option's special characters, such as å and ∑.
+macos-option-as-alt = true
+
 # Tab switching with Ctrl+number instead of Cmd+number
 keybind = ctrl+1=goto_tab:1
 keybind = ctrl+2=goto_tab:2
