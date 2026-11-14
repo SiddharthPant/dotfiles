@@ -27,7 +27,6 @@ vim.o.laststatus = 2
 -- LSP progress is left to fidget, so the statusline only adds diagnostic counts.
 vim.o.statusline = '%f %m%=%{% luaeval("next(vim.diagnostic.count(0)) and vim.diagnostic.status() .. \' \' or \'\'") %}%y %{&fileencoding ==# "" ? &encoding : &fileencoding}'
 vim.o.winborder = 'rounded'
-vim.o.pumborder = 'rounded'
 
 -- Treesitter supplies 'foldexpr' per buffer; start with everything open and folded lines still highlighted.
 vim.o.foldlevelstart = 99
@@ -461,9 +460,18 @@ require('blink.cmp').setup({
     ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
   },
   completion = {
-    menu = { auto_show = function() return vim.g.autocomplete end },
+    -- Borderless like the native popup menu; blink otherwise inherits 'winborder'.
+    menu = {
+      auto_show = function() return vim.g.autocomplete end,
+      border = 'none',
+      draw = {
+        treesitter = { 'lsp' },
+        -- The source column tells gopls, templ, html and emmet items apart in templ files.
+        columns = { { 'kind_icon' }, { 'label', 'label_description', gap = 1 }, { 'source_name' } },
+      },
+    },
     list = { selection = { preselect = false, auto_insert = true } },
-    documentation = { auto_show = true, auto_show_delay_ms = 200 },
+    documentation = { auto_show = true, auto_show_delay_ms = 200, window = { border = 'none' } },
   },
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer' },
@@ -483,11 +491,19 @@ require('blink.cmp').setup({
       },
     },
   },
-  signature = { enabled = true },
+  signature = { enabled = true, window = { border = 'none' } },
   -- The command line keeps the native wildmenu, which the CmdlineChanged autocmd opens as you type.
   cmdline = { enabled = false },
   fuzzy = { implementation = 'prefer_rust_with_warning' },
 })
+
+-- Without borders, the docs window needs its own shade to stand apart from the menu beside it.
+for _, group in ipairs({ 'BlinkCmpDoc', 'BlinkCmpDocBorder', 'BlinkCmpDocSeparator' }) do
+  vim.api.nvim_set_hl(0, group, { bg = '#262626' })
+end
+-- lunaperche's grey-on-grey selection is easy to lose on a black background.
+vim.api.nvim_set_hl(0, 'PmenuSel', { fg = '#ffffff', bg = '#005f87', bold = true })
+vim.api.nvim_set_hl(0, 'PmenuMatchSel', { fg = '#ffd7ff', bg = '#005f87', bold = true })
 
 map('n', '<leader>ta', function()
   vim.g.autocomplete = not vim.g.autocomplete
