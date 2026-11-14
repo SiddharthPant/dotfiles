@@ -9,6 +9,22 @@
     {
       "source": "posix/nvim-pack-lock.json",
       "destination": "nvim-pack-lock.json"
+    },
+    {
+      "source": "posix/snippets/package.json",
+      "destination": "snippets/package.json"
+    },
+    {
+      "source": "posix/snippets/datastar.json",
+      "destination": "snippets/datastar.json"
+    },
+    {
+      "source": "posix/queries/datastar-injections.scm",
+      "destination": "after/queries/html/injections.scm"
+    },
+    {
+      "source": "posix/queries/datastar-injections.scm",
+      "destination": "after/queries/templ/injections.scm"
     }
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "name": "user-snippets",
+  "description": "datastar.json is tools/vscode-extension/src/data-attributes.json from starfederation/datastar at 1b15fef96273 (MIT).",
+  "contributes": {
+    "snippets": [
+      {
+        "language": ["html", "templ", "gohtmltmpl", "htmldjango", "javascriptreact", "typescriptreact", "vue", "svelte", "astro"],
+        "path": "./datastar.json"
+      }
+    ]
+  }
+}
