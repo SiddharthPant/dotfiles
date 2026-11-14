@@ -1,7 +1,7 @@
 {
   "[rust]": {
     "editor.inlayHints.enabled": "off",
-    "editor.semanticHighlighting.enabled": true
+    "editor.semanticHighlighting.enabled": true,
   },
   "chat.disableAIFeatures": true,
   "editor.bracketPairColorization.enabled": false,
@@ -20,12 +20,13 @@
   "editor.wordWrapColumn": 100,
   "extensions.ignoreRecommendations": true,
   "files.exclude": {
-    "**/.jj": true
+    "**/.jj": true,
   },
   "git.autofetch": true,
   "git.confirmSync": false,
   "json.schemaDownload.trustedDomains": {
     "https://aka.ms": true,
+    "https://biomejs.dev": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
@@ -33,22 +34,27 @@
     "https://raw.githubusercontent.com/devcontainers/spec/": true,
     "https://raw.githubusercontent.com/microsoft/vscode/": true,
     "https://schemastore.azurewebsites.net/": true,
-    "https://www.schemastore.org/": true
+    "https://spec.openapis.org/": true,
+    "https://www.schemastore.org/": true,
   },
   "security.workspace.trust.enabled": false,
-  "telemetry.telemetryLevel": "off",
   "terminal.integrated.fontSize": 12,
   "window.autoDetectColorScheme": true,
   "workbench.activityBar.location": "top",
   "workbench.diffEditorAssociations": {
-    "*.md": "vscode.markdown.preview.editor"
+    "*.md": "vscode.markdown.preview.editor",
   },
   "workbench.editor.wrapTabs": true,
   "workbench.editorAssociations": {
-    "*.md": "vscode.markdown.editor"
+    "*.md": "vscode.markdown.editor",
   },
   "workbench.experimental.modernUI": true,
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "vscode-modern-icons",
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "emmet.includeLanguages": {
+    "templ": "html",
+  },
+  "claudeCode.preferredLocation": "panel",
+  "telemetry.telemetryLevel": "off",
 }

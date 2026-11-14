@@ -1,7 +1,7 @@
 [tools]
 "cargo:cargo-expand" = "1.0.127"
 taplo = "0.10.0"
-cargo-binstall = "1.26.2"
+cargo-binstall = "1.27.0"
 "cargo:cargo-llvm-lines" = "0.4.48"
 hk = { version = "2.12.0", workflow = "release.yml" }
 java = "27.0.1+0"

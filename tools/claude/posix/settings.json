@@ -10,7 +10,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "node ~/.claude/statusline.js",
@@ -31,11 +30,15 @@
     },
     "claude-opus-5-5": {
       "effortLevel": "high"
+    },
+    "claude-fable-5-2": {
+      "effortLevel": "xhigh"
     }
   },
   "tui": "fullscreen",
   "theme": "auto",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opus"
 }
