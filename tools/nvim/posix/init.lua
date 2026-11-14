@@ -283,6 +283,7 @@ vim.pack.add({
   gh('folke/flash.nvim'),
   { src = gh('jake-stewart/multicursor.nvim'), version = '1.0' },
   gh('windwp/nvim-autopairs'),
+  gh('windwp/nvim-ts-autotag'),
   gh('stevearc/oil.nvim'),
   gh('ibhagwan/fzf-lua'),
   { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
@@ -371,7 +372,8 @@ require('mason').setup()
 require('mason-lspconfig').setup({ automatic_enable = { exclude = { 'stylua' } } })
 require('mason-tool-installer').setup({
   ensure_installed = {
-    'basedpyright', 'bashls', 'cssls', 'html', 'jsonls', 'lua_ls', 'rust_analyzer', 'taplo', 'ts_ls', 'yamlls',
+    'basedpyright', 'bashls', 'cssls', 'emmet_language_server', 'html', 'jsonls', 'lua_ls', 'rust_analyzer', 'taplo',
+    'ts_ls', 'yamlls',
     'prettier', 'shfmt', 'stylua',
   },
 })
@@ -380,6 +382,10 @@ vim.lsp.enable({ 'gopls', 'templ', 'ruff', 'golangci_lint_ls' })
 
 -- Tag and attribute completion inside templ components; the templ server only covers the Go side.
 vim.lsp.config('html', { filetypes = { 'html', 'templ' } })
+vim.lsp.config('emmet_language_server', {
+  filetypes = { 'html', 'templ' },
+  init_options = { includeLanguages = { templ = 'html' } },
+})
 
 vim.lsp.config('gopls', {
   settings = {
@@ -439,8 +445,7 @@ end, { desc = 'Toggle inlay hints' })
 
 -- Completion
 
--- Off by default, as in the vimrc; <C-Space> or <C-n> opens the menu on demand.
-vim.g.autocomplete = false
+vim.g.autocomplete = true
 
 require('blink.cmp').setup({
   keymap = {
@@ -459,6 +464,17 @@ require('blink.cmp').setup({
     per_filetype = { lua = { inherit_defaults = true, 'lazydev' } },
     providers = {
       lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink', score_offset = 100 },
+      lsp = {
+        -- Emmet matches every word, Go identifiers in templ included.
+        transform_items = function(_, items)
+          for _, item in ipairs(items) do
+            if item.client_name == 'emmet_language_server' then
+              item.score_offset = (item.score_offset or 0) - 3
+            end
+          end
+          return items
+        end,
+      },
     },
   },
   signature = { enabled = true },
@@ -553,6 +569,12 @@ map('c', '<C-s>', function() require('flash').toggle() end, { desc = 'Toggle fla
 -- Closes brackets and quotes as they are typed. Brackets after an accepted completion are blink.cmp's
 -- own doing, so the two need no integration.
 require('nvim-autopairs').setup({})
+
+-- The HTML server's linked editing already renames closing tags there.
+require('nvim-ts-autotag').setup({
+  opts = { enable_close_on_slash = true },
+  per_filetype = { html = { enable_rename = false }, templ = { enable_rename = false } },
+})
 
 local mc = require('multicursor-nvim')
 mc.setup()
