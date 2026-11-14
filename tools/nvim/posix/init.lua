@@ -258,6 +258,12 @@ autocmd('PackChanged', {
       end
       vim.cmd('TSUpdate')
     end
+    if name == 'fff' and (kind == 'install' or kind == 'update') then
+      if not ev.data.active then
+        vim.cmd.packadd('fff')
+      end
+      require('fff.download').download_or_build_binary()
+    end
   end,
 })
 
@@ -266,7 +272,7 @@ local function gh(repo)
 end
 
 vim.pack.add({
-  -- File-type icons, picked up by fzf-lua, oil, diffview, which-key and render-markdown.
+  -- File-type icons, picked up by fff, oil, diffview, which-key and render-markdown.
   gh('nvim-tree/nvim-web-devicons'),
   gh('neovim/nvim-lspconfig'),
   gh('mason-org/mason.nvim'),
@@ -285,7 +291,7 @@ vim.pack.add({
   gh('windwp/nvim-autopairs'),
   gh('windwp/nvim-ts-autotag'),
   gh('stevearc/oil.nvim'),
-  gh('ibhagwan/fzf-lua'),
+  gh('dmtrKovalenko/fff'),
   { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
   gh('nvim-lua/plenary.nvim'),
   gh('m00qek/baleia.nvim'),
@@ -539,22 +545,12 @@ end, { desc = 'Toggle format on save' })
 require('oil').setup({ default_file_explorer = false, keymaps = { ['<C-h>'] = false, ['<C-l>'] = false } })
 map('n', '-', '<Cmd>Oil<CR>', { desc = 'Open parent directory in oil' })
 
--- Pickers on the keys the vimrc's command-line :Find, :Buffer and :Grep used.
-local fzf = require('fzf-lua')
-fzf.setup({
-  -- Search dotfiles too, as files already does, but never inside VCS metadata.
-  grep = {
-    hidden = true,
-    rg_opts = [[--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -g "!.git" -g "!.jj" -e]],
-  },
-})
-map('n', '<leader><Space>', fzf.files, { desc = 'Find file' })
-map('n', '<leader><BS>', fzf.buffers, { desc = 'Find buffer' })
-map('n', '<leader>/', fzf.live_grep, { desc = 'Live grep' })
-map('n', '<leader>?', fzf.grep_cword, { desc = 'Grep word under cursor' })
-map('x', '<leader>?', fzf.grep_visual, { desc = 'Grep selection' })
-map('n', '<leader>fh', fzf.helptags, { desc = 'Find help tag' })
-map('n', '<leader>fr', fzf.resume, { desc = 'Resume last picker' })
+map('n', '<leader><Space>', function() require('fff').find_files() end, { desc = 'Find file' })
+map('n', '<leader>/', function() require('fff').live_grep() end, { desc = 'Live grep' })
+map({ 'n', 'x' }, '<leader>?', function() require('fff').live_grep_under_cursor() end, { desc = 'Grep word or selection' })
+-- fff has no buffer or help pickers; these open the fuzzy wildmenu instead.
+map('n', '<leader><BS>', ':buffer <C-@>', { desc = 'Find buffer' })
+map('n', '<leader>fh', ':help <C-@>', { desc = 'Find help tag' })
 
 map('n', '<leader>u', '<Cmd>Undotree<CR>', { desc = 'Toggle undo tree' })
 
