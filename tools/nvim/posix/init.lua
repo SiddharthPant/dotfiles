@@ -84,7 +84,7 @@ vim.o.wildignore = '.git,.jj,node_modules,target,vendor,dist,*.o,*.swp'
 vim.keymap.set('c', '<Up>', function() return vim.fn.wildmenumode() == 1 and '<C-E><Up>' or '<Up>' end, { expr = true })
 vim.keymap.set('c', '<Down>', function() return vim.fn.wildmenumode() == 1 and '<C-E><Down>' or '<Down>' end, { expr = true })
 
-vim.opt.diffopt:append({ 'algorithm:histogram', 'vertical' })
+vim.o.diffopt = vim.o.diffopt .. ',algorithm:histogram,vertical'
 
 -- Backup, swap and undo files stay in Neovim's state dir so they never collide with Vim's ~/.vim ones.
 vim.o.undofile = true
@@ -271,7 +271,7 @@ local function gh(repo)
 end
 
 vim.pack.add({
-  -- File-type icons, picked up by fff, oil, diffview, which-key and render-markdown.
+  -- File-type icons, picked up by fff, fzf-lua, oil, diffview, which-key and render-markdown.
   gh('nvim-tree/nvim-web-devicons'),
   gh('neovim/nvim-lspconfig'),
   gh('mason-org/mason.nvim'),
@@ -291,6 +291,7 @@ vim.pack.add({
   gh('windwp/nvim-ts-autotag'),
   gh('stevearc/oil.nvim'),
   gh('dmtrKovalenko/fff'),
+  gh('ibhagwan/fzf-lua'),
   { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
   gh('nvim-lua/plenary.nvim'),
   gh('m00qek/baleia.nvim'),
@@ -498,8 +499,8 @@ require('blink.cmp').setup({
 })
 
 -- Without borders, the docs window needs its own shade to stand apart from the menu beside it.
-for _, group in ipairs({ 'BlinkCmpDoc', 'BlinkCmpDocBorder', 'BlinkCmpDocSeparator' }) do
-  vim.api.nvim_set_hl(0, group, { bg = '#262626' })
+for _, hl_group in ipairs({ 'BlinkCmpDoc', 'BlinkCmpDocBorder', 'BlinkCmpDocSeparator' }) do
+  vim.api.nvim_set_hl(0, hl_group, { bg = '#262626' })
 end
 -- lunaperche's grey-on-grey selection is easy to lose on a black background.
 vim.api.nvim_set_hl(0, 'PmenuSel', { fg = '#ffffff', bg = '#005f87', bold = true })
@@ -564,9 +565,20 @@ map('n', '-', '<Cmd>Oil<CR>', { desc = 'Open parent directory in oil' })
 map('n', '<leader><Space>', function() require('fff').find_files() end, { desc = 'Find file' })
 map('n', '<leader>/', function() require('fff').live_grep() end, { desc = 'Live grep' })
 map({ 'n', 'x' }, '<leader>?', function() require('fff').live_grep_under_cursor() end, { desc = 'Grep word or selection' })
--- fff has no buffer or help pickers; these open the fuzzy wildmenu instead.
-map('n', '<leader><BS>', ':buffer <C-@>', { desc = 'Find buffer' })
-map('n', '<leader>fh', ':help <C-@>', { desc = 'Find help tag' })
+
+-- fff covers files and grep; fzf-lua picks everything else.
+local fzf = require('fzf-lua')
+fzf.setup({})
+map('n', '<leader><BS>', fzf.buffers, { desc = 'Find buffer' })
+map('n', '<leader>fh', fzf.helptags, { desc = 'Find help tag' })
+map('n', '<leader>fd', fzf.diagnostics_document, { desc = 'Find diagnostic in buffer' })
+map('n', '<leader>fD', fzf.diagnostics_workspace, { desc = 'Find diagnostic in workspace' })
+map('n', '<leader>fs', fzf.lsp_document_symbols, { desc = 'Find symbol in buffer' })
+map('n', '<leader>fS', fzf.lsp_live_workspace_symbols, { desc = 'Find symbol in workspace' })
+map('n', '<leader>fo', fzf.oldfiles, { desc = 'Find recent file' })
+map('n', '<leader>fk', fzf.keymaps, { desc = 'Find keymap' })
+map('n', '<leader>fc', fzf.commands, { desc = 'Find command' })
+map('n', '<leader>fr', fzf.resume, { desc = 'Resume last fzf-lua picker' })
 
 map('n', '<leader>u', '<Cmd>Undotree<CR>', { desc = 'Toggle undo tree' })
 
@@ -755,7 +767,7 @@ local function save_session()
     end
   end
   vim.fn.mkdir(session_dir, 'p')
-  pcall(vim.cmd, 'mksession! ' .. vim.fn.fnameescape(session_file()))
+  pcall(vim.api.nvim_command, 'mksession! ' .. vim.fn.fnameescape(session_file()))
   for _, bufnr in ipairs(plugin_buffers) do
     vim.bo[bufnr].buflisted = true
   end
