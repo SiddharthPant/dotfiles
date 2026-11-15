@@ -719,6 +719,78 @@ map('n', '<leader>cr', '<Cmd>Recompile<CR>', { desc = 'Recompile' })
 map('n', ']e', '<Cmd>NextError<CR>', { desc = 'Next compile error' })
 map('n', '[e', '<Cmd>PrevError<CR>', { desc = 'Previous compile error' })
 
+-- Sessions
+
+-- A plain `nvim` reopens the tabs, windows and buffers it last had in this folder, which is what
+-- brings Neovim back in tmux-resurrect and sesh panes. `nvim <file>` ($EDITOR, git commit) and
+-- headless runs neither load nor overwrite the folder's session.
+vim.o.sessionoptions = 'buffers,curdir,folds,tabpages,winsize'
+local session_dir = vim.fn.stdpath('state') .. '/sessions/'
+local read_stdin = false
+local session_deleted = false
+
+local function session_file()
+  return session_dir .. vim.fn.getcwd():gsub('[/\\:]', '%%') .. '.vim'
+end
+
+local function session_enabled()
+  return vim.fn.argc() == 0 and not read_stdin and not session_deleted
+    and not vim.list_contains(vim.v.argv, '--headless')
+end
+
+local function save_session()
+  if not session_enabled() or vim.g.SessionLoad then return end
+  local has_file = vim.iter(listed_buffers()):any(function(buffer)
+    return buffer.name ~= '' and vim.bo[buffer.bufnr].buftype == ''
+  end)
+  if not has_file then return end
+  -- mksession already skips plugin windows (Neogit, Oil, Diffview), but 'buffers' would still list
+  -- their buffers and bring them back empty; they are unlisted just for the write, without autocmds.
+  local eventignore, plugin_buffers = vim.o.eventignore, {}
+  vim.o.eventignore = 'all'
+  for _, buffer in ipairs(listed_buffers()) do
+    if vim.bo[buffer.bufnr].buftype ~= '' then
+      vim.bo[buffer.bufnr].buflisted = false
+      table.insert(plugin_buffers, buffer.bufnr)
+    end
+  end
+  vim.fn.mkdir(session_dir, 'p')
+  pcall(vim.cmd, 'mksession! ' .. vim.fn.fnameescape(session_file()))
+  for _, bufnr in ipairs(plugin_buffers) do
+    vim.bo[bufnr].buflisted = true
+  end
+  vim.o.eventignore = eventignore
+end
+
+autocmd('StdinReadPre', { callback = function() read_stdin = true end })
+autocmd('VimEnter', {
+  nested = true, -- so the restored buffers get filetype, treesitter and LSP like any other
+  callback = function()
+    local file = session_file()
+    if not (session_enabled() and vim.uv.fs_stat(file)) then return end
+    vim.cmd('silent! source ' .. vim.fn.fnameescape(file))
+    -- A tab that only held plugin windows (Neogit and Diffview open in their own) comes back empty.
+    for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+      local empty = vim.iter(vim.api.nvim_tabpage_list_wins(tab)):all(function(win)
+        return vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win)) == ''
+      end)
+      if empty and #vim.api.nvim_list_tabpages() > 1 then
+        vim.cmd.tabclose(vim.api.nvim_tabpage_get_number(tab))
+      end
+    end
+  end,
+})
+-- tmux kill-server ends Neovim with SIGHUP, which skips VimLeavePre, so the session is also kept
+-- current while editing.
+autocmd({ 'BufEnter', 'FocusLost', 'VimLeavePre' }, { callback = save_session })
+
+-- Saving stops too, or the next BufEnter would write the session straight back.
+vim.api.nvim_create_user_command('SessionDelete', function()
+  session_deleted = true
+  local removed = os.remove(session_file())
+  notify((removed and 'Deleted the session for ' or 'No session for ') .. vim.fn.getcwd())
+end, { desc = "Delete this folder's session and stop saving it until Neovim restarts" })
+
 require('which-key').setup({
   spec = {
     { '<leader>b', group = 'buffer' },
