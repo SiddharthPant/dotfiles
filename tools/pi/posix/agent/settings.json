@@ -5,7 +5,7 @@
   "modelThinkingLevels": {
     "openai-codex/gpt-6-luna": "high"
   },
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "enabledModels": [
     "fireworks/accounts/fireworks/models/glm-5p3-flash",
     "openai-codex/gpt-6-astra",
