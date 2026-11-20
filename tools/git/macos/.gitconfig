@@ -6,11 +6,11 @@
 	defaultBranch = main
 
 [core]
-	editor = vim
+	editor = code --wait
 	excludesfile = ~/.config/git/ignore
 
 [sequence]
-	editor = vim
+	editor = code --wait
 
 [fetch]
 	prune = true
@@ -27,12 +27,12 @@
 
 [diff]
 	algorithm = histogram
-	tool = vim
+	tool = vscode
 
 [difftool]
 	prompt = false
-[difftool "vim"]
-	cmd = vim -d "$LOCAL" "$REMOTE"
+[difftool "vscode"]
+	cmd = code --wait --diff "$LOCAL" "$REMOTE"
 
 [merge]
 	tool = vscode
